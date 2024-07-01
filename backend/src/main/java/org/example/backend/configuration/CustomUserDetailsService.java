@@ -11,6 +11,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -22,14 +23,15 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userRepository.findByEmail(username);
-        List<GrantedAuthority> authorities = user.getRoles().stream()
-                .map((roles) -> new SimpleGrantedAuthority(roles.getName()))
-                .collect(Collectors.toList());
+        User user = userRepository.findByUsername(username);
+//        List<GrantedAuthority> authorities = user.getRoles().stream()
+//                .map((roles) -> new SimpleGrantedAuthority(roles.getName()))
+//                .collect(Collectors.toList());
+        GrantedAuthority authority=new SimpleGrantedAuthority(user.getRole());
         return new org.springframework.security.core.userdetails.User(
                 username,
                 user.getPassword(),
-                authorities
+                Collections.singletonList(authority)
         );
     }
 }

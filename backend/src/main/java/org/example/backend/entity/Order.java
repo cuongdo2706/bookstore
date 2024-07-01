@@ -46,17 +46,23 @@ public class Order {
     @Column(name = "total_receive", precision = 19, scale = 2)
     private BigDecimal totalReceive;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "walkin_customer_id",nullable = true)
-    private WalkinCustomer walkinCustomer;
-
     @ManyToOne
     @JoinColumn(name = "customer_id")
-    private User customer;
+    private Customer customer;
 
     @ManyToOne
     @JoinColumn(name = "staff_id")
-    private User staff;
+    private Staff staff;
+
+    @Column(name = "customer_name")
+    private String customerName;
+
+    private String email;
+
+    @Column(name = "phone_num")
+    private String phoneNum;
+
+    private String address;
 
     @Column(name = "order_type")
     private Boolean orderType;

@@ -1,0 +1,45 @@
+
+.full-height-menu {
+  height: 100%;
+  width: 250px; /* Đặt chiều rộng của menu */
+  overflow-y: auto; /* Cho phép cuộn dọc nếu nội dung quá dài */
+  margin-top: 500px;
+}
+
+.sidenav-header {
+  padding-top: 24px;
+  text-align: center;
+
+  > img {
+    border-radius: 100%;
+    object-fit: cover;
+    margin-bottom: 10px;
+  }
+
+  .header-text {
+    > h2 {
+      margin: 0;
+      font-size: 1rem;
+      line-height: 1.5rem;
+    }
+
+    > p {
+      margin: 0;
+      font-size: 0.8rem;
+    }
+  }
+}
+
+  .custom-link:hover {
+    color: green;
+
+  }
+
+  .custom-link:hover i {
+    color: green;
+  }
+
+  .custom-link:hover span {
+    color: green;
+  }
+

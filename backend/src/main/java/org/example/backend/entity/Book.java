@@ -49,8 +49,7 @@ public class Book {
     @Column(name = "published_year")
     private Integer publishedYear;
 
-    @Column(name = "status", columnDefinition = "BOOLEAN DEFAULT FALSE")
-    private Boolean status;
+    private String status;
 
     private String description;
 
