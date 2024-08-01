@@ -24,8 +24,7 @@ public class AuthController {
         String token = authService.login(loginRequest);
 
         //02 - Set the token as a response using JwtAuthResponse Dto class
-        AuthResponse authResponseDto = new AuthResponse();
-        authResponseDto.setToken(token);
+        AuthResponse authResponseDto = new AuthResponse(token);
 
         //03 - Return the response to the user
         return new ResponseEntity<>(authResponseDto, HttpStatus.OK);

@@ -4,19 +4,16 @@ import {MenuModule} from "primeng/menu";
 import {PanelMenuModule} from "primeng/panelmenu";
 import {TieredMenuModule} from "primeng/tieredmenu";
 import {RippleModule} from "primeng/ripple";
+import {CardModule} from "primeng/card";
 
 @Component({
   selector: 'app-sidebar',
   standalone: true,
-  imports: [MenubarModule, MenuModule, PanelMenuModule, TieredMenuModule,RippleModule],
+  imports: [MenubarModule, MenuModule, PanelMenuModule, TieredMenuModule, RippleModule, CardModule],
   templateUrl: './sidebar.component.html',
   styleUrl: './sidebar.component.css'
 })
-export class SidebarComponent implements OnInit{
-  item=[{}];
+export class SidebarComponent{
 
-  ngOnInit(): void {
-
-  }
 
 }

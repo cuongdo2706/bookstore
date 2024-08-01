@@ -2,6 +2,8 @@ package org.example.backend.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
@@ -27,13 +29,16 @@ public class User {
 
     private String role;
 
-    private String status;
+    @Column(name = "is_active",columnDefinition = "boolean default true")
+    private Boolean isActive;
 
-    @CreatedDate
+    @CreationTimestamp
+    @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 
-    @LastModifiedDate
+    @UpdateTimestamp
+    @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 }

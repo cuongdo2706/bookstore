@@ -1,21 +1,165 @@
 <div>
-    <h1 class="mt-0 pt-0">Quản lí sản phẩm</h1>
+  <h1 class="mt-0 pt-0">Sản phẩm</h1>
 </div>
-<p-table [value]="products" [tableStyle]="{ 'min-width': '50rem' }">
+<p-table [value]="products"
+         [scrollable]="true"
+         [paginator]="true"
+         [rows]="10"
+
+         [rowsPerPageOptions]="[10, 25, 50]"
+         styleClass="p-datatable-sm p-datatable-gridlines"
+         [tableStyle]="{ 'min-width': '30rem' }"
+         [expandedRowKeys]="expandedRows" dataKey="id"
+         (onRowExpand)="onRowExpand($event)">
+  <ng-template pTemplate="caption">
+    <div class="flex justify-content-between ">
+      <p-iconField iconPosition="left">
+        <p-inputIcon>
+          <i class="pi pi-search"></i>
+        </p-inputIcon>
+        <input
+          pInputText
+          type="text"
+          [(ngModel)]="keyword"
+          (input)="searchKeyword()"
+          placeholder="Tìm theo mã hoặc tên"/>
+      </p-iconField>
+      <div>
+        <p-button icon="pi pi-plus" severity="success" class="mr-2" label="Thêm mới"></p-button>
+        <p-button (click)="exportExcel()" icon="pi pi-file-export" severity="success" class="mr-2"
+                  label="Xuất Excel"></p-button>
+        <p-button icon="pi pi-file-import" severity="success" label="Nhập Excel"></p-button>
+      </div>
+    </div>
+  </ng-template>
   <ng-template pTemplate="header">
     <tr>
-      <th>Code</th>
-      <th>Name</th>
-      <th>Category</th>
-      <th>Quantity</th>
+      <th>
+        <p-checkbox [binary]="true"></p-checkbox>
+      </th>
+      <th>Mã sách</th>
+      <th>Tên sách</th>
+      <th>Ảnh</th>
+      <th>Giá gốc</th>
+      <th>Giá bán</th>
+      <th>Số lượng</th>
     </tr>
   </ng-template>
-  <ng-template pTemplate="body" let-product>
-    <tr>
+
+
+  <ng-template pTemplate="body" let-product let-expanded="expanded">
+    <tr [pRowToggler]="product">
+      <td>
+        <p-checkbox [binary]="true" (click)="$event.stopPropagation()"></p-checkbox>
+      </td>
       <td>{{ product.code }}</td>
       <td>{{ product.name }}</td>
-      <td>{{ product.category }}</td>
+      <td><img src="{{product.imgUrl}}" width="50"></td>
+      <td>{{ product.defaultPrice | number:"1.0-0" }}</td>
+      <td>{{ product.sellPrice | number:"1.0-0" }}</td>
       <td>{{ product.quantity }}</td>
     </tr>
   </ng-template>
+  <ng-template pTemplate="rowexpansion" let-product>
+    <tr class="bg-primary-50">
+      <td colspan="7">
+        <div class="p-3">
+          <div class="grid">
+            <span class="text-primary-700">{{ product.name }}</span>
+          </div>
+          <div class="grid mt-3">
+            <div class="col-3 flex justify-content-center">
+              <p-image
+                src="{{product.imgUrl}}"
+                alt="Image"
+                width="250"
+                [preview]="true"/>
+            </div>
+            <div class="col-4">
+              <div class="grid">
+                <div style="font-weight: bold" class="col-4">Mã sách:</div>
+                <div class="col-8">{{ product.code }}</div>
+              </div>
+              <div class="grid mt-1">
+                <div style="font-weight: bold" class="col-4">Tên sách:</div>
+                <div class="col-8">{{ product.name }}</div>
+              </div>
+              <div class="grid mt-1">
+                <div style="font-weight: bold" class="col-4">Nhà xuất bản:</div>
+                <div
+                  class="col-8">{{ product.publisher == null || product.publisher == "" ? "Đang cập nhật" : product.publisher }}
+                </div>
+              </div>
+              <div class="grid mt-1">
+                <div style="font-weight: bold" class="col-4">Dịch giả:</div>
+                <div
+                  class="col-8">{{ product.translator == null || product.translator == "" ? "Đang cập nhật" : product.translator }}
+                </div>
+              </div>
+              <div class="grid mt-1">
+                <div style="font-weight: bold" class="col-4">Tác giả:</div>
+                <div class="col-8">{{ product.author.name }}</div>
+              </div>
+              <div class="grid mt-1">
+                <div style="font-weight: bold" class="col-4">Thể loại:</div>
+                <div class="col-8">{{ product.category.name }}</div>
+              </div>
+              <div class="grid mt-1">
+                <div style="font-weight: bold" class="col-4">Số lượng:</div>
+                <div class="col-8">{{ product.quantity }}</div>
+              </div>
+              <div class="grid mt-1">
+                <div style="font-weight: bold" class="col-4">Giá gốc:</div>
+                <div class="col-8">{{ product.defaultPrice | number:"1.0-0" }}</div>
+              </div>
+              <div class="grid mt-1">
+                <div style="font-weight: bold" class="col-4">Giá bán:</div>
+                <div class="col-8">{{ product.sellPrice | number:"1.0-0" }}</div>
+              </div>
+              <div class="grid mt-1">
+                <div style="font-weight: bold" class="col-4">Số trang:</div>
+                <div
+                  class="col-8">{{ product.numOfPages == null || product.numOfPages == "" ? "Đang cập nhật" : product.numOfPages }}
+                </div>
+              </div>
+              <div class="grid mt-1">
+                <div style="font-weight: bold" class="col-4">Năm xuất bản:</div>
+                <div
+                  class="col-8">{{ product.publishedYear == null || product.publishedYear == "" ? "Đang cập nhật" : product.publishedYear }}
+                </div>
+              </div>
+              <div class="grid mt-1">
+                <div style="font-weight: bold" class="col-4">Trạng thái:</div>
+                <div class="col-8">{{ product.isActive ? "Đang bán" : "Ngừng bán" }}</div>
+              </div>
+            </div>
+            <div class="col-5 pl-4">
+              <div class="grid">
+                <div style="font-weight: bold">Mô tả:</div>
+              </div>
+              <div class="grid mt-1">
+                <p style="line-height: 1.8">{{ product.description }}</p>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </td>
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="emptymessage">
+    <tr>
+      <td colspan="7" style="text-align: center">Không tìm thấy bản ghi nào</td>
+    </tr>
+  </ng-template>
+
 </p-table>
+<!--<div class="grid flex justify-content-center">-->
+<!--  <p-paginator-->
+<!--    (onPageChange)="onPageChange($event)"-->
+<!--    [first]="3"-->
+<!--    [rows]="5"-->
+<!--    [totalRecords]="6"-->
+<!--    [rowsPerPageOptions]="[10, 25, 50]"/>-->
+<!--</div>-->
+

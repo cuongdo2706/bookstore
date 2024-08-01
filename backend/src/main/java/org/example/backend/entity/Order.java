@@ -23,11 +23,9 @@ public class Order {
     @Column(nullable = false, unique = true)
     private String code;
 
-    @CreatedDate
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 
-    @LastModifiedDate
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
@@ -67,6 +65,7 @@ public class Order {
     @Column(name = "order_type")
     private Boolean orderType;
 
+    @Column(columnDefinition = "TEXT")
     private String note;
 
     private String status;

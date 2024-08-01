@@ -41,10 +41,13 @@ public class SecurityConfig {
         http.csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests((authorize) -> {
                     authorize.requestMatchers("/auth/**").permitAll();
-                    authorize.anyRequest().authenticated();
+                    authorize.anyRequest().permitAll();
+//                    authorize.requestMatchers(HttpMethod.GET, "/author/**").permitAll();
+//                    authorize.requestMatchers(HttpMethod.GET, "/category/**").permitAll();
+//                    authorize.anyRequest().authenticated();
                 }).httpBasic(Customizer.withDefaults());
 
-        http.exceptionHandling( exception -> exception
+        http.exceptionHandling(exception -> exception
                 .authenticationEntryPoint(authenticationEntryPoint));
 
         http.addFilterBefore(authenticationFilter, UsernamePasswordAuthenticationFilter.class);

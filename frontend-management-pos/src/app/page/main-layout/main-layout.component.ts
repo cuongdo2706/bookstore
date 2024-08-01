@@ -3,6 +3,7 @@ import {NavbarComponent} from "./navbar/navbar.component";
 import {SidebarComponent} from "./sidebar/sidebar.component";
 import {CardModule} from "primeng/card";
 import {RouterOutlet} from "@angular/router";
+import {ScrollPanelModule} from "primeng/scrollpanel";
 
 @Component({
   selector: 'app-main-layout',
@@ -11,7 +12,8 @@ import {RouterOutlet} from "@angular/router";
     NavbarComponent,
     SidebarComponent,
     CardModule,
-    RouterOutlet
+    RouterOutlet,
+    ScrollPanelModule
   ],
   templateUrl: './main-layout.component.html',
   styleUrl: './main-layout.component.css'

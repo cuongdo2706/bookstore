@@ -1,6 +1,8 @@
 package org.example.backend.service.impl;
 
+import org.example.backend.dto.request.PropertyCreationRequest;
 import org.example.backend.entity.Author;
+import org.example.backend.exception.DataNotFoundException;
 import org.example.backend.repository.AuthorRepository;
 import org.example.backend.service.IAuthorService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,15 +11,58 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class AuthorService implements IAuthorService {
     @Autowired
     private AuthorRepository authorRepository;
 
+
     @Override
-    public Page<Author> findAllPage(Integer page) {
-        if (page < 1) page = 1;
-        Pageable pageable = PageRequest.of(page - 1, 10);
-        return authorRepository.findAllPage(pageable);
+    public List<Author> findAllPage(Integer page,Integer size) {
+        if (page == null || page < 1) page = 1;
+        if (size == null) size = 10;
+        Pageable pageable = PageRequest.of(page - 1, size);
+        return authorRepository.findAllPage(pageable).getContent();
+    }
+
+    @Override
+    public Author findById(Long id) throws DataNotFoundException {
+        return authorRepository.findById(id).orElseThrow(()->new DataNotFoundException("author not found: "+id));
+    }
+
+    @Override
+    public List<Author> findByName(Integer page,Integer size, String name) {
+        if (page == null || page < 1) page = 1;
+        if (size == null) size = 10;
+        Pageable pageable = PageRequest.of(page - 1, size);
+        return authorRepository.findByName(pageable,name).getContent();
+    }
+
+    @Override
+    public Author save(PropertyCreationRequest request) throws Exception {
+        if (authorRepository.existsByName(request.getName())){
+            throw new Exception("Author already exists");
+        }
+        Author author = Author.builder()
+                .name(request.getName())
+                .isDeleted(Boolean.FALSE)
+                .build();
+        return authorRepository.save(author);
+    }
+
+    @Override
+    public Author update(Long id, PropertyCreationRequest request) throws DataNotFoundException {
+        Author existedAuthor=findById(id);
+        existedAuthor.setName(request.getName());
+        return authorRepository.save(existedAuthor);
+    }
+
+    @Override
+    public String delete(Long id) throws DataNotFoundException {
+        Author existedAuthor=findById(id);
+        existedAuthor.setIsDeleted(true);
+        return "Delete succeed";
     }
 }

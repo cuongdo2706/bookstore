@@ -2,6 +2,8 @@ package org.example.backend.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
@@ -20,7 +22,7 @@ public class Customer {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    
+
     private String code;
 
     private String name;
@@ -49,11 +51,19 @@ public class Customer {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "customer")
     private List<DeliveryAddress> deliveryAddresses;
 
-    @CreatedDate
+    @Column(name = "is_active", columnDefinition = "boolean default true")
+    private Boolean isActive;
+
+    @Column(name = "is_deleted", columnDefinition = "boolean default false")
+    private Boolean isDeleted;
+
+    @CreationTimestamp
+    @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 
-    @LastModifiedDate
+    @UpdateTimestamp
+    @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 }
