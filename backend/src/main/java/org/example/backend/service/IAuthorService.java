@@ -8,6 +8,8 @@ import org.springframework.data.domain.Page;
 import java.util.List;
 
 public interface IAuthorService {
+    List<Author> findAll();
+
     List<Author> findAllPage(Integer page, Integer size);
 
     Author findById(Long id) throws DataNotFoundException;

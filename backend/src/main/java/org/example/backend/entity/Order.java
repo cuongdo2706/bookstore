@@ -2,6 +2,7 @@ package org.example.backend.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import lombok.experimental.FieldDefaults;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
@@ -15,58 +16,59 @@ import java.time.LocalDateTime;
 @Builder
 @Entity
 @Table(name = "tbl_order")
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    Long id;
 
     @Column(nullable = false, unique = true)
-    private String code;
+    String code;
 
     @Column(name = "created_at")
-    private LocalDateTime createdAt;
+    LocalDateTime createdAt;
 
     @Column(name = "updated_at")
-    private LocalDateTime updatedAt;
+    LocalDateTime updatedAt;
 
     @Column(name = "payment_at")
-    private LocalDateTime paymentAt;
+    LocalDateTime paymentAt;
 
     @Column(name = "delivered_at")
-    private LocalDateTime deliveredAt;
+    LocalDateTime deliveredAt;
 
     @Column(name = "delivery_fee", precision = 19, scale = 2)
-    private BigDecimal deliveryFee;
+    BigDecimal deliveryFee;
 
     @Column(name = "total_price", precision = 19, scale = 2)
-    private BigDecimal totalPrice;
+    BigDecimal totalPrice;
 
     @Column(name = "total_receive", precision = 19, scale = 2)
-    private BigDecimal totalReceive;
+    BigDecimal totalReceive;
 
     @ManyToOne
     @JoinColumn(name = "customer_id")
-    private Customer customer;
+    Customer customer;
 
     @ManyToOne
     @JoinColumn(name = "staff_id")
-    private Staff staff;
+    Staff staff;
 
     @Column(name = "customer_name")
-    private String customerName;
+    String customerName;
 
-    private String email;
+    String email;
 
     @Column(name = "phone_num")
-    private String phoneNum;
+    String phoneNum;
 
-    private String address;
+    String address;
 
     @Column(name = "order_type")
-    private Boolean orderType;
+    Boolean orderType;
 
     @Column(columnDefinition = "TEXT")
-    private String note;
+    String note;
 
-    private String status;
+    String status;
 }

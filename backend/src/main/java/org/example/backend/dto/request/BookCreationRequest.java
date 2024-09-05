@@ -2,6 +2,7 @@ package org.example.backend.dto.request;
 
 import jakarta.validation.constraints.*;
 import lombok.*;
+import lombok.experimental.FieldDefaults;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.math.BigDecimal;
@@ -11,24 +12,25 @@ import java.math.BigDecimal;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class BookCreationRequest {
     @NotBlank(message = "Name is required")
-    private String name;
+    String name;
     @PositiveOrZero(message = "Quantity must be greater than 0")
-    private Integer quantity;
-    private String publicId;
-    private String url;
-    @DecimalMin(value = "1.0",message = "Price must be greater than 0")
+    Integer quantity;
+    String publicId;
+    String url;
+    @DecimalMin(value = "1.0", message = "Price must be greater than 0")
     @NotNull(message = "Price is required")
-    private BigDecimal defaultPrice;
-    private String publisher;
-    private String translator;
-    private Integer numOfPages;
-    private Integer publishedYear;
-    private String description;
-    private Boolean isActive;
+    BigDecimal defaultPrice;
+    String publisher;
+    String translator;
+    Integer numOfPages;
+    Integer publishedYear;
+    String description;
+    Boolean isActive;
     @NotNull(message = "Author Id is required")
-    private Long authorId;
+    Long authorId;
     @NotNull(message = "Category Id is required")
-    private Long categoryId;
+    Long categoryId;
 }

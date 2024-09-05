@@ -2,6 +2,7 @@ package org.example.backend.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import lombok.experimental.FieldDefaults;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -15,67 +16,66 @@ import java.time.LocalDateTime;
 @Builder
 @Entity
 @Table(name = "tbl_book")
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class Book {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    Long id;
 
-    @Column(nullable = false,unique = true)
-    private String code;
+    @Column(nullable = false, unique = true)
+    String code;
 
-    private String name;
+    String name;
 
     @Column(name = "public_id")
-    private String publicId;
+    String publicId;
 
     @Column(name = "img_url")
-    private String imgUrl;
+    String imgUrl;
 
-    private Integer quantity;
+    Integer quantity;
 
     @Column(name = "default_price", precision = 19, scale = 2)
-    private BigDecimal defaultPrice;
+    BigDecimal defaultPrice;
 
     @Column(name = "sell_price", precision = 19, scale = 2)
-    private BigDecimal sellPrice;
+    BigDecimal sellPrice;
 
-    private String publisher;
+    String publisher;
 
-    private String translator;
+    String translator;
 
     @Column(name = "num_of_pages")
-    private Integer numOfPages;
+    Integer numOfPages;
 
     @Column(name = "published_year")
-    private Integer publishedYear;
-
-
+    Integer publishedYear;
 
 
     @Column(columnDefinition = "TEXT")
-    private String description;
+    String description;
 
     @ManyToOne
     @JoinColumn(name = "id_author")
-    private Author author;
+    Author author;
 
     @ManyToOne
     @JoinColumn(name = "id_category")
-    private Category category;
+    Category category;
 
     @CreationTimestamp
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "created_at")
-    private LocalDateTime createdAt;
+    LocalDateTime createdAt;
 
     @UpdateTimestamp
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "updated_at")
-    private LocalDateTime updatedAt;
+    LocalDateTime updatedAt;
 
-    @Column(name = "is_active",columnDefinition = "boolean default true")
-    private Boolean isActive;
+    @Column(name = "is_active", columnDefinition = "boolean default true")
+    Boolean isActive;
 
     @Column(name = "is_deleted", columnDefinition = "boolean default false")
-    private Boolean isDeleted;
+    Boolean isDeleted;
 }

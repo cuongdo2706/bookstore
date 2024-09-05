@@ -2,6 +2,7 @@ package org.example.backend.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import lombok.experimental.FieldDefaults;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.data.annotation.CreatedDate;
@@ -17,48 +18,49 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class Staff {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    Long id;
 
-    private String code;
+    String code;
 
-    private String name;
+    String name;
 
-    private LocalDate dob;
+    LocalDate dob;
 
-    private Boolean gender;
+    Boolean gender;
 
     @Column(name = "identity_num")
-    private String identityNum;
+    String identityNum;
 
-    private String address;
+    String address;
 
     @Column(name = "phone_num")
-    private String phoneNum;
+    String phoneNum;
 
-    private String email;
+    String email;
 
-    private String status;
+    String status;
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id")
-    private User user;
+    User user;
 
-    @Column(name = "is_active",columnDefinition = "boolean default true")
-    private Boolean isActive;
+    @Column(name = "is_active", columnDefinition = "boolean default true")
+    Boolean isActive;
 
     @Column(name = "is_deleted", columnDefinition = "boolean default false")
-    private Boolean isDeleted;
+    Boolean isDeleted;
 
     @CreationTimestamp
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "created_at")
-    private LocalDateTime createdAt;
+    LocalDateTime createdAt;
 
     @UpdateTimestamp
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "updated_at")
-    private LocalDateTime updatedAt;
+    LocalDateTime updatedAt;
 }

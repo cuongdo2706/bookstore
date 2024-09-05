@@ -19,6 +19,11 @@ public class CategoryService implements ICategoryService {
     private CategoryRepository categoryRepository;
 
     @Override
+    public List<Category> findAll() {
+        return categoryRepository.findAll();
+    }
+
+    @Override
     public List<Category> findAllPage(Integer page, Integer size) {
         if (page == null || page < 1) page = 1;
         if (size == null) size = 10;

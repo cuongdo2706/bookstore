@@ -1,28 +1,31 @@
 package org.example.backend.entity;
 
 import jakarta.persistence.*;
+import lombok.AccessLevel;
+import lombok.experimental.FieldDefaults;
 
 @Entity
 @Table(name = "tbl_delivery_address")
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class DeliveryAddress {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    Long id;
 
-    private String name;
+    String name;
 
     @Column(name = "phone_num")
-    private String phoneNum;
+    String phoneNum;
 
-    private String address;
+    String address;
 
-    private String province;
+    String province;
 
-    private String district;
+    String district;
 
-    private String commune;
+    String commune;
 
     @ManyToOne
     @JoinColumn(name = "delivery_address")
-    private Customer customer;
+    Customer customer;
 }

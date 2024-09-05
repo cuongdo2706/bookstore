@@ -1,12 +1,16 @@
 package org.example.backend.dto.request;
 
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.experimental.FieldDefaults;
 
 @Getter
 @Setter
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class BookSearchRequest {
-    private Integer size;
-    private Integer page;
-    private String keyword;
+    Integer size;
+    Integer page;
+    String keyword;
+    String sort;
 }

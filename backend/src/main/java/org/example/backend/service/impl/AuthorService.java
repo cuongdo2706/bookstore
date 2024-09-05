@@ -20,6 +20,11 @@ public class AuthorService implements IAuthorService {
 
 
     @Override
+    public List<Author> findAll() {
+        return authorRepository.findAllList();
+    }
+
+    @Override
     public List<Author> findAllPage(Integer page,Integer size) {
         if (page == null || page < 1) page = 1;
         if (size == null) size = 10;

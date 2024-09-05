@@ -1,0 +1,104 @@
+<p-dialog
+  header="Thêm mới"
+  [modal]="true"
+  [style]="{width:'70rem'}"
+  [visible]="visible()"
+  closable="false"
+>
+  <form [formGroup]="saveForm" (ngSubmit)="onSubmit()">
+    <div class="flex">
+      <div class="col-7">
+        <p-floatLabel class="mt-3 flex">
+          <input type="text" pInputText id="name" style="width:600px" [formControl]="saveForm.controls.name"/>
+          <label for="name">Tên sách</label>
+        </p-floatLabel>
+        <p-floatLabel class="mt-5 flex">
+          <input pInputText id="publisher" style="width:600px" [formControl]="saveForm.controls.publisher"/>
+          <label for="publisher">Nhà xuất bản</label>
+        </p-floatLabel>
+        <p-floatLabel class="mt-5 flex">
+          <input pInputText id="translator" style="width:600px" [formControl]="saveForm.controls.translator"/>
+          <label for="name">Dịch giả</label>
+        </p-floatLabel>
+        <p-floatLabel class="mt-5 flex">
+          <input pInputText id="numOfPages" style="width:600px" [formControl]="saveForm.controls.numOfPages"/>
+          <label for="numOfPages">Số trang</label>
+        </p-floatLabel>
+        <p-floatLabel class="mt-5 flex">
+          <input pInputText id="publishedYear" style="width:600px" [formControl]="saveForm.controls.publishedYear"/>
+          <label for="publishedYear">Năm xuất bản</label>
+        </p-floatLabel>
+        <div class="mt-5 flex">
+          <p-dropdown
+            [style]="{'width':'550px'}"
+            [formControl]="saveForm.controls.author"
+            [options]="authors"
+            optionLabel="name"
+            optionValue="id"
+            placeholder="Tác giả"
+            [filter]="true"
+            filterBy="name"
+            [showClear]="true"
+          ></p-dropdown>
+          <p-button class="ml-1" icon="pi pi-plus" [rounded]="true" [text]="true" severity="secondary"/>
+        </div>
+        <div class="mt-5 flex">
+          <p-dropdown
+            [style]="{'width':'550px'}"
+            [formControl]="saveForm.controls.category"
+            [options]="categories"
+            optionLabel="name"
+            optionValue="id"
+            placeholder="Thể loại"
+            [filter]="true"
+            filterBy="name"
+            [showClear]="true"
+          ></p-dropdown>
+          <p-button class="ml-1" icon="pi pi-plus" [rounded]="true" [text]="true" severity="secondary"/>
+        </div>
+
+      </div>
+      <div class="col-5">
+        <p-floatLabel class="mt-3 flex">
+          <input pInputText id="quantity" style="width:450px" [formControl]="saveForm.controls.quantity"/>
+          <label for="quantity">Số lượng</label>
+        </p-floatLabel>
+        <p-floatLabel class="mt-5 flex">
+          <input pInputText id="defaultPrice" style="width:450px" [formControl]="saveForm.controls.defaultPrice"/>
+          <label for="defaultPrice">Giá gốc</label>
+        </p-floatLabel>
+        <p-floatLabel class="mt-5 flex">
+          <input pInputText id="sellPrice" style="width:450px" [formControl]="saveForm.controls.sellPrice"/>
+          <label for="sellPrice">Giá bán</label>
+        </p-floatLabel>
+        <p-floatLabel class="mt-5 flex">
+          <textarea
+            [formControl]="saveForm.controls.description"
+            [style]="{'width':'450px'}"
+            id="description"
+            rows="13"
+            pInputTextarea
+          ></textarea>
+          <label for="description">Mô tả</label>
+        </p-floatLabel>
+      </div>
+    </div>
+    <div class="flex">
+      <p-fileUpload
+        [multiple]="false"
+        accept="image/*"
+        maxFileSize="1000000"
+        [showUploadButton]="false"
+        [showCancelButton]="false"
+        chooseLabel="Chọn ảnh"
+        mode="advanced"
+        (onSelect)="chooseImage($event)"
+        
+      ></p-fileUpload>
+    </div>
+    <div class="flex mt-2 justify-content-end">
+      <p-button class="mr-2" label="Bỏ qua" (onClick)="closeDialog()"></p-button>
+      <p-button type="submit" label="Thêm mới"></p-button>
+    </div>
+  </form>
+</p-dialog>

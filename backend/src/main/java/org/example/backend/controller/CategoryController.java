@@ -20,9 +20,12 @@ public class CategoryController {
     private ICategoryService categoryService;
 
     @GetMapping
-    public List<Category> findPage(@ModelAttribute PageRequest pageRequest) {
-        return categoryService.findAllPage(pageRequest.getPage(), pageRequest.getSize());
+    public List<Category>findAll(){
+        return categoryService.findAll();
     }
+//    public List<Category> findPage(@ModelAttribute PageRequest pageRequest) {
+//        return categoryService.findAllPage(pageRequest.getPage(), pageRequest.getSize());
+//    }
 
     @GetMapping("/search")
     public List<Category> findByName(@ModelAttribute PropertySearchRequest request) {

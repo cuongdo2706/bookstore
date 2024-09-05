@@ -1,16 +1,15 @@
 package org.example.backend.dto.request;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+import lombok.experimental.FieldDefaults;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class PropertySearchRequest {
-    private Integer size;
-    private Integer page;
-    private String name;
+    Integer size;
+    Integer page;
+    String name;
 }

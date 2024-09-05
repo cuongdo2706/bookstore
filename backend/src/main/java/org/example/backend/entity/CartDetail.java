@@ -1,10 +1,8 @@
 package org.example.backend.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+import lombok.experimental.FieldDefaults;
 
 import java.math.BigDecimal;
 
@@ -14,21 +12,22 @@ import java.math.BigDecimal;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class CartDetail {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    Long id;
 
     @ManyToOne
     @JoinColumn(name = "cart_id")
-    private Cart cart;
+    Cart cart;
 
     @ManyToOne
     @JoinColumn(name = "book_id")
-    private Book book;
+    Book book;
 
-    private Integer quantity;
+    Integer quantity;
 
     @Column(precision = 19, scale = 2)
-    private BigDecimal price;
+    BigDecimal price;
 }

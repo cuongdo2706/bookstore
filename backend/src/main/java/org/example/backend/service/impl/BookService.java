@@ -3,6 +3,7 @@ package org.example.backend.service.impl;
 import lombok.Builder;
 import org.example.backend.dto.request.BookCreationRequest;
 import org.example.backend.dto.response.BookResponse;
+import org.example.backend.dto.response.PageResponse;
 import org.example.backend.entity.Author;
 import org.example.backend.entity.Book;
 import org.example.backend.entity.Category;
@@ -12,11 +13,15 @@ import org.example.backend.repository.AuthorRepository;
 import org.example.backend.repository.BookRepository;
 import org.example.backend.repository.CategoryRepository;
 import org.example.backend.service.IBookService;
+import org.example.backend.spec.BookSpec;
 import org.example.backend.utility.GenerateCodeUtil;
 import org.example.backend.utility.ImageUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -25,7 +30,8 @@ import java.util.Map;
 
 @Service
 public class BookService implements IBookService {
-    BookMapper bookMapper = new BookMapper();
+    @Autowired
+    private BookMapper bookMapper;
 
     @Autowired
     private BookRepository bookRepository;
@@ -39,25 +45,35 @@ public class BookService implements IBookService {
     @Autowired
     private ImageUtil imageUtil;
 
+
     @Override
     public List<BookResponse> findAll() {
         return bookMapper.toBookResponses(bookRepository.findAll());
     }
 
     @Override
-    public List<BookResponse> findAllPage(Integer page, Integer size) {
-        if (page == null || page < 1) page = 1;
-        if (size == null) size = 10;
-        Pageable pageable = PageRequest.of(page - 1, size);
-        return bookMapper.toBookResponses(bookRepository.findAllPage(pageable).getContent());
+    public PageResponse<BookResponse> findAllPage(Integer page, Integer size) {
+        if (page < 0) page = 0;
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.ASC, "name"));
+        Page<Book> books = bookRepository.findAll(pageable);
+        return new PageResponse<BookResponse>(bookMapper.toBookResponses(books.getContent()), books.getNumber(), books.getSize(), books.getTotalElements(), books.getTotalPages());
     }
 
+
     @Override
-    public List<BookResponse> findByCodeOrName(Integer page, Integer size, String keyword) {
-        if (page == null || page < 1) page = 1;
-        if (size == null) size = 10;
-        Pageable pageable = PageRequest.of(page - 1, size);
-        return bookMapper.toBookResponses(bookRepository.findByCodeOrName(pageable,keyword).getContent());
+    public PageResponse<BookResponse> findByCodeOrNameAndSort(Integer page, Integer size, String keyword, String sortInput) {
+        if (page < 0) page = 0;
+        Specification<Book> spec = BookSpec.findByNameOrCode(keyword);
+        Sort sort = null;
+        switch (sortInput) {
+            case "name-desc" -> sort = Sort.by(Sort.Direction.DESC, "name");
+            case "price-asc" -> sort = Sort.by(Sort.Direction.ASC, "defaultPrice");
+            case "price-desc" -> sort = Sort.by(Sort.Direction.DESC, "defaultPrice");
+            default -> sort = Sort.by(Sort.Direction.ASC, "name");
+        }
+        Pageable pageable = PageRequest.of(page, size, sort);
+        Page<Book> books = bookRepository.findAll(spec, pageable);
+        return new PageResponse<BookResponse>(bookMapper.toBookResponses(books.getContent()), books.getNumber(), books.getSize(), books.getTotalElements(), books.getTotalPages());
     }
 
     @Override

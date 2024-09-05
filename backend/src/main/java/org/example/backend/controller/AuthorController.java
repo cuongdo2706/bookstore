@@ -22,13 +22,17 @@ public class AuthorController {
     @Autowired
     private IAuthorService authorService;
 
+
     @GetMapping
-    List<Author> findPage(@ModelAttribute PageRequest request) {
-        return authorService.findAllPage(request.getPage(), request.getSize());
+    public List<Author> findAll() {
+        return authorService.findAll();
     }
+//    List<Author> findPage(@ModelAttribute PageRequest request) {
+//        return authorService.findAllPage(request.getPage(), request.getSize());
+//    }
 
     @GetMapping("/search")
-    List<Author> findByName(@ModelAttribute PropertySearchRequest request) {
+    public List<Author> findByName(@ModelAttribute PropertySearchRequest request) {
         return authorService.findByName(request.getPage(), request.getSize(), request.getName());
     }
 

@@ -14,18 +14,14 @@ export interface Product {
   isActive:boolean;
   isDeleted: boolean;
   description: string;
-  author: AuthorResponse;
-  category: CategoryResponse;
+  author: {
+    id: number;
+    name: string;
+  };
+  category: {
+    id: number;
+    name: string;
+  };
   createdAt: Date;
   updatedAt: Date;
-}
-
-interface AuthorResponse {
-  id: number;
-  name: string;
-}
-
-interface CategoryResponse {
-  id: number;
-  name: string;
 }

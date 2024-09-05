@@ -11,14 +11,18 @@ import org.example.backend.entity.Category;
 import org.example.backend.exception.DataNotFoundException;
 import org.example.backend.repository.AuthorRepository;
 import org.example.backend.repository.CategoryRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@NoArgsConstructor
+@Component
 public class BookMapper {
-    public Book toBook(BookCreationRequest request,Category existedCategory,Author existedAuthor) throws DataNotFoundException {
+    public Book toBook(BookCreationRequest request, Category existedCategory, Author existedAuthor) throws DataNotFoundException {
         return Book.builder().
                 name(request.getName()).
                 quantity(request.getQuantity()).
@@ -36,6 +40,7 @@ public class BookMapper {
                 author(existedAuthor).
                 build();
     }
+
     public BookResponse toBookResponse(Book book) {
         return new BookResponse(
                 book.getId(),
@@ -52,14 +57,22 @@ public class BookMapper {
                 book.getIsActive(),
                 book.getDescription(),
                 new BookResponse.AuthorResponse(book.getAuthor().getId(), book.getAuthor().getName()),
-                new BookResponse.CategoryResponse(book.getCategory().getId(),book.getCategory().getName()),
+                new BookResponse.CategoryResponse(book.getCategory().getId(), book.getCategory().getName()),
                 book.getCreatedAt(),
                 book.getUpdatedAt()
         );
     }
+
     public List<BookResponse> toBookResponses(List<Book> books) {
         return books.stream()
                 .map(this::toBookResponse)
                 .collect(Collectors.toList());
+    }
+
+    public Page<BookResponse> toBookResponsePage(Page<Book> books) {
+        List<BookResponse> bookResponses = books.stream()
+                .map(this::toBookResponse)
+                .toList();
+        return new PageImpl<>(bookResponses, PageRequest.of(books.getNumber(), books.getSize()), books.getTotalElements());
     }
 }

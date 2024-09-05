@@ -1,9 +1,0 @@
-.hover-effect {
-  transition: transform 0.2s ease, color 0.2s ease; /* Thêm chuyển tiếp mượt mà */
-}
-
-.hover-effect:hover {
-  transform: scale(1.2); /* Phóng to biểu tượng khi hover */
-  color: forestgreen; /* Thay đổi màu biểu tượng khi hover */
-}
-
