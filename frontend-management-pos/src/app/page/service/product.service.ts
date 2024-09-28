@@ -1,9 +1,9 @@
 import {inject, Injectable, signal} from '@angular/core';
 import {HttpClient, HttpParams} from "@angular/common/http";
-import {Product} from "../model/response/product.model";
 import {Observable} from "rxjs";
-import {BookSearchRequest} from "../model/request/BookSearchRequest";
 import {PageResponse} from "../../core/model/page.model";
+import {ProductResponse} from "../model/response/product-response.model";
+import {BookCreationRequest} from "../model/request/BookCreationRequest.model";
 
 @Injectable({
   providedIn: 'root'
@@ -16,7 +16,7 @@ export class ProductService {
     let params = new HttpParams()
       .set("page", page)
       .set("size", size)
-    return this.http.get<PageResponse<Product>>(this.url, {params})
+    return this.http.get<PageResponse<ProductResponse>>(this.url, {params});
   };
 
   searchProducts(page: number, size: number, keyword: string, sort: string) {
@@ -25,12 +25,16 @@ export class ProductService {
       .set("sort", sort)
       .set("page", page)
       .set("size", size)
-    return this.http.get<PageResponse<Product>>(`${this.url}/search`, {params})
+    return this.http.get<PageResponse<ProductResponse>>(`${this.url}/search`, {params});
   }
 
   exportExcel() {
     return this.http.get(`${this.url}/export-excel`, {
       responseType: "blob"
-    })
+    });
+  }
+
+  saveProduct(product: BookCreationRequest) {
+    return this.http.post<ProductResponse>(this.url, product);
   }
 }

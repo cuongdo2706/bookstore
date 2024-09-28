@@ -1,7 +1,6 @@
 package org.example.backend.service.impl;
 
 import jakarta.validation.Valid;
-import org.example.backend.dto.request.PropertyCreationRequest;
 import org.example.backend.entity.Category;
 import org.example.backend.exception.DataNotFoundException;
 import org.example.backend.repository.CategoryRepository;
@@ -46,21 +45,21 @@ public class CategoryService implements ICategoryService {
 
 
     @Override
-    public Category save(@Valid PropertyCreationRequest request) throws Exception {
-        if (categoryRepository.existsByName(request.getName())) {
+    public Category save(String name) throws Exception {
+        if (categoryRepository.existsByName(name)){
             throw new Exception("Username already exists");
         }
         Category newCategory = Category.builder()
-                .name(request.getName())
+                .name(name)
                 .isDeleted(Boolean.FALSE)
                 .build();
         return categoryRepository.save(newCategory);
     }
 
     @Override
-    public Category update(Long id, PropertyCreationRequest request) throws DataNotFoundException {
+    public Category update(Long id, String name) throws DataNotFoundException {
         Category existedCategory = findById(id);
-        existedCategory.setName(request.getName());
+        existedCategory.setName(name);
         return categoryRepository.save(existedCategory);
     }
 

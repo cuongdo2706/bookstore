@@ -20,4 +20,11 @@ public class UploadImageController {
     public ImageResponse uploadImage(@RequestPart("file") MultipartFile file) throws IOException {
         return imageUtil.upload(file);
     }
+
+    @PutMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ImageResponse updateImage(@RequestPart("file") MultipartFile file,
+                                     @RequestParam(name = "publicId") String publicId)
+            throws IOException {
+        return imageUtil.update(publicId, file);
+    }
 }

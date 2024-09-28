@@ -5,17 +5,24 @@
   [visible]="visible()"
   closable="false"
 >
-  <form [formGroup]="saveForm" (ngSubmit)="onSubmit()">
+  <form [formGroup]="saveForm" (ngSubmit)="saveBook()">
     <div class="flex">
       <div class="col-7">
         <p-floatLabel class="mt-3 flex">
-          <input type="text" pInputText id="name" style="width:600px" [formControl]="saveForm.controls.name"/>
+          <input aria-describedby="name-error" type="text" pInputText id="name" style="width:600px"
+                 [formControl]="saveForm.controls.name"/>
           <label for="name">Tên sách</label>
         </p-floatLabel>
+        @if (submitted && saveForm.get('name')?.invalid) {
+          <small class="p-error block mt-1">
+            Tên không được để trống
+          </small>
+        }
         <p-floatLabel class="mt-5 flex">
           <input pInputText id="publisher" style="width:600px" [formControl]="saveForm.controls.publisher"/>
           <label for="publisher">Nhà xuất bản</label>
         </p-floatLabel>
+
         <p-floatLabel class="mt-5 flex">
           <input pInputText id="translator" style="width:600px" [formControl]="saveForm.controls.translator"/>
           <label for="name">Dịch giả</label>
@@ -24,59 +31,143 @@
           <input pInputText id="numOfPages" style="width:600px" [formControl]="saveForm.controls.numOfPages"/>
           <label for="numOfPages">Số trang</label>
         </p-floatLabel>
+        @if (submitted && saveForm.get('numOfPages')?.invalid && saveForm.get('numOfPages')?.value!=null) {
+          <small class="p-error block mt-1">
+            Số trang phải là số và lớn hơn 0
+          </small>
+        }
         <p-floatLabel class="mt-5 flex">
-          <input pInputText id="publishedYear" style="width:600px" [formControl]="saveForm.controls.publishedYear"/>
-          <label for="publishedYear">Năm xuất bản</label>
+          <p-floatLabel>
+            <p-dropdown
+              [style]="{'width':'600px'}"
+              [formControl]="saveForm.controls.publishedYear"
+              [options]="years"
+              [filter]="true"
+              [showClear]="true"
+            />
+            <label>Năm phát hành</label>
+          </p-floatLabel>
         </p-floatLabel>
         <div class="mt-5 flex">
-          <p-dropdown
-            [style]="{'width':'550px'}"
-            [formControl]="saveForm.controls.author"
-            [options]="authors"
-            optionLabel="name"
-            optionValue="id"
-            placeholder="Tác giả"
-            [filter]="true"
-            filterBy="name"
-            [showClear]="true"
-          ></p-dropdown>
-          <p-button class="ml-1" icon="pi pi-plus" [rounded]="true" [text]="true" severity="secondary"/>
+          <p-floatLabel>
+            <p-dropdown
+              [style]="{'width':'550px'}"
+              [formControl]="saveForm.controls.author"
+              [options]="authors"
+              optionLabel="name"
+              optionValue="id"
+              inputId="author"
+              [filter]="true"
+              filterBy="name"
+              [showClear]="true"
+            />
+            <label>Tác giả</label>
+          </p-floatLabel>
+          <p-button (onClick)="saveAuthorForm()" class="ml-1" icon="pi pi-plus" [rounded]="true" [text]="true"
+                    severity="secondary"/>
+          <p-dialog
+            header="Thêm tác giả"
+            [modal]="true"
+            [(visible)]="authorVisible"
+            [closable]="false"
+          >
+            <form [formGroup]="authorInput" (ngSubmit)="saveAuthor(authorInput.value)">
+              <div class="flex align-items-center gap-3 mb-3 mt-2">
+                <label for="authorName" class="font-semibold w-6rem">Tên</label>
+                <input pInputText id="authorName" [formControl]="authorInput.controls.name" class="flex-auto"/>
+              </div>
+              <div class="flex justify-content-end gap-2 mt-4">
+                <p-button label="Save" type="submit"/>
+                <p-button label="Cancel" severity="secondary" (onClick)="authorVisible = false"/>
+              </div>
+            </form>
+          </p-dialog>
         </div>
-        <div class="mt-5 flex">
-          <p-dropdown
-            [style]="{'width':'550px'}"
-            [formControl]="saveForm.controls.category"
-            [options]="categories"
-            optionLabel="name"
-            optionValue="id"
-            placeholder="Thể loại"
-            [filter]="true"
-            filterBy="name"
-            [showClear]="true"
-          ></p-dropdown>
-          <p-button class="ml-1" icon="pi pi-plus" [rounded]="true" [text]="true" severity="secondary"/>
-        </div>
+        @if (submitted && saveForm.get('author')?.invalid) {
+          <small class="p-error block mt-1">
+            Tác giả phải được chọn
+          </small>
+        }
 
+        <div class="mt-5 flex">
+          <p-floatLabel>
+            <p-dropdown
+              [style]="{'width':'550px'}"
+              [formControl]="saveForm.controls.category"
+              [options]="categories"
+              optionLabel="name"
+              optionValue="id"
+              inputId="category"
+              [filter]="true"
+              filterBy="name"
+              [showClear]="true"/>
+            <label>Danh mục</label>
+          </p-floatLabel>
+
+          <p-button (onClick)="saveCategoryForm()" class="ml-1" icon="pi pi-plus" [rounded]="true" [text]="true"
+                    severity="secondary"/>
+          <p-dialog
+            header="Thêm thể loại"
+            [modal]="true"
+            [(visible)]="categoryVisible"
+            [closable]="false"
+          >
+            <form [formGroup]="categoryInput" (ngSubmit)="saveCategory(categoryInput.value)">
+              <div class="flex align-items-center gap-3 mb-3 mt-2">
+                <label for="categoryName" class="font-semibold w-6rem">Tên</label>
+                <input pInputText [formControl]="categoryInput.controls.name" id="categoryName" class="flex-auto"/>
+              </div>
+              <div class="flex justify-content-end gap-2 mt-4">
+                <p-button label="Save" type="submit"/>
+                <p-button label="Cancel" severity="secondary" (onClick)="categoryVisible = false"/>
+              </div>
+            </form>
+          </p-dialog>
+        </div>
+        @if (submitted && saveForm.get('category')?.invalid) {
+          <small class="p-error block mt-1">
+            Danh mục phải được chọn
+          </small>
+        }
       </div>
       <div class="col-5">
         <p-floatLabel class="mt-3 flex">
           <input pInputText id="quantity" style="width:450px" [formControl]="saveForm.controls.quantity"/>
           <label for="quantity">Số lượng</label>
         </p-floatLabel>
+        @if (submitted && saveForm.get('quantity')?.invalid) {
+          <small class="p-error block mt-1">
+            Số lượng phải là số và lớn hơn hoặc bằng 0
+          </small>
+        }
         <p-floatLabel class="mt-5 flex">
           <input pInputText id="defaultPrice" style="width:450px" [formControl]="saveForm.controls.defaultPrice"/>
           <label for="defaultPrice">Giá gốc</label>
         </p-floatLabel>
+        @if (submitted && saveForm.get('defaultPrice')?.invalid) {
+          <small class="p-error block mt-1">
+            Giá phải là số và lớn hơn 0
+          </small>
+        }
         <p-floatLabel class="mt-5 flex">
           <input pInputText id="sellPrice" style="width:450px" [formControl]="saveForm.controls.sellPrice"/>
           <label for="sellPrice">Giá bán</label>
         </p-floatLabel>
+        @if (submitted && saveForm.get('sellPrice')?.invalid) {
+          <small class="p-error block mt-1">
+            Giá phải là số và lớn hơn 0
+          </small>
+        }
+        <div class="mt-5 pb-0 flex">
+          <p class="mt-2">Đăng bán</p>
+          <p-inputSwitch class="ml-3 pt-1" [formControl]="saveForm.controls.isActive"></p-inputSwitch>
+        </div>
         <p-floatLabel class="mt-5 flex">
           <textarea
             [formControl]="saveForm.controls.description"
             [style]="{'width':'450px'}"
             id="description"
-            rows="13"
+            rows="10"
             pInputTextarea
           ></textarea>
           <label for="description">Mô tả</label>
@@ -84,21 +175,26 @@
       </div>
     </div>
     <div class="flex">
-      <p-fileUpload
-        [multiple]="false"
-        accept="image/*"
-        maxFileSize="1000000"
-        [showUploadButton]="false"
-        [showCancelButton]="false"
-        chooseLabel="Chọn ảnh"
-        mode="advanced"
-        (onSelect)="chooseImage($event)"
-        
-      ></p-fileUpload>
+      <div class="col-7">
+        <p-fileUpload
+          (onSelect)="chooseImage($event)"
+          (onRemove)="removeImage()"
+          [multiple]="false"
+          accept="image/*"
+          maxFileSize="5242880"
+          [showCancelButton]="false"
+          [showUploadButton]="false"
+          fileLimit="1"
+          chooseLabel="Chọn ảnh">
+        </p-fileUpload>
+      </div>
+
+      <div class="flex pt-2 col-5 justify-content-end">
+        <p-button class="mr-3" type="submit" label="Thêm mới"></p-button>
+        <p-button severity="secondary" label="Bỏ qua" (onClick)="closeDialog()"></p-button>
+      </div>
     </div>
-    <div class="flex mt-2 justify-content-end">
-      <p-button class="mr-2" label="Bỏ qua" (onClick)="closeDialog()"></p-button>
-      <p-button type="submit" label="Thêm mới"></p-button>
-    </div>
+
   </form>
 </p-dialog>
+<p-toast></p-toast>

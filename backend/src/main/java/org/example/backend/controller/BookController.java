@@ -65,7 +65,7 @@ public class BookController {
     }
 
     @PostMapping
-    public Book createBook(@Valid @ModelAttribute BookCreationRequest request) throws IOException, DataNotFoundException {
+    public Book createBook(@RequestBody BookCreationRequest request) throws IOException, DataNotFoundException {
         return bookService.save(request);
     }
 

@@ -1,5 +1,6 @@
 package org.example.backend.dto.request;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -14,15 +15,21 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class BookCreationRequest {
+
     @NotBlank(message = "Name is required")
     String name;
     @PositiveOrZero(message = "Quantity must be greater than 0")
     Integer quantity;
+    @JsonProperty("publicId")
     String publicId;
-    String url;
+    @JsonProperty("imgUrl")
+    String imgUrl;
     @DecimalMin(value = "1.0", message = "Price must be greater than 0")
     @NotNull(message = "Price is required")
     BigDecimal defaultPrice;
+    @DecimalMin(value = "1.0", message = "Price must be greater than 0")
+    @NotNull(message = "Price is required")
+    BigDecimal sellPrice;
     String publisher;
     String translator;
     Integer numOfPages;

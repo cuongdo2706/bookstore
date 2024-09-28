@@ -1,6 +1,5 @@
 package org.example.backend.service.impl;
 
-import org.example.backend.dto.request.PropertyCreationRequest;
 import org.example.backend.entity.Author;
 import org.example.backend.exception.DataNotFoundException;
 import org.example.backend.repository.AuthorRepository;
@@ -46,21 +45,21 @@ public class AuthorService implements IAuthorService {
     }
 
     @Override
-    public Author save(PropertyCreationRequest request) throws Exception {
-        if (authorRepository.existsByName(request.getName())){
+    public Author save(String name) throws Exception {
+        if (authorRepository.existsByName(name)){
             throw new Exception("Author already exists");
         }
         Author author = Author.builder()
-                .name(request.getName())
+                .name(name)
                 .isDeleted(Boolean.FALSE)
                 .build();
         return authorRepository.save(author);
     }
 
     @Override
-    public Author update(Long id, PropertyCreationRequest request) throws DataNotFoundException {
+    public Author update(Long id, String name) throws DataNotFoundException {
         Author existedAuthor=findById(id);
-        existedAuthor.setName(request.getName());
+        existedAuthor.setName(name);
         return authorRepository.save(existedAuthor);
     }
 

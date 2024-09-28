@@ -1,4 +1,4 @@
-export interface Author {
+export interface CategoryResponse {
   id: string;
   name: string;
   isDeleted: boolean;

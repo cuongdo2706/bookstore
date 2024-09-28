@@ -19,14 +19,24 @@ public class ImageUtil {
 
 
     public ImageResponse upload(MultipartFile multipartFile) throws IOException {
-        Map<?, ?> result = cloudinary.uploader().upload(multipartFile.getBytes(), ObjectUtils.emptyMap());
+        Map result = cloudinary.uploader().upload(multipartFile.getBytes(), ObjectUtils.emptyMap());
         String url = (String) result.get("url");
         String publicId = (String) result.get("public_id");
-        return new ImageResponse(url, publicId);
+        return new ImageResponse(publicId, url);
+    }
+
+    public ImageResponse update(String publicIdExisted, MultipartFile multipartFile) throws IOException {
+        Map result = cloudinary.uploader().upload(multipartFile.getBytes(), ObjectUtils.asMap(
+                "public_id", publicIdExisted,
+                "overwrite", true
+        ));
+        String url = (String) result.get("url");
+        String publicId = (String) result.get("public_id");
+        return new ImageResponse(publicId, url);
     }
 
 
-    public void delete(String imgId) throws IOException {
-        cloudinary.uploader().destroy(imgId, ObjectUtils.emptyMap());
+    public void delete(String publicId) throws IOException {
+        cloudinary.uploader().destroy(publicId, ObjectUtils.emptyMap());
     }
 }

@@ -2,7 +2,6 @@ package org.example.backend.controller;
 
 import jakarta.annotation.security.PermitAll;
 import org.example.backend.dto.request.PageRequest;
-import org.example.backend.dto.request.PropertyCreationRequest;
 import org.example.backend.dto.request.PropertySearchRequest;
 import org.example.backend.entity.Author;
 import org.example.backend.exception.DataNotFoundException;
@@ -42,13 +41,13 @@ public class AuthorController {
     }
 
     @PostMapping
-    public Author save(@RequestBody PropertyCreationRequest request) throws Exception {
-        return authorService.save(request);
+    public Author save(@RequestParam(name = "name") String name) throws Exception {
+        return authorService.save(name);
     }
 
     @PutMapping("/{id}")
-    public Author update(@PathVariable Long id, @RequestBody PropertyCreationRequest request) throws DataNotFoundException {
-        return authorService.update(id, request);
+    public Author update(@PathVariable Long id, @RequestBody String name) throws DataNotFoundException {
+        return authorService.update(id, name);
     }
 
     @DeleteMapping("/{id}")

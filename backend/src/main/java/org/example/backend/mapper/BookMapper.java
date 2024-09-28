@@ -11,6 +11,7 @@ import org.example.backend.entity.Category;
 import org.example.backend.exception.DataNotFoundException;
 import org.example.backend.repository.AuthorRepository;
 import org.example.backend.repository.CategoryRepository;
+import org.example.backend.utility.GenerateCodeUtil;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -24,18 +25,20 @@ import java.util.stream.Collectors;
 public class BookMapper {
     public Book toBook(BookCreationRequest request, Category existedCategory, Author existedAuthor) throws DataNotFoundException {
         return Book.builder().
+                code(GenerateCodeUtil.generateProductCode()).
                 name(request.getName()).
                 quantity(request.getQuantity()).
                 publicId(request.getPublicId()).
-                imgUrl(request.getUrl()).
+                imgUrl(request.getImgUrl()).
                 defaultPrice(request.getDefaultPrice()).
-                sellPrice(request.getDefaultPrice()).
+                sellPrice(request.getSellPrice()).
                 publisher(request.getPublisher()).
                 translator(request.getTranslator()).
                 numOfPages(request.getNumOfPages()).
                 publishedYear(request.getPublishedYear()).
                 description(request.getDescription()).
-                isActive(request.getIsActive()).
+                isActive(true).
+                isDeleted(false).
                 category(existedCategory).
                 author(existedAuthor).
                 build();

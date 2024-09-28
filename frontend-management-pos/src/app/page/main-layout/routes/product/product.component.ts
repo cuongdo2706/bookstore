@@ -2,7 +2,6 @@ import {Component, inject, OnInit, Signal, viewChild} from '@angular/core';
 import {CardModule} from "primeng/card";
 import {TableLazyLoadEvent, TableModule} from "primeng/table";
 import {ProductService} from "../../../service/product.service";
-import {Product} from "../../../model/response/product.model";
 import {CheckboxModule} from "primeng/checkbox";
 import {ToastModule} from "primeng/toast";
 import {ButtonModule} from "primeng/button";
@@ -16,6 +15,8 @@ import {Paginator, PaginatorModule, PaginatorState} from "primeng/paginator";
 import {DecimalPipe} from "@angular/common";
 import {DialogModule} from "primeng/dialog";
 import {SaveFormComponent} from "./save-form/save-form.component";
+import {ProductResponse} from "../../../model/response/product-response.model";
+import {FileUploadComponent} from "../../../../shared/file-upload/file-upload.component";
 
 @Component({
   selector: 'app-product',
@@ -35,14 +36,15 @@ import {SaveFormComponent} from "./save-form/save-form.component";
     PaginatorModule,
     DecimalPipe,
     DialogModule,
-    SaveFormComponent
+    SaveFormComponent,
+    FileUploadComponent
   ],
   templateUrl: './product.component.html',
   styleUrl: './product.component.css'
 })
 export class ProductComponent implements OnInit {
   private productService = inject(ProductService);
-  products!: Product[];
+  products!: ProductResponse[];
   selectedProductIds!: number[];
   keyword: string = "";
   filterSelection: string = "name-asc";
@@ -62,10 +64,11 @@ export class ProductComponent implements OnInit {
 
 
   ngOnInit() {
+    this.onFetchProducts()
   }
 
-  onFetchProducts(event: TableLazyLoadEvent) {
-    this.productService.fetchProducts(this.page, this.size).subscribe({
+  onFetchProducts() {
+    this.productService.fetchProducts(0, 10).subscribe({
         next: res => {
           this.products = res.content;
           this.totalElements = res.totalElements
@@ -133,4 +136,8 @@ export class ProductComponent implements OnInit {
     this.saveFormVisible = true;
   }
 
+  onSaveForm(event: any) {
+    this.products = event.content;
+    this.totalElements = event.totalElements;
+  }
 }

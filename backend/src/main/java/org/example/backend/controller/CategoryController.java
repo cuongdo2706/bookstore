@@ -1,7 +1,5 @@
 package org.example.backend.controller;
 
-import org.example.backend.dto.request.PageRequest;
-import org.example.backend.dto.request.PropertyCreationRequest;
 import org.example.backend.dto.request.PropertySearchRequest;
 import org.example.backend.entity.Category;
 import org.example.backend.exception.DataNotFoundException;
@@ -38,13 +36,13 @@ public class CategoryController {
     }
 
     @PostMapping
-    public Category save(@RequestBody PropertyCreationRequest request) throws Exception {
-        return categoryService.save(request);
+    public Category save(@RequestParam(name = "name") String name) throws Exception {
+        return categoryService.save(name);
     }
 
     @PutMapping("/{id}")
-    public Category update(@PathVariable Long id, @RequestBody PropertyCreationRequest request) throws DataNotFoundException {
-        return categoryService.update(id, request);
+    public Category update(@PathVariable Long id, @RequestBody String name) throws DataNotFoundException {
+        return categoryService.update(id, name);
     }
 
     @DeleteMapping("/{id}")
