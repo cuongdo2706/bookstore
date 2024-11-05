@@ -1,6 +1,7 @@
 package org.example.backend.service;
 
 import org.example.backend.entity.Category;
+import org.example.backend.exception.DataExistedException;
 import org.example.backend.exception.DataNotFoundException;
 
 
@@ -15,9 +16,9 @@ public interface ICategoryService {
 
     List<Category>findByName(Integer page,Integer size, String name);
 
-    Category save(String name) throws Exception;
+    Category save(String name) throws DataExistedException;
 
     Category update(Long id, String name) throws DataNotFoundException;
 
-    String delete(Long id) throws DataNotFoundException;
+    void delete(Long id) throws DataNotFoundException;
 }

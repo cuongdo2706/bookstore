@@ -20,7 +20,7 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class Customer {
+public class Customer extends BaseEntity  {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
@@ -42,8 +42,7 @@ public class Customer {
 
     String status;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "user_id")
+    @OneToOne(mappedBy = "customer")
     User user;
 
     @OneToOne(cascade = CascadeType.ALL)
@@ -58,14 +57,4 @@ public class Customer {
 
     @Column(name = "is_deleted", columnDefinition = "boolean default false")
     Boolean isDeleted;
-
-    @CreationTimestamp
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "created_at")
-    LocalDateTime createdAt;
-
-    @UpdateTimestamp
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "updated_at")
-    LocalDateTime updatedAt;
 }

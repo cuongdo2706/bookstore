@@ -2,6 +2,7 @@ package org.example.backend.service.impl;
 
 import jakarta.validation.Valid;
 import org.example.backend.entity.Category;
+import org.example.backend.exception.DataExistedException;
 import org.example.backend.exception.DataNotFoundException;
 import org.example.backend.repository.CategoryRepository;
 import org.example.backend.service.ICategoryService;
@@ -32,7 +33,7 @@ public class CategoryService implements ICategoryService {
 
     @Override
     public Category findById(Long id) throws DataNotFoundException {
-        return categoryRepository.findById(id).orElseThrow(() -> new DataNotFoundException("category not found: " + id));
+        return categoryRepository.findById(id).orElseThrow(() -> new DataNotFoundException("Category not found: " + id));
     }
 
     @Override
@@ -45,9 +46,9 @@ public class CategoryService implements ICategoryService {
 
 
     @Override
-    public Category save(String name) throws Exception {
+    public Category save(String name) {
         if (categoryRepository.existsByName(name)){
-            throw new Exception("Username already exists");
+            throw new DataExistedException("Category is already existed");
         }
         Category newCategory = Category.builder()
                 .name(name)
@@ -64,11 +65,8 @@ public class CategoryService implements ICategoryService {
     }
 
     @Override
-    public String delete(Long id) throws DataNotFoundException {
+    public void delete(Long id) throws DataNotFoundException {
         Category existedCategory = findById(id);
         existedCategory.setIsDeleted(true);
-        return "Delete succeed";
     }
-
-
 }

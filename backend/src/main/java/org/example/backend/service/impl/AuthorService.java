@@ -2,10 +2,10 @@ package org.example.backend.service.impl;
 
 import org.example.backend.entity.Author;
 import org.example.backend.exception.DataNotFoundException;
+import org.example.backend.exception.DataExistedException;
 import org.example.backend.repository.AuthorRepository;
 import org.example.backend.service.IAuthorService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -33,7 +33,7 @@ public class AuthorService implements IAuthorService {
 
     @Override
     public Author findById(Long id) throws DataNotFoundException {
-        return authorRepository.findById(id).orElseThrow(()->new DataNotFoundException("author not found: "+id));
+        return authorRepository.findById(id).orElseThrow(()->new DataNotFoundException("Author not found: "+id));
     }
 
     @Override
@@ -45,9 +45,9 @@ public class AuthorService implements IAuthorService {
     }
 
     @Override
-    public Author save(String name) throws Exception {
+    public Author save(String name) {
         if (authorRepository.existsByName(name)){
-            throw new Exception("Author already exists");
+            throw new DataExistedException("Author is already existed");
         }
         Author author = Author.builder()
                 .name(name)
@@ -64,9 +64,8 @@ public class AuthorService implements IAuthorService {
     }
 
     @Override
-    public String delete(Long id) throws DataNotFoundException {
+    public void delete(Long id) throws DataNotFoundException {
         Author existedAuthor=findById(id);
         existedAuthor.setIsDeleted(true);
-        return "Delete succeed";
     }
 }

@@ -47,7 +47,7 @@ public class ExcelUtil {
                 row.createCell(1).setCellValue(p.name());
                 row.createCell(2).setCellValue(p.imgUrl());
                 row.createCell(3).setCellValue(p.quantity());
-                row.createCell(4).setCellValue(String.valueOf(p.defaultPrice()));
+                row.createCell(4).setCellValue(String.valueOf(p.price()));
                 row.createCell(5).setCellValue(String.valueOf(p.sellPrice()));
                 row.createCell(6).setCellValue(p.publisher());
                 row.createCell(7).setCellValue(p.translator());

@@ -1,13 +1,8 @@
 package org.example.backend.spec;
 
-import jakarta.persistence.criteria.CriteriaBuilder;
-import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Predicate;
-import jakarta.persistence.criteria.Root;
-import lombok.NoArgsConstructor;
 import org.example.backend.entity.Book;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.stereotype.Component;
 
 
 public class BookSpec {

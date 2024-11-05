@@ -4,7 +4,10 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
@@ -12,48 +15,38 @@ import java.security.Key;
 import java.security.SecureRandom;
 import java.util.Base64;
 import java.util.Date;
+import java.util.Objects;
 
 @Component
 public class JwtTokenProvider {
-    private String jwtSecret = generateSecretKey();
-    private long jwtExpirationDate = 3600000;
-
-    public String generateSecretKey() {
-        // length means (32 bytes are required for 256-bit key)
-        int length = 32;
-
-        // Create a secure random generator
-        SecureRandom secureRandom = new SecureRandom();
-
-        // Create a byte array to hold the random bytes
-        byte[] keyBytes = new byte[length];
-
-        // Generate the random bytes
-        secureRandom.nextBytes(keyBytes);
-
-        // Encode the key in Base64 format for easier storage and usage
-        return Base64.getEncoder().encodeToString(keyBytes);
-    }
+    @Autowired
+    private Environment env;
 
     private Key key() {
-        return Keys.hmacShaKeyFor(Decoders.BASE64.decode(jwtSecret));
+        return Keys.hmacShaKeyFor(Decoders.BASE64.decode(env.getProperty("jwt.secret-key")));
     }
 
     public String generateToken(Authentication authentication) {
 
         String username = authentication.getName();
         Date currentDate = new Date();
+        long jwtExpirationDate = Long.parseLong(Objects.requireNonNull(env.getProperty("jwt.token.expiration")));
         Date expireDate = new Date(currentDate.getTime() + jwtExpirationDate);
 
         return Jwts.builder()
                 .subject(username)
+                .claim("role", authentication.getAuthorities().stream()
+                        .findFirst()
+                        .map(GrantedAuthority::getAuthority)
+                        .orElse("")
+                )
                 .issuedAt(new Date())
                 .expiration(expireDate)
-                .signWith(key(), SignatureAlgorithm.HS256)
+                .signWith(key())
                 .compact();
     }
 
-    public String getUsername(String token){
+    public String getUsername(String token) {
 
         return Jwts.parser()
                 .verifyWith((SecretKey) key())
@@ -64,12 +57,11 @@ public class JwtTokenProvider {
     }
 
     // validate JWT token
-    public boolean validateToken(String token){
+    public boolean validateToken(String token) {
         Jwts.parser()
                 .verifyWith((SecretKey) key())
                 .build()
-                .parse(token);
+                .parseSignedClaims(token);
         return true;
-
     }
 }

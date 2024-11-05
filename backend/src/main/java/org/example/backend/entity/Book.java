@@ -17,7 +17,7 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "tbl_book")
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class Book {
+public class Book extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
@@ -35,8 +35,8 @@ public class Book {
 
     Integer quantity;
 
-    @Column(name = "default_price", precision = 19, scale = 2)
-    BigDecimal defaultPrice;
+    @Column(name = "price", precision = 19, scale = 2)
+    BigDecimal price;
 
     @Column(name = "sell_price", precision = 19, scale = 2)
     BigDecimal sellPrice;
@@ -62,16 +62,6 @@ public class Book {
     @ManyToOne
     @JoinColumn(name = "id_category")
     Category category;
-
-    @CreationTimestamp
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "created_at")
-    LocalDateTime createdAt;
-
-    @UpdateTimestamp
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "updated_at")
-    LocalDateTime updatedAt;
 
     @Column(name = "is_active", columnDefinition = "boolean default true")
     Boolean isActive;

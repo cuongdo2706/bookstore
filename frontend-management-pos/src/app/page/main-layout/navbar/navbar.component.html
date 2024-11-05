@@ -1,6 +1,51 @@
-<div class="mb-2 pt-2 fixed align-items-center" style="right: 16px;left: 16px;top: 0">
-  <p-menubar>
-      <i class="pi pi-bell m-2 hover-effect"></i>
-      <i class="pi pi-user m-2 hover-effect"></i>
-  </p-menubar >
+<div class = "mb-2 pt-2 fixed align-items-center" style = "right: 16px;left: 16px;top: 0">
+    <p-menubar>
+        <p-button
+	      class="mr-2"
+	      icon="pi pi-bell"
+	      [text]="true"
+	      [rounded]="true"
+	      size="small"
+        ></p-button>
+        <p-button
+	      class="mr-4"
+	      icon="pi pi-user"
+	      [text]="true"
+	      [rounded]="true"
+	      size="small"
+	      (onClick)="confirmSignOut()"
+        ></p-button>
+
+        <p-tieredMenu [model]="items" [popup]="true" appendTo="body"></p-tieredMenu>
+    </p-menubar>
 </div>
+<p-confirmDialog #cd>
+    <ng-template pTemplate="headless" let-message>
+        <div class="flex flex-column align-items-center p-5 surface-overlay border-round">
+	  <div class="border-circle bg-primary inline-flex justify-content-center align-items-center h-6rem w-6rem">
+	      <i class="pi pi-question text-5xl"></i>
+	  </div>
+	  <span class="font-bold text-2xl block mb-2 mt-4">
+                {{ message.header }}
+            </span>
+	  <div class="flex align-items-center gap-2 mt-4">
+	      <button
+		    pButton
+		    label="Đồng ý"
+		    severity="danger"
+		    icon="pi pi-check"
+		    (click)="cd.accept()"
+		    class="w-8rem">
+	      </button>
+	      <button
+		    pButton
+		    label="Bỏ qua"
+		    severity="secondary"
+		    icon="pi pi-times"
+		    (click)="cd.reject()"
+		    class="p-button-outlined w-8rem ">
+	      </button>
+	  </div>
+        </div>
+    </ng-template>
+</p-confirmDialog>

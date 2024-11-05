@@ -10,57 +10,89 @@ import {CustomerComponent} from "./page/main-layout/routes/customer/customer.com
 import {StaffComponent} from "./page/main-layout/routes/staff/staff.component";
 import {DiscountComponent} from "./page/main-layout/routes/discount/discount.component";
 import {VoucherComponent} from "./page/main-layout/routes/voucher/voucher.component";
+import {PageNotFoundComponent} from "./page/main-layout/routes/page-not-found/page-not-found.component";
+import {AuthGuard} from "./core/auth/guard/auth.guard";
+import {LoginGuard} from "./core/auth/guard/login.guard";
 
 export const routes: Routes = [
-  {
-    path: "quan-ly/login",
-    component: LoginComponent
-  },
-  {
-    path: "quan-ly",
-    component: MainLayoutComponent,
-    children: [
-      {
+    {
+        path: "dang-nhap",
+        component: LoginComponent,
+        canActivate:[LoginGuard]
+    },
+    {
         path: "",
-        redirectTo: "thong-ke",
-        pathMatch: "full",
-      },
-      {
-        path: "thong-ke",
-        component: DashboardComponent
-      },
-      {
-        path: "ban-hang",
-        component: PosComponent
-      },
-      {
-        path: "san-pham",
-        component: ProductComponent
-      },
-      {
-        path: "thuoc-tinh",
-        component: CategoryComponent
-      },
-      {
-        path: "hoa-don",
-        component: OrderComponent
-      },
-      {
-        path: "khach-hang",
-        component: CustomerComponent
-      },
-      {
-        path: "nhan-vien",
-        component: StaffComponent
-      },
-      {
-        path:"khuyen-mai",
-        component:DiscountComponent
-      },
-      {
-        path:"ma-giam-gia",
-        component:VoucherComponent
-      }
-    ]
-  }
+        component: MainLayoutComponent,
+        canActivate: [AuthGuard],
+        children: [
+            {
+                path: "",
+                redirectTo: "thong-ke",
+                pathMatch: "full",
+            },
+            {
+                path: "thong-ke",
+                title: "Thống kê",
+                canActivate: [AuthGuard],
+                component: DashboardComponent
+            },
+            {
+                path: "ban-hang",
+                title: "Bán hàng",
+                canActivate: [AuthGuard],
+                component: PosComponent
+            },
+            {
+                path: "san-pham",
+                title: "Sản phẩm",
+                canActivate: [AuthGuard],
+                component: ProductComponent
+            },
+            {
+                path: "thuoc-tinh",
+                title: "Thuộc tính",
+                canActivate: [AuthGuard],
+                component: CategoryComponent
+            },
+            {
+                path: "hoa-don",
+                title: "Hoá đơn",
+                canActivate: [AuthGuard],
+                component: OrderComponent
+            },
+            {
+                path: "khach-hang",
+                title: "Khách hàng",
+                canActivate: [AuthGuard],
+                component: CustomerComponent
+            },
+            {
+                path: "nhan-vien",
+                title: "Nhân viên",
+                canActivate: [AuthGuard],
+                component: StaffComponent
+            },
+            {
+                path: "khuyen-mai",
+                title: "Khuyến mãi",
+                canActivate: [AuthGuard],
+                component: DiscountComponent
+            },
+            {
+                path: "ma-giam-gia",
+                title: "Mã giảm giá",
+                canActivate: [AuthGuard],
+                component: VoucherComponent
+            }
+        ]
+    },
+    {
+        path: "404",
+        component: PageNotFoundComponent
+    },
+    {
+        path: "**",
+        redirectTo: "/404"
+    },
+
 ];

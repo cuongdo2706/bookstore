@@ -20,7 +20,7 @@ import java.util.UUID;
 @Entity
 @Table(name = "tbl_category")
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class Category {
+public class Category extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
@@ -29,14 +29,4 @@ public class Category {
 
     @Column(name = "is_deleted")
     Boolean isDeleted;
-
-    @CreationTimestamp
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "created_at")
-    LocalDateTime createdAt;
-
-    @UpdateTimestamp
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "updated_at")
-    LocalDateTime updatedAt;
 }

@@ -19,7 +19,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class Staff {
+public class Staff extends BaseEntity  {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
@@ -44,8 +44,7 @@ public class Staff {
 
     String status;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "user_id")
+    @OneToOne(mappedBy = "staff")
     User user;
 
     @Column(name = "is_active", columnDefinition = "boolean default true")
@@ -53,14 +52,4 @@ public class Staff {
 
     @Column(name = "is_deleted", columnDefinition = "boolean default false")
     Boolean isDeleted;
-
-    @CreationTimestamp
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "created_at")
-    LocalDateTime createdAt;
-
-    @UpdateTimestamp
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "updated_at")
-    LocalDateTime updatedAt;
 }

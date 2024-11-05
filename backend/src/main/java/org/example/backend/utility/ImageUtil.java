@@ -19,6 +19,7 @@ public class ImageUtil {
 
 
     public ImageResponse upload(MultipartFile multipartFile) throws IOException {
+        if (multipartFile.isEmpty()) return null;
         Map result = cloudinary.uploader().upload(multipartFile.getBytes(), ObjectUtils.emptyMap());
         String url = (String) result.get("url");
         String publicId = (String) result.get("public_id");
@@ -26,6 +27,7 @@ public class ImageUtil {
     }
 
     public ImageResponse update(String publicIdExisted, MultipartFile multipartFile) throws IOException {
+        if (multipartFile.isEmpty()) return null;
         Map result = cloudinary.uploader().upload(multipartFile.getBytes(), ObjectUtils.asMap(
                 "public_id", publicIdExisted,
                 "overwrite", true

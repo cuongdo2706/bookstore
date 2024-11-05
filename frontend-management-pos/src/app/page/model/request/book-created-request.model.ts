@@ -1,10 +1,9 @@
-export interface BookCreationRequest {
+export interface BookCreatedRequest {
   name: string;
-  publicId: string|null;
-  imgUrl: string|null;
+  publicId?: string;
+  imgUrl?: string;
   quantity: number;
-  defaultPrice: number;
-  sellPrice: number;
+  price: number;
   publisher: string|null;
   translator: string|null;
   numOfPages: number|null;

@@ -1,7 +1,7 @@
 package org.example.backend.service.impl;
 
-import lombok.Builder;
-import org.example.backend.dto.request.BookCreationRequest;
+import org.example.backend.dto.request.BookCreatedRequest;
+import org.example.backend.dto.request.BookUpdatedRequest;
 import org.example.backend.dto.response.BookResponse;
 import org.example.backend.dto.response.PageResponse;
 import org.example.backend.entity.Author;
@@ -23,10 +23,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Map;
 
 @Service
 public class BookService implements IBookService {
@@ -54,9 +54,14 @@ public class BookService implements IBookService {
     @Override
     public PageResponse<BookResponse> findAllPage(Integer page, Integer size) {
         if (page < 0) page = 0;
-        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.ASC, "name"));
-        Page<Book> books = bookRepository.findAll(pageable);
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Book> books = bookRepository.findAllPage(pageable);
         return new PageResponse<BookResponse>(bookMapper.toBookResponses(books.getContent()), books.getNumber(), books.getSize(), books.getTotalElements(), books.getTotalPages());
+    }
+
+    @Override
+    public Book findById(Long id) throws DataNotFoundException {
+        return bookRepository.findById(id).orElseThrow(() -> new DataNotFoundException("Book not found"));
     }
 
 
@@ -67,8 +72,8 @@ public class BookService implements IBookService {
         Sort sort = null;
         switch (sortInput) {
             case "name-desc" -> sort = Sort.by(Sort.Direction.DESC, "name");
-            case "price-asc" -> sort = Sort.by(Sort.Direction.ASC, "defaultPrice");
-            case "price-desc" -> sort = Sort.by(Sort.Direction.DESC, "defaultPrice");
+            case "price-asc" -> sort = Sort.by(Sort.Direction.ASC, "sellPrice");
+            case "price-desc" -> sort = Sort.by(Sort.Direction.DESC, "sellPrice");
             default -> sort = Sort.by(Sort.Direction.ASC, "name");
         }
         Pageable pageable = PageRequest.of(page, size, sort);
@@ -77,26 +82,29 @@ public class BookService implements IBookService {
     }
 
     @Override
-    public Book save(BookCreationRequest request) throws DataNotFoundException {
-        Author existAuthor = authorRepository.findById(request.getAuthorId()).orElseThrow(() -> new DataNotFoundException("Author not found"));
-        Category existCategory = categoryRepository.findById(request.getCategoryId()).orElseThrow(() -> new DataNotFoundException("Category not found"));
+    public Book save(BookCreatedRequest request) throws DataNotFoundException {
+        Author existAuthor = authorRepository.findById(request.getAuthorId()).orElseThrow(() -> new RuntimeException("Author not found"));
+        Category existCategory = categoryRepository.findById(request.getCategoryId()).orElseThrow(() -> new RuntimeException("Category not found"));
         String productCode = GenerateCodeUtil.generateProductCode();
         while (bookRepository.existsByCode(productCode)) {
             productCode = GenerateCodeUtil.generateProductCode();
         }
-        Book book = bookMapper.toBook(request, existCategory, existAuthor);
+        Book book = bookMapper.toCreatedBook(request, existCategory, existAuthor);
         return bookRepository.save(book);
     }
 
     @Override
-    public String softDelete(Long id) {
-        bookRepository.softDelete(id);
-        return "Delete successfully!!!";
+    public Book update(Long id, BookUpdatedRequest request) throws IOException, DataNotFoundException {
+        Author existAuthor = authorRepository.findById(request.getAuthorId()).orElseThrow(() -> new RuntimeException("Author not found"));
+        Category existCategory = categoryRepository.findById(request.getCategoryId()).orElseThrow(() -> new RuntimeException("Category not found"));
+        Book existedBook = findById(id);
+        Book updateBook = bookMapper.toUpdatedBook(existedBook, request, existCategory, existAuthor);
+        return bookRepository.save(updateBook);
     }
 
     @Override
-    public String softDeleteByIds(List<Long> ids) {
-        bookRepository.softDeleteByIds(ids);
-        return "Delete successfully!!!";
+    @Transactional
+    public void softDelete(Long id) {
+        bookRepository.softDelete(id);
     }
 }

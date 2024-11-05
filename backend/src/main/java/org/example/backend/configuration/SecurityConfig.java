@@ -3,6 +3,7 @@ package org.example.backend.configuration;
 import lombok.AllArgsConstructor;
 import org.example.backend.jwt.JwtAuthenticationEntryPoint;
 import org.example.backend.jwt.JwtAuthenticationFilter;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -24,6 +25,9 @@ import org.springframework.stereotype.Component;
 @EnableMethodSecurity
 @AllArgsConstructor
 public class SecurityConfig {
+    @Autowired
+    private CustomCorsConfig customCorsConfig;
+
     private UserDetailsService userDetailsService;
 
     private JwtAuthenticationEntryPoint authenticationEntryPoint;
@@ -41,11 +45,14 @@ public class SecurityConfig {
         http.csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests((authorize) -> {
                     authorize.requestMatchers("/auth/**").permitAll();
+                    authorize.requestMatchers(HttpMethod.GET,"/book").authenticated();
                     authorize.anyRequest().permitAll();
 //                    authorize.requestMatchers(HttpMethod.GET, "/author/**").permitAll();
 //                    authorize.requestMatchers(HttpMethod.GET, "/category/**").permitAll();
 //                    authorize.anyRequest().authenticated();
-                }).httpBasic(Customizer.withDefaults());
+                })
+                .cors(c->c.configurationSource(customCorsConfig))
+                .httpBasic(Customizer.withDefaults());
 
         http.exceptionHandling(exception -> exception
                 .authenticationEntryPoint(authenticationEntryPoint));

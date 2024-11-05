@@ -10,5 +10,4 @@ import {MainLayoutComponent} from "./page/main-layout/main-layout.component";
   styleUrl: './app.component.css'
 })
 export class AppComponent {
-  title = 'frontend-management-pos';
 }
