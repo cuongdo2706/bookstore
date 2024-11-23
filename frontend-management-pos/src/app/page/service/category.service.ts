@@ -10,7 +10,7 @@ import {AppConstants} from "../../app.constants";
 export class CategoryService {
 
     private http = inject(HttpClient);
-    private url: string = AppConstants.API_BASE_URL +  "category";
+    private readonly url: string = AppConstants.API_BASE_URL +  "category";
 
     fetchCategories() {
         return this.http.get<ApiResponse<CategoryResponse[]>>(this.url);

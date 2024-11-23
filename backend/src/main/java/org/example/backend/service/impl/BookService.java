@@ -95,8 +95,14 @@ public class BookService implements IBookService {
 
     @Override
     public Book update(Long id, BookUpdatedRequest request) throws IOException, DataNotFoundException {
-        Author existAuthor = authorRepository.findById(request.getAuthorId()).orElseThrow(() -> new RuntimeException("Author not found"));
-        Category existCategory = categoryRepository.findById(request.getCategoryId()).orElseThrow(() -> new RuntimeException("Category not found"));
+        Author existAuthor=null;
+        Category existCategory=null;
+        if (request.getAuthorId()!=null){
+            existAuthor = authorRepository.findById(request.getAuthorId()).orElseThrow(() -> new RuntimeException("Author not found"));
+        }
+        if (request.getCategoryId()!=null){
+            existCategory = categoryRepository.findById(request.getCategoryId()).orElseThrow(() -> new RuntimeException("Category not found"));
+        }
         Book existedBook = findById(id);
         Book updateBook = bookMapper.toUpdatedBook(existedBook, request, existCategory, existAuthor);
         return bookRepository.save(updateBook);

@@ -63,6 +63,7 @@ export class SaveFormComponent implements OnInit {
     authors: AuthorResponse[] = [];
     categories: CategoryResponse[] = [];
     onSave = output<any>();
+    message = output<{}>();
 
     saveForm = this.fb.group({
         name: [null, [Validators.required]],
@@ -126,48 +127,53 @@ export class SaveFormComponent implements OnInit {
         this.submitted = true;
         if (this.saveForm.valid) {
             let fileReq: File | null = this.saveForm.controls.imgFile.value;
+            console.log(!fileReq);
             let bookReq: BookCreatedRequest = {
                 name: this.saveForm.controls.name.value!,
                 quantity: this.saveForm.controls.quantity.value!,
                 price: this.saveForm.controls.price.value!,
-                publisher: this.saveForm.controls.publisher.value,
-                translator: this.saveForm.controls.translator.value,
-                numOfPages: this.saveForm.controls.numOfPages.value,
-                publishedYear: this.saveForm.controls.publishedYear.value,
+                ...(this.saveForm.controls.publisher.value != null ?
+                    {publisher: this.saveForm.controls.publisher.value} : null),
+                ...(this.saveForm.controls.translator.value != null ?
+                    {translator: this.saveForm.controls.translator.value} : null),
+                ...(this.saveForm.controls.numOfPages.value != null ?
+                    {numOfPages: this.saveForm.controls.numOfPages.value} : null),
+                ...(this.saveForm.controls.publishedYear.value != null ?
+                    {publishedYear: this.saveForm.controls.publishedYear.value} : null),
                 isActive: true,
-                description: this.saveForm.controls.description.value,
+                ...(this.saveForm.controls.description.value != null ?
+                    {description: this.saveForm.controls.description.value} : null),
                 authorId: this.saveForm.controls.author.value!,
                 categoryId: this.saveForm.controls.category.value!,
-                ...(!fileReq && await this.uploadImage(fileReq!))
+                ...(fileReq !== null && await this.uploadImage(fileReq!))
             };
+            console.log(bookReq);
             await firstValueFrom(this.productService.saveProduct(bookReq));
-            this.messageService.add({
-                severity: "success",
-                summary: "Thành công",
-                detail: "Thêm sản phẩm mới thành công!!!"
-            });
-            this.onFetchProduct();
-            this.visible.set(false);
+            await firstValueFrom(this.productService.fetchProducts(0, 10))
+                .then(res => {
+                    this.onSave.emit(res.data);
+                    this.message.emit(
+                        {
+                            severity: "success",
+                            summary: "Thành công",
+                            detail: "Thêm sản phẩm mới thành công!!!"
+                        }
+                    );
+                });
             this.saveForm.reset();
             this.saveForm.patchValue({isActive: true});
             this.submitted = false;
+            this.visible.set(false);
         } else {
             this.messageService.add({
                 severity: "error",
                 summary: "Lỗi",
                 detail: "Dữ liệu nhập vào không đúng yêu cầu, hãy nhập lại!!!"
             });
+            this.visible.set(false);
         }
     }
 
-    onFetchProduct() {
-        this.productService.fetchProducts(0, 10).subscribe({
-                next: res => {
-                    this.onSave.emit(res);
-                }
-            }
-        );
-    }
 
     saveCategoryForm() {
         this.categoryVisible = true;

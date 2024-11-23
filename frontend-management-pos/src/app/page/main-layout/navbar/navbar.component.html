@@ -34,7 +34,7 @@
 		    label="Đồng ý"
 		    severity="danger"
 		    icon="pi pi-check"
-		    (click)="cd.accept()"
+		    (click)="cd.onAccept()"
 		    class="w-8rem">
 	      </button>
 	      <button
@@ -42,7 +42,7 @@
 		    label="Bỏ qua"
 		    severity="secondary"
 		    icon="pi pi-times"
-		    (click)="cd.reject()"
+		    (click)="cd.onReject()"
 		    class="p-button-outlined w-8rem ">
 	      </button>
 	  </div>

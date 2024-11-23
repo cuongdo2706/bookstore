@@ -12,7 +12,7 @@ import {AppConstants} from "../../../app.constants";
     providedIn: 'root'
 })
 export class AuthService {
-    private url = AppConstants.API_BASE_URL + "auth";
+    private readonly url = AppConstants.API_BASE_URL + "auth";
     private http = inject(HttpClient);
     private router = inject(Router);
     private jwtHelper = inject(JwtHelperService);

@@ -8,7 +8,7 @@ import {AppConstants} from "../../app.constants";
 })
 export class UploadImageService {
     private http = inject(HttpClient);
-    private url: string = AppConstants.API_BASE_URL + "upload";
+    private readonly url: string = AppConstants.API_BASE_URL + "upload";
 
     uploadImage(file: File) {
         const formData = new FormData();

@@ -59,7 +59,7 @@ public class BookController {
     @GetMapping("/export-excel")
     public ResponseEntity<Resource> exportExcel() {
         List<BookResponse> list = bookService.findAll();
-        ByteArrayInputStream bais = excelUtil.exportExcel(list);
+        ByteArrayInputStream bais = excelUtil.exportBookExcel(list);
         HttpHeaders headers = new HttpHeaders();
         headers.add("Content-Disposition", "attachment; filename=Danh-sach-san-pham.xlsx");
         return ResponseEntity.ok()

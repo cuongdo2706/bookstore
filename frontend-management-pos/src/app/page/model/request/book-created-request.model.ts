@@ -4,12 +4,12 @@ export interface BookCreatedRequest {
   imgUrl?: string;
   quantity: number;
   price: number;
-  publisher: string|null;
-  translator: string|null;
-  numOfPages: number|null;
-  publishedYear: number|null;
+  publisher?: string;
+  translator?: string;
+  numOfPages?: number;
+  publishedYear?: number;
   isActive:boolean;
-  description: string|null;
+  description?: string;
   authorId: number;
   categoryId: number;
 }

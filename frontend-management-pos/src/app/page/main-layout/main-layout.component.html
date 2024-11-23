@@ -1,21 +1,17 @@
 <!doctype html>
-<html lang="en">
+<html lang = "en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport"
-        content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-  <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>Document</title>
+    <meta charset = "UTF-8">
+    <meta name = "viewport"
+	content = "width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv = "X-UA-Compatible" content = "ie=edge">
+    <title>Document</title>
 </head>
 <body>
 <app-navbar></app-navbar>
-<div class="flex flex-row">
-  <app-sidebar></app-sidebar>
-  <p-card [style]="{top:'82px',bottom:'10px',right:'16px',left:'235px',position:'fixed'}">
-    <p-scrollPanel [style]="{ width: '100%', height: '700px' }">
-      <router-outlet></router-outlet>
-    </p-scrollPanel>
-  </p-card>
+<div class = "flex flex-row">
+    <app-sidebar></app-sidebar>
+    <router-outlet></router-outlet>
 </div>
 </body>
 </html>

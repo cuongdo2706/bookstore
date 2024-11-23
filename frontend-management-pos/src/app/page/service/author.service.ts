@@ -10,8 +10,7 @@ import {AppConstants} from "../../app.constants";
 export class AuthorService {
 
     private http = inject(HttpClient);
-    private url: string = AppConstants.API_BASE_URL + "author";
-
+    private readonly url: string = AppConstants.API_BASE_URL + "author";
     fetchAuthors() {
         return this.http.get<ApiResponse<AuthorResponse[]>>(this.url);
     }

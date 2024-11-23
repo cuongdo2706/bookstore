@@ -53,7 +53,7 @@ public class BookMapper {
         return book;
     }
 
-    public Book toUpdatedBook(Book existedBook, BookUpdatedRequest request, Category existedCategory, Author existedAuthor) throws DataNotFoundException {
+    public Book toUpdatedBook(Book existedBook, BookUpdatedRequest request, Category existedCategory, Author existedAuthor) {
         if (request.getName() != null) {
             existedBook.setName(request.getName());
         }
@@ -122,7 +122,7 @@ public class BookMapper {
                 .collect(Collectors.toList());
     }
 
-    public Page<BookResponse> toBookResponsePage(Page<Book> books) {
+    public Page<BookResponse> toBookPageResponse(Page<Book> books) {
         List<BookResponse> bookResponses = books.stream()
                 .map(this::toBookResponse)
                 .toList();

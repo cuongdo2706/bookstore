@@ -23,6 +23,7 @@ import {firstValueFrom} from "rxjs";
 import {UpdateFormComponent} from "./update-form/update-form.component";
 import {AuthService} from "../../../../core/auth/service/auth.service";
 import {AppConstants} from "../../../../app.constants";
+import {PageResponse} from "../../../model/response/page-response.model";
 
 @Component({
     selector: 'app-product',
@@ -73,7 +74,7 @@ export class ProductComponent implements OnInit {
     paginator = viewChild<Paginator>('paginator');
     saveFormVisible: boolean = false;
     updateFormVisible: boolean = false;
-    updateId: number | null = null;
+    updateId!: number;
     baseImg = AppConstants.BASE_IMAGE;
 
 
@@ -94,19 +95,23 @@ export class ProductComponent implements OnInit {
 
     searchKeyword() {
         const paginator = this.paginator();
-        this.productService.searchProducts(0, this.size, this.keyword, this.filterSelection).subscribe({
-                next: res => {
-                    this.products = res.data.content;
-                    this.totalElements = res.data.totalElements;
-                    if (paginator) {
-                        paginator.changePage(0);
+        setTimeout(() => {
+            this.productService.searchProducts(0, this.size, this.keyword, this.filterSelection).subscribe({
+                    next: res => {
+                        this.products = res.data.content;
+                        this.totalElements = res.data.totalElements;
+                        if (paginator) {
+                            paginator.changePage(0);
+                        }
                     }
                 }
-            }
-        );
+            );
+        }, 500);
+
     }
 
     exportExcel() {
+
         this.productService.exportExcel().subscribe({
             next: (response: Blob) => {
                 const blob = new Blob([response], {type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'});
@@ -149,9 +154,13 @@ export class ProductComponent implements OnInit {
         this.saveFormVisible = true;
     }
 
-    onSaveForm(event: any) {
+    onSaveForm(event: PageResponse<ProductResponse>) {
         this.products = event.content;
         this.totalElements = event.totalElements;
+    }
+
+    saveMessage(event: {}) {
+        this.messageService.add(event);
     }
 
 
@@ -162,7 +171,6 @@ export class ProductComponent implements OnInit {
                 await firstValueFrom(this.productService.deleteProduct(id));
 
                 this.messageService.add({
-                    key: 'deleteToast',
                     severity: 'error',
                     summary: 'Xác nhận',
                     detail: 'Xoá thành công'
@@ -180,5 +188,14 @@ export class ProductComponent implements OnInit {
     showUpdateDialog(id: number) {
         this.updateFormVisible = true;
         this.updateId = id;
+    }
+
+    onUpdateForm(event: PageResponse<ProductResponse>) {
+        this.products = event.content;
+        this.totalElements = event.totalElements;
+    }
+
+    updateMessage(event: {}) {
+        this.messageService.add(event);
     }
 }

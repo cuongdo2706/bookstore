@@ -1,4 +1,4 @@
-import {Component, effect, inject, input, model, OnInit, output} from '@angular/core';
+import {Component, DestroyRef, effect, inject, input, model, OnDestroy, OnInit, output} from '@angular/core';
 import {DialogModule} from "primeng/dialog";
 import {FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators} from "@angular/forms";
 import {ProductService} from "../../../../service/product.service";
@@ -18,9 +18,11 @@ import {InputTextareaModule} from "primeng/inputtextarea";
 import {FileUploadModule} from "primeng/fileupload";
 import {ImageModule} from "primeng/image";
 import {ToastModule} from "primeng/toast";
-import {lastValueFrom} from "rxjs";
+import {firstValueFrom, lastValueFrom} from "rxjs";
 import {AppConstants} from "../../../../../app.constants";
 import {BookUpdatedRequest} from "../../../../model/request/book-updated-request.model";
+import {ImageResponse} from "../../../../model/response/image-response.model";
+import {PageResponse} from "../../../../model/response/page-response.model";
 
 @Component({
     selector: 'app-update-form',
@@ -53,11 +55,12 @@ export class UpdateFormComponent implements OnInit {
         this.getListYears();
     }
 
-    defaultData!: ProductResponse;
+    private defaultData!: ProductResponse;
     imageUrl!: string;
     publicId!: string | null;
     years: number[] = [];
     submitted = false;
+    private messageService = inject(MessageService);
     private fb = inject(FormBuilder);
     private productService = inject(ProductService);
     private categoryService = inject(CategoryService);
@@ -68,8 +71,9 @@ export class UpdateFormComponent implements OnInit {
     categoryVisible = false;
     authorVisible = false;
     visible = model(false);
-    onUpdate = output<any>();
-    updateId = input<number | null>(null);
+    message = output<{}>();
+    onUpdate = output<PageResponse<ProductResponse>>();
+    updateId = input<number>();
     updateForm = this.fb.group({
         name: this.fb.control<string | null>(null, [Validators.required]),
         imgFile: null,
@@ -92,16 +96,66 @@ export class UpdateFormComponent implements OnInit {
         name: ['', Validators.required]
     });
 
+    async uploadImage(file: File): Promise<ImageResponse> {
+        return await lastValueFrom(this.uploadImageService.uploadImage(file));
+    }
+
+    async updateImage(file: File, publicId: string): Promise<ImageResponse> {
+        return await lastValueFrom(this.uploadImageService.updateImage(file, publicId));
+    }
 
     async updateBook() {
         this.submitted = true;
         if (this.updateForm.valid) {
             let fileReq: File | null = this.updateForm.controls.imgFile.value;
             let bookReq: BookUpdatedRequest = {
-                ...(this.updateForm.controls.name.value !== this.defaultData.name ? {name: this.updateForm.controls.name.value!} : null),
-                quantity: this.updateForm.controls.quantity.value!,
+                ...(this.updateForm.controls.name.value !== this.defaultData.name ?
+                    {name: this.updateForm.controls.name.value!} : null),
+                ...(this.updateForm.controls.quantity.value !== this.defaultData.quantity ?
+                    {quantity: this.updateForm.controls.quantity.value!} : null),
+                ...(this.updateForm.controls.price.value !== this.defaultData.price ?
+                    {price: this.updateForm.controls.price.value!} : null),
+                ...(this.updateForm.controls.publisher.value !== this.defaultData.publisher ?
+                    {publisher: this.updateForm.controls.publisher.value} : null),
+                ...(this.updateForm.controls.translator.value !== this.defaultData.translator ?
+                    {translator: this.updateForm.controls.translator.value} : null),
+                ...(this.updateForm.controls.numOfPages.value !== this.defaultData.numOfPages ?
+                    {numOfPages: this.updateForm.controls.numOfPages.value} : null),
+                ...(this.updateForm.controls.publishedYear.value !== this.defaultData.publishedYear ?
+                    {publishedYear: this.updateForm.controls.publishedYear.value} : null),
+                ...(this.updateForm.controls.description.value !== this.defaultData.description ?
+                    {description: this.updateForm.controls.description.value} : null),
+                ...(this.updateForm.controls.author.value !== this.defaultData.author.id ?
+                    {authorId: this.updateForm.controls.author.value!} : null),
+                ...(this.updateForm.controls.category.value !== this.defaultData.category.id ?
+                    {categoryId: this.updateForm.controls.category.value!} : null),
+                ...(this.defaultData.publicId !== null ?
+                    (fileReq !== null ? await this.updateImage(fileReq, this.defaultData.publicId) : null) :
+                    (fileReq !== null ? await this.uploadImage(fileReq) : null))
             };
-            console.log(bookReq);
+            await firstValueFrom(this.productService.updateProduct(this.updateId()!, bookReq));
+            await firstValueFrom(this.productService.fetchProducts(0, 10))
+                .then(res => {
+                    this.onUpdate.emit(res.data);
+                    this.message.emit(
+                        {
+                            severity: "success",
+                            summary: "Thành công",
+                            detail: "Cập nhật sản phẩm thành công!!!"
+                        }
+                    );
+                });
+
+            this.submitted = false;
+            this.visible.set(false);
+
+        } else {
+            this.message.emit({
+                severity: "error",
+                summary: "Lỗi",
+                detail: "Dữ liệu nhập vào không đúng yêu cầu, hãy nhập lại!!!"
+            });
+            this.visible.set(false);
         }
     }
 
@@ -200,5 +254,4 @@ export class UpdateFormComponent implements OnInit {
             this.years.push(year);
         }
     }
-
 }

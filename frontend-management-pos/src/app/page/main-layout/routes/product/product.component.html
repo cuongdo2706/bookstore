@@ -1,224 +1,228 @@
-<div>
-    <h1 class = "mt-0 pt-0">Sản phẩm</h1>
-</div>
-@if (saveFormVisible) {
-    <app-save-form
-	  [(visible)] = "saveFormVisible"
-	  (onSave) = "onSaveForm($event)"
-    ></app-save-form>
-}
-<p-table [value] = "products"
-         [lazy] = "true"
-         [(selection)] = "selectedProductIds"
-         styleClass = "p-datatable-sm p-datatable-gridlines"
-         [tableStyle] = "{ 'min-width': '30rem' }"
-         [expandedRowKeys] = "expandedRows"
-         dataKey = "id"
-         (onRowExpand) = "onRowExpand($event)">
-    <ng-template pTemplate = "caption">
-        <div class = "flex">
-	  <div class = "col-6 flex">
-	      <p-iconField iconPosition = "left">
-		<p-inputIcon>
-		    <i class = "pi pi-search"></i>
-		</p-inputIcon>
-		<input
-		        pInputText
-		        type = "text"
-		        (input) = "searchKeyword()"
-		        [(ngModel)] = "keyword"
-		        placeholder = "Tìm theo mã hoặc tên"/>
-	      </p-iconField>
-	      <p-dropdown
-		    [style.margin-left.px] = "10"
-		    (onChange) = "searchKeyword()"
-		    [options] = "filterOption"
-		    optionLabel = "name"
-		    optionValue = "code"
-		    [(ngModel)] = "filterSelection"
-		    placeholder = "Bộ lọc"/>
+<p-card header = "Sản phẩm"
+        [style] = "{'top':'82px','bottom':'10px','right':'16px','left':'235px','position':'fixed', 'overflow-y': 'auto','padding-top':'0px'}">
+    @if (saveFormVisible) {
+        <app-save-form
+	      [(visible)] = "saveFormVisible"
+	      (onSave) = "onSaveForm($event)"
+	      (message) = "saveMessage($event)"
+        ></app-save-form>
+    }
+    <p-table [value] = "products"
+	   [lazy] = "true"
+	   [(selection)] = "selectedProductIds"
+	   styleClass = "p-datatable-sm p-datatable-gridlines"
+	   [tableStyle] = "{ 'min-width': '30rem' }"
+	   [expandedRowKeys] = "expandedRows"
+	   dataKey = "id"
+	   (onRowExpand) = "onRowExpand($event)">
+        <ng-template pTemplate = "caption">
+	  <div class = "flex">
+	      <div class = "col-6 flex">
+		<p-iconField iconPosition = "left">
+		    <p-inputIcon>
+		        <i class = "pi pi-search"></i>
+		    </p-inputIcon>
+		    <input
+			  pInputText
+			  type = "text"
+			  (input) = "searchKeyword()"
+			  [(ngModel)] = "keyword"
+			  placeholder = "Tìm theo mã hoặc tên"/>
+		</p-iconField>
+		<p-dropdown
+		        [style.margin-left.px] = "10"
+		        (onChange) = "searchKeyword()"
+		        [options] = "filterOption"
+		        optionLabel = "name"
+		        optionValue = "code"
+		        [(ngModel)] = "filterSelection"
+		        placeholder = "Bộ lọc"/>
+	      </div>
+	      <div class = "col-6 flex justify-content-end">
+		<p-button (click) = "showSaveDialog()" icon = "pi pi-plus" severity = "success" class = "mr-2"
+			label = "Thêm mới"></p-button>
+		<p-button (click) = "exportExcel()" icon = "pi pi-file-export" severity = "success" class = "mr-2"
+			label = "Xuất Excel"></p-button>
+		<!--	      <p-button class = "mr-0" icon = "pi pi-file-import" severity = "success"-->
+		<!--		      label = "Nhập Excel"></p-button>-->
+	      </div>
 	  </div>
-	  <div class = "col-6 flex justify-content-end">
-	      <p-button (click) = "showSaveDialog()" icon = "pi pi-plus" severity = "success" class = "mr-2"
-		      label = "Thêm mới"></p-button>
-	      <p-button (click) = "exportExcel()" icon = "pi pi-file-export" severity = "success" class = "mr-2"
-		      label = "Xuất Excel"></p-button>
-	      <p-button class = "mr-0" icon = "pi pi-file-import" severity = "success"
-		      label = "Nhập Excel"></p-button>
-	  </div>
-        </div>
-    </ng-template>
-    <ng-template pTemplate = "header">
-        <tr>
+        </ng-template>
+        <ng-template pTemplate = "header">
+	  <tr>
 
-	  <th>Mã sách</th>
-	  <th>Tên sách</th>
-	  <th>Ảnh</th>
-	  <th>Giá</th>
-	  <th>Số lượng</th>
-        </tr>
-    </ng-template>
-    <ng-template pTemplate = "body" let-product let-expanded = "expanded">
-        <tr [pRowToggler] = "product">
+	      <th>Mã sách</th>
+	      <th>Tên sách</th>
+	      <th>Ảnh</th>
+	      <th>Giá</th>
+	      <th>Số lượng</th>
+	  </tr>
+        </ng-template>
+        <ng-template pTemplate = "body" let-product let-expanded = "expanded">
+	  <tr [pRowToggler] = "product">
 
-	  <td style = "width: 100px">{{ product.code }}</td>
-	  <td>{{ product.name }}</td>
-	  <td style = "width: 60px">
-	      <p-image
-		    src = "{{product.imgUrl||baseImg}}"
-		    width = "50"
-	      />
-	  </td>
-	  <td
-		style = "width: 120px">{{ (product.sellPrice ? product.sellPrice : product.price) | number:"1.0-0" }}
-	  </td>
-	  <td style = "width: 20px">{{ product.quantity }}</td>
-        </tr>
-    </ng-template>
-    <ng-template pTemplate = "rowexpansion" let-product>
-        <tr class = "bg-primary-50">
-	  <td colspan = "7">
-	      <div class = "p-3">
-		<div>
-		    <span class = "text-primary-700">{{ product.name }}</span>
-		</div>
-		<div class = "grid mt-3">
-		    <div class = "col-3 flex justify-content-center">
-		        <p-image
-			      src = "{{product.imgUrl||baseImg}}"
-			      alt = "Image"
-			      width = "250"
-			      [preview] = "true"/>
+	      <td style = "width: 100px">{{ product.code }}</td>
+	      <td>{{ product.name }}</td>
+	      <td style = "width: 60px">
+		<p-image
+		        src = "{{product.imgUrl||baseImg}}"
+		        width = "50"
+		/>
+	      </td>
+	      <td
+		    style = "width: 120px">{{ (product.sellPrice ? product.sellPrice : product.price) | number:"1.0-0" }}
+	      </td>
+	      <td style = "width: 20px">{{ product.quantity }}</td>
+	  </tr>
+        </ng-template>
+        <ng-template pTemplate = "rowexpansion" let-product>
+	  <tr class = "bg-primary-50">
+	      <td colspan = "7">
+		<div class = "p-3">
+		    <div>
+		        <span class = "text-primary-700">{{ product.name }}</span>
 		    </div>
-		    <div class = "col-4">
-		        <div class = "grid">
-			  <div style = "font-weight: bold" class = "col-4">Mã sách:</div>
-			  <div class = "col-8">{{ product.code }}</div>
+		    <div class = "grid mt-3">
+		        <div class = "col-3 flex justify-content-center">
+			  <p-image
+				src = "{{product.imgUrl||baseImg}}"
+				alt = "Image"
+				width = "250"
+				[preview] = "true"/>
 		        </div>
-		        <div class = "grid mt-1">
-			  <div style = "font-weight: bold" class = "col-4">Tên sách:</div>
-			  <div class = "col-8">{{ product.name }}</div>
-		        </div>
-		        <div class = "grid mt-1">
-			  <div style = "font-weight: bold" class = "col-4">Nhà xuất bản:</div>
-			  <div
-				class = "col-8">{{ product.publisher == null || product.publisher == "" ? "Đang cập nhật" : product.publisher }}
+		        <div class = "col-4">
+			  <div class = "grid">
+			      <div style = "font-weight: bold" class = "col-4">Mã sách:</div>
+			      <div class = "col-8">{{ product.code }}</div>
 			  </div>
-		        </div>
-		        <div class = "grid mt-1">
-			  <div style = "font-weight: bold" class = "col-4">Dịch giả:</div>
-			  <div
-				class = "col-8">{{ product.translator == null || product.translator == "" ? "Đang cập nhật" : product.translator }}
+			  <div class = "grid mt-1">
+			      <div style = "font-weight: bold" class = "col-4">Tên sách:</div>
+			      <div class = "col-8">{{ product.name }}</div>
 			  </div>
-		        </div>
-		        <div class = "grid mt-1">
-			  <div style = "font-weight: bold" class = "col-4">Tác giả:</div>
-			  <div class = "col-8">{{ product.author.name }}</div>
-		        </div>
-		        <div class = "grid mt-1">
-			  <div style = "font-weight: bold" class = "col-4">Thể loại:</div>
-			  <div class = "col-8">{{ product.category.name }}</div>
-		        </div>
-		        <div class = "grid mt-1">
-			  <div style = "font-weight: bold" class = "col-4">Số lượng:</div>
-			  <div class = "col-8">{{ product.quantity }}</div>
-		        </div>
-		        <div class = "grid mt-1">
-			  <div style = "font-weight: bold" class = "col-4">Giá:</div>
-			  <div class = "col-8">{{ (product.sellPrice ? product.sellPrice : product.price) | number:"1.0-0" }}</div>
-		        </div>
-		        <div class = "grid mt-1">
-			  <div style = "font-weight: bold" class = "col-4">Số trang:</div>
-			  <div
-				class = "col-8">{{ !product.numOfPages ? "Đang cập nhật" : product.numOfPages }}
-			  </div>
-		        </div>
-		        <div class = "grid mt-1">
-			  <div style = "font-weight: bold" class = "col-4">Năm xuất bản:</div>
-			  <div
-				class = "col-8">{{ !product.publishedYear ? "Đang cập nhật" : product.publishedYear }}
-			  </div>
-		        </div>
-		        <div class = "grid mt-1">
-			  <div style = "font-weight: bold" class = "col-4">Trạng thái:</div>
-			  <div class = "col-8">{{ product.isActive ? "Đang bán" : "Ngừng bán" }}</div>
-		        </div>
-		    </div>
-		    <div class = "col-5 pl-4">
-		        <div class = "grid">
-			  <div style = "font-weight: bold">Mô tả:</div>
-		        </div>
-		        <div class = "grid mt-1">
-			  <p style = "line-height: 1.8">{{ product.description }}</p>
-		        </div>
-		    </div>
-		</div>
-		@if (updateFormVisible) {
-		    <app-update-form
-			  [(visible)] = "updateFormVisible"
-			  [updateId] = "updateId"
-		    ></app-update-form>
-		}
-		<div class = "flex pt-2 justify-content-end">
-		    <p-button (click) = "showUpdateDialog(product.id)" icon = "pi pi-pencil" class = "mr-3"
-			    label = "Cập nhật"></p-button>
-
-		    <p-button (onClick) = "confirmDelete(product.id)" icon = "pi pi-trash" severity = "danger"
-			    label = "Xoá"></p-button>
-
-		    <p-confirmDialog #cd>
-		        <ng-template pTemplate = "headless" let-message>
-			  <div class = "flex flex-column align-items-center p-5 surface-overlay border-round">
-			      <div class = "border-circle bg-primary inline-flex justify-content-center align-items-center h-6rem w-6rem">
-				<i class = "pi pi-question text-5xl"></i>
+			  <div class = "grid mt-1">
+			      <div style = "font-weight: bold" class = "col-4">Nhà xuất bản:</div>
+			      <div
+				    class = "col-8">{{ product.publisher == null || product.publisher == "" ? "Đang cập nhật" : product.publisher }}
 			      </div>
-			      <span class = "font-bold text-2xl block mb-2 mt-4">
+			  </div>
+			  <div class = "grid mt-1">
+			      <div style = "font-weight: bold" class = "col-4">Dịch giả:</div>
+			      <div
+				    class = "col-8">{{ product.translator == null || product.translator == "" ? "Đang cập nhật" : product.translator }}
+			      </div>
+			  </div>
+			  <div class = "grid mt-1">
+			      <div style = "font-weight: bold" class = "col-4">Tác giả:</div>
+			      <div class = "col-8">{{ product.author.name }}</div>
+			  </div>
+			  <div class = "grid mt-1">
+			      <div style = "font-weight: bold" class = "col-4">Thể loại:</div>
+			      <div class = "col-8">{{ product.category.name }}</div>
+			  </div>
+			  <div class = "grid mt-1">
+			      <div style = "font-weight: bold" class = "col-4">Số lượng:</div>
+			      <div class = "col-8">{{ product.quantity }}</div>
+			  </div>
+			  <div class = "grid mt-1">
+			      <div style = "font-weight: bold" class = "col-4">Giá:</div>
+			      <div class = "col-8">{{ (product.sellPrice ? product.sellPrice : product.price) | number:"1.0-0" }}</div>
+			  </div>
+			  <div class = "grid mt-1">
+			      <div style = "font-weight: bold" class = "col-4">Số trang:</div>
+			      <div
+				    class = "col-8">{{ !product.numOfPages ? "Đang cập nhật" : product.numOfPages }}
+			      </div>
+			  </div>
+			  <div class = "grid mt-1">
+			      <div style = "font-weight: bold" class = "col-4">Năm xuất bản:</div>
+			      <div
+				    class = "col-8">{{ !product.publishedYear ? "Đang cập nhật" : product.publishedYear }}
+			      </div>
+			  </div>
+			  <div class = "grid mt-1">
+			      <div style = "font-weight: bold" class = "col-4">Trạng thái:</div>
+			      <div class = "col-8">{{ product.isActive ? "Đang bán" : "Ngừng bán" }}</div>
+			  </div>
+		        </div>
+		        <div class = "col-5 pl-4">
+			  <div class = "grid">
+			      <div style = "font-weight: bold">Mô tả:</div>
+			  </div>
+			  <div class = "grid mt-1">
+			      <p style = "line-height: 1.8">{{ product.description }}</p>
+			  </div>
+		        </div>
+		    </div>
+		    @if (updateFormVisible) {
+		        <app-update-form
+			      [(visible)] = "updateFormVisible"
+			      [updateId] = "updateId"
+			      (onUpdate) = "onUpdateForm($event)"
+			      (message) = "updateMessage($event)"
+		        ></app-update-form>
+		    }
+		    <div class = "flex pt-2 justify-content-end">
+		        <p-button (click) = "showUpdateDialog(product.id)" icon = "pi pi-pencil" class = "mr-3"
+			        label = "Cập nhật"></p-button>
+
+		        <p-button (onClick) = "confirmDelete(product.id)" icon = "pi pi-trash" severity = "danger"
+			        label = "Xoá"></p-button>
+
+		        <p-confirmDialog #cd>
+			  <ng-template pTemplate = "headless" let-message>
+			      <div class = "flex flex-column align-items-center p-5 surface-overlay border-round">
+				<div class = "border-circle bg-primary inline-flex justify-content-center align-items-center h-6rem w-6rem">
+				    <i class = "pi pi-question text-5xl"></i>
+				</div>
+				<span class = "font-bold text-2xl block mb-2 mt-4">
                 {{ message.header }}
             </span>
-			      <div class = "flex align-items-center gap-2 mt-4">
-				<button
-				        pButton
-				        label = "Đồng ý"
-				        severity = "danger"
-				        icon = "pi pi-check"
-				        (click) = "cd.accept()"
-				        class = "w-8rem">
-				</button>
-				<button
-				        pButton
-				        label = "Bỏ qua"
-				        severity = "secondary"
-				        icon = "pi pi-times"
-				        (click) = "cd.reject()"
-				        class = "p-button-outlined w-8rem ">
-				</button>
+				<div class = "flex align-items-center gap-2 mt-4">
+				    <button
+					  pButton
+					  label = "Đồng ý"
+					  severity = "danger"
+					  icon = "pi pi-check"
+					  (click) = "cd.accept()"
+					  class = "w-8rem">
+				    </button>
+				    <button
+					  pButton
+					  label = "Bỏ qua"
+					  severity = "secondary"
+					  icon = "pi pi-times"
+					  (click) = "cd.reject()"
+					  class = "p-button-outlined w-8rem ">
+				    </button>
+				</div>
 			      </div>
-			  </div>
-		        </ng-template>
-		    </p-confirmDialog>
+			  </ng-template>
+		        </p-confirmDialog>
+		    </div>
 		</div>
-	      </div>
-	  </td>
-        </tr>
-    </ng-template>
-    <ng-template pTemplate = "emptymessage">
-        <tr>
-	  <td colspan = "7" style = "text-align: center">Không tìm thấy bản ghi nào</td>
-        </tr>
-    </ng-template>
-    <ng-template pTemplate = "footer" class = "flex justify-content-center">
-        <tr>
-	  <td colspan = "100%" style = "background-color: #ffffff">
-	      <p-paginator #paginator
-		         (onPageChange) = "onPageChange($event)"
-		         [rows] = "size"
-		         [totalRecords] = "totalElements"
-		         [rowsPerPageOptions] = "[10, 20, 30]"/>
-	  </td>
-        </tr>
-    </ng-template>
-</p-table>
-<p-toast key = "deleteToast" [life] = "3000"/>
+	      </td>
+	  </tr>
+        </ng-template>
+        <ng-template pTemplate = "emptymessage">
+	  <tr>
+	      <td colspan = "7" style = "text-align: center">Không tìm thấy bản ghi nào</td>
+	  </tr>
+        </ng-template>
+        <ng-template pTemplate = "footer" class = "flex justify-content-center">
+	  <tr>
+	      <td colspan = "100%" style = "background-color: #ffffff">
+		<p-paginator #paginator
+			   (onPageChange) = "onPageChange($event)"
+			   [rows] = "size"
+			   [totalRecords] = "totalElements"
+			   [rowsPerPageOptions] = "[10, 20, 30]"/>
+	      </td>
+	  </tr>
+        </ng-template>
+    </p-table>
+    <p-toast [life] = "3000"/>
+</p-card>
+
 
 
 
