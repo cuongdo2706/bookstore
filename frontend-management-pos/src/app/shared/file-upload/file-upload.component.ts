@@ -2,13 +2,12 @@ import {Component, input, output} from '@angular/core';
 import {ImageModule} from "primeng/image";
 
 @Component({
-  selector: 'app-file-upload',
-  standalone: true,
-  imports: [
-    ImageModule
-  ],
-  templateUrl: './file-upload.component.html',
-  styleUrl: './file-upload.component.css'
+    selector: 'app-file-upload',
+    imports: [
+        ImageModule
+    ],
+    templateUrl: './file-upload.component.html',
+    styleUrl: './file-upload.component.css'
 })
 export class FileUploadComponent {
   onSelect = output<File | null>();

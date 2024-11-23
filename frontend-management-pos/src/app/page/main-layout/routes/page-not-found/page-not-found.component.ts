@@ -4,7 +4,6 @@ import {NgOptimizedImage} from "@angular/common";
 
 @Component({
     selector: 'app-page-not-found',
-    standalone: true,
     imports: [
         NgOptimizedImage
     ],

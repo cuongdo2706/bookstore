@@ -10,7 +10,6 @@ import {Login} from "../../core/auth/model/login.model";
 
 @Component({
     selector: 'app-login',
-    standalone: true,
     imports: [
         CardModule,
         ReactiveFormsModule,

@@ -26,7 +26,6 @@ import {PageResponse} from "../../../../model/response/page-response.model";
 
 @Component({
     selector: 'app-update-form',
-    standalone: true,
     imports: [
         DialogModule,
         ReactiveFormsModule,

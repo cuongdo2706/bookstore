@@ -23,7 +23,6 @@ import {ImageResponse} from "../../../../model/response/image-response.model";
 
 @Component({
     selector: 'app-save-form',
-    standalone: true,
     imports: [
         DialogModule,
         Button,

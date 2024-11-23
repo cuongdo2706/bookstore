@@ -27,7 +27,6 @@ import {PageResponse} from "../../../model/response/page-response.model";
 
 @Component({
     selector: 'app-product',
-    standalone: true,
     imports: [
         CardModule,
         TableModule,

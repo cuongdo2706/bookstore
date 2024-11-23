@@ -13,7 +13,6 @@ export interface PosTab {
 
 @Component({
     selector: 'app-pos',
-    standalone: true,
     imports: [
         TabViewModule,
         CardModule
