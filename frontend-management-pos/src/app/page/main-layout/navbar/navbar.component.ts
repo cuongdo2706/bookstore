@@ -21,6 +21,7 @@ import {Router} from "@angular/router";
     ],
     providers: [ConfirmationService],
     templateUrl: './navbar.component.html',
+    standalone: true,
     styleUrl: './navbar.component.css'
 })
 export class NavbarComponent implements OnInit {

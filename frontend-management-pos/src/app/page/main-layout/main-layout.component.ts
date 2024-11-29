@@ -15,6 +15,7 @@ import {ScrollPanelModule} from "primeng/scrollpanel";
         ScrollPanelModule
     ],
     templateUrl: './main-layout.component.html',
+    standalone: true,
     styleUrl: './main-layout.component.css'
 })
 export class MainLayoutComponent {

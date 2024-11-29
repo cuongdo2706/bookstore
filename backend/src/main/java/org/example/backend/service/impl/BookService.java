@@ -68,6 +68,11 @@ public class BookService implements IBookService {
     @Override
     public PageResponse<BookResponse> findByCodeOrNameAndSort(Integer page, Integer size, String keyword, String sortInput) {
         if (page < 0) page = 0;
+        if (keyword.isEmpty() && sortInput.equals("name-asc")) {
+            Pageable pageable = PageRequest.of(page, size);
+            Page<Book> books = bookRepository.findAllPage(pageable);
+            return new PageResponse<BookResponse>(bookMapper.toBookResponses(books.getContent()), books.getNumber(), books.getSize(), books.getTotalElements(), books.getTotalPages());
+        }
         Specification<Book> spec = BookSpec.findByNameOrCode(keyword);
         Sort sort = null;
         switch (sortInput) {
@@ -95,12 +100,12 @@ public class BookService implements IBookService {
 
     @Override
     public Book update(Long id, BookUpdatedRequest request) throws IOException, DataNotFoundException {
-        Author existAuthor=null;
-        Category existCategory=null;
-        if (request.getAuthorId()!=null){
+        Author existAuthor = null;
+        Category existCategory = null;
+        if (request.getAuthorId() != null) {
             existAuthor = authorRepository.findById(request.getAuthorId()).orElseThrow(() -> new RuntimeException("Author not found"));
         }
-        if (request.getCategoryId()!=null){
+        if (request.getCategoryId() != null) {
             existCategory = categoryRepository.findById(request.getCategoryId()).orElseThrow(() -> new RuntimeException("Category not found"));
         }
         Book existedBook = findById(id);

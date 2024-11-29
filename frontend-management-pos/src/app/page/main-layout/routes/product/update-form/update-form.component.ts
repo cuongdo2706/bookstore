@@ -14,7 +14,6 @@ import {InputTextModule} from "primeng/inputtext";
 import {AuthorResponse} from "../../../../model/response/author-response.model";
 import {CategoryResponse} from "../../../../model/response/category-response.model";
 import {InputSwitchModule} from "primeng/inputswitch";
-import {InputTextareaModule} from "primeng/inputtextarea";
 import {FileUploadModule} from "primeng/fileupload";
 import {ImageModule} from "primeng/image";
 import {ToastModule} from "primeng/toast";
@@ -23,6 +22,7 @@ import {AppConstants} from "../../../../../app.constants";
 import {BookUpdatedRequest} from "../../../../model/request/book-updated-request.model";
 import {ImageResponse} from "../../../../model/response/image-response.model";
 import {PageResponse} from "../../../../model/response/page-response.model";
+import {InputTextareaModule} from "primeng/inputtextarea";
 
 @Component({
     selector: 'app-update-form',
@@ -32,15 +32,16 @@ import {PageResponse} from "../../../../model/response/page-response.model";
         Button,
         DropdownModule,
         FloatLabelModule,
-        InputTextModule,
         InputSwitchModule,
-        InputTextareaModule,
         FileUploadModule,
         ImageModule,
-        ToastModule
+        ToastModule,
+        InputTextareaModule,
+        InputTextModule
     ],
     templateUrl: './update-form.component.html',
     styleUrl: './update-form.component.css',
+    standalone: true,
     providers: [MessageService]
 })
 

@@ -19,6 +19,7 @@ import {Login} from "../../core/auth/model/login.model";
         Button
     ],
     templateUrl: './login.component.html',
+    standalone: true,
     styleUrl: './login.component.css'
 })
 export class LoginComponent {

@@ -20,6 +20,7 @@ export interface PosTab {
     templateUrl: './pos.component.html',
     styleUrl: './pos.component.css',
     encapsulation: ViewEncapsulation.None,
+    standalone: true,
     providers: [MessageService]
 })
 

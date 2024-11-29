@@ -8,6 +8,7 @@ import {NgOptimizedImage} from "@angular/common";
         NgOptimizedImage
     ],
     templateUrl: './page-not-found.component.html',
+    standalone: true,
     styleUrl: './page-not-found.component.css'
 })
 export class PageNotFoundComponent {

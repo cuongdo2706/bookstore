@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="6fa780d9-1d59-496e-bb5d-9a898f77f42e" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/frontend-management-pos.iml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend-management-pos/.editorconfig" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend-management-pos/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend-management-pos/.idea/misc.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend-management-pos/.idea/modules.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend-management-pos/.vscode/extensions.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend-management-pos/.vscode/launch.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend-management-pos/.vscode/tasks.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend-management-pos/README.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend-management-pos/angular.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend-management-pos/package-lock.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend-management-pos/package.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend-management-pos/public/astronaut.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend-management-pos/public/favicon.ico" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend-management-pos/public/no-image-available-picture-coming-600nw-2057829641.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend-management-pos/src/app/app.component.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend-management-pos/src/app/app.component.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend-management-pos/src/app/app.component.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend-management-pos/src/app/app.config.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend-management-pos/src/app/app.constants.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend-management-pos/src/app/app.routes.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend-management-pos/src/app/core/auth/guard/auth.guard.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend-management-pos/src/app/core/auth/guard/login.guard.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend-management-pos/src/app/core/auth/interceptor/auth.interceptor.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend-management-pos/src/app/core/auth/model/login.model.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend-management-pos/src/app/core/auth/service/auth.service.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend-management-pos/src/app/core/validator/custom-validators.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend-management-pos/src/app/page/login/login.component.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend-management-pos/src/app/page/login/login.component.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend-management-pos/src/app/page/login/login.component.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend-management-pos/src/app/page/main-layout/main-layout.component.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend-management-pos/src/app/page/main-layout/main-layout.component.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend-management-pos/src/app/page/main-layout/main-layout.component.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend-management-pos/src/app/page/main-layout/navbar/navbar.component.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend-management-pos/src/app/page/main-layout/navbar/navbar.component.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend-management-pos/src/app/page/main-layout/navbar/navbar.component.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend-management-pos/src/app/page/main-layout/routes/category/category.component.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend-management-pos/src/app/page/main-layout/routes/category/category.component.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend-management-pos/src/app/page/main-layout/routes/category/category.component.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend-management-pos/src/app/page/main-layout/routes/customer/customer.component.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend-management-pos/src/app/page/main-layout/routes/customer/customer.component.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend-management-pos/src/app/page/main-layout/routes/customer/customer.component.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend-management-pos/src/app/page/main-layout/routes/dashboard/dashboard.component.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend-management-pos/src/app/page/main-layout/routes/dashboard/dashboard.component.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend-management-pos/src/app/page/main-layout/routes/dashboard/dashboard.component.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend-management-pos/src/app/page/main-layout/routes/discount/discount.component.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend-management-pos/src/app/page/main-layout/routes/discount/discount.component.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend-management-pos/src/app/page/main-layout/routes/discount/discount.component.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend-management-pos/src/app/page/main-layout/routes/order/order.component.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend-management-pos/src/app/page/main-layout/routes/order/order.component.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend-management-pos/src/app/page/main-layout/routes/order/order.component.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend-management-pos/src/app/page/main-layout/routes/page-not-found/page-not-found.component.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend-management-pos/src/app/page/main-layout/routes/page-not-found/page-not-found.component.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend-management-pos/src/app/page/main-layout/routes/page-not-found/page-not-found.component.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend-management-pos/src/app/page/main-layout/routes/pos/pos.component.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend-management-pos/src/app/page/main-layout/routes/pos/pos.component.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend-management-pos/src/app/page/main-layout/routes/pos/pos.component.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend-management-pos/src/app/page/main-layout/routes/product/product.component.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend-management-pos/src/app/page/main-layout/routes/product/product.component.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend-management-pos/src/app/page/main-layout/routes/product/product.component.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend-management-pos/src/app/page/main-layout/routes/product/save-form/save-form.component.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend-management-pos/src/app/page/main-layout/routes/product/save-form/save-form.component.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend-management-pos/src/app/page/main-layout/routes/product/save-form/save-form.component.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend-management-pos/src/app/page/main-layout/routes/product/update-form/update-form.component.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend-management-pos/src/app/page/main-layout/routes/product/update-form/update-form.component.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend-management-pos/src/app/page/main-layout/routes/product/update-form/update-form.component.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend-management-pos/src/app/page/main-layout/routes/staff/staff.component.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend-management-pos/src/app/page/main-layout/routes/staff/staff.component.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend-management-pos/src/app/page/main-layout/routes/staff/staff.component.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend-management-pos/src/app/page/main-layout/routes/voucher/voucher.component.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend-management-pos/src/app/page/main-layout/routes/voucher/voucher.component.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend-management-pos/src/app/page/main-layout/routes/voucher/voucher.component.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend-management-pos/src/app/page/main-layout/sidebar/sidebar.component.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend-management-pos/src/app/page/main-layout/sidebar/sidebar.component.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend-management-pos/src/app/page/main-layout/sidebar/sidebar.component.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend-management-pos/src/app/page/model/request/book-created-request.model.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend-management-pos/src/app/page/model/request/book-updated-request.model.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend-management-pos/src/app/page/model/request/order-created-request.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend-management-pos/src/app/page/model/response/api-response.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend-management-pos/src/app/page/model/response/author-response.model.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend-management-pos/src/app/page/model/response/category-response.model.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend-management-pos/src/app/page/model/response/image-response.model.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend-management-pos/src/app/page/model/response/page-response.model.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend-management-pos/src/app/page/model/response/product-response.model.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend-management-pos/src/app/page/model/response/token-response.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend-management-pos/src/app/page/service/author.service.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend-management-pos/src/app/page/service/category.service.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend-management-pos/src/app/page/service/product.service.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend-management-pos/src/app/page/service/upload-image.service.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend-management-pos/src/app/shared/file-upload/file-upload.component.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend-management-pos/src/app/shared/file-upload/file-upload.component.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend-management-pos/src/app/shared/file-upload/file-upload.component.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend-management-pos/src/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend-management-pos/src/main.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend-management-pos/src/styles.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend-management-pos/tsconfig.app.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend-management-pos/tsconfig.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend-management-pos/tsconfig.spec.json" beforeDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ProjectColorInfo"><![CDATA[{
+  "associatedIndex": 4
+}]]></component>
+  <component name="ProjectId" id="2pK0QvCQJJjQysn9ZfJnpbGpqfj" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "E:/FPT POLYTECHNIC/bookstore",
+    "nodejs_package_manager_path": "npm",
+    "vue.rearranger.settings.migration": "true"
+  }
+}]]></component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-jdk-9823dce3aa75-fdfe4dae3a2d-intellij.indexing.shared.core-IU-243.21565.193" />
+        <option value="bundled-js-predefined-d6986cc7102b-e768b9ed790e-JavaScript-IU-243.21565.193" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="6fa780d9-1d59-496e-bb5d-9a898f77f42e" name="Changes" comment="" />
+      <created>1732499447102</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1732499447102</updated>
+      <workItem from="1732499448230" duration="2000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+</project>

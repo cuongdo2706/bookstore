@@ -1,6 +1,6 @@
-import {Component, inject, model, OnInit, Signal, viewChild} from '@angular/core';
+import {Component, inject, OnInit, viewChild} from '@angular/core';
 import {CardModule} from "primeng/card";
-import {TableLazyLoadEvent, TableModule} from "primeng/table";
+import {TableModule} from "primeng/table";
 import {ProductService} from "../../../service/product.service";
 import {CheckboxModule} from "primeng/checkbox";
 import {ToastModule} from "primeng/toast";
@@ -16,14 +16,14 @@ import {DecimalPipe} from "@angular/common";
 import {DialogModule} from "primeng/dialog";
 import {SaveFormComponent} from "./save-form/save-form.component";
 import {ProductResponse} from "../../../model/response/product-response.model";
-import {FileUploadComponent} from "../../../../shared/file-upload/file-upload.component";
 import {ConfirmDialogModule} from "primeng/confirmdialog";
 import {ConfirmationService, MessageService} from "primeng/api";
-import {firstValueFrom} from "rxjs";
+import {debounceTime, delay, distinctUntilChanged, firstValueFrom, lastValueFrom} from "rxjs";
 import {UpdateFormComponent} from "./update-form/update-form.component";
 import {AuthService} from "../../../../core/auth/service/auth.service";
 import {AppConstants} from "../../../../app.constants";
 import {PageResponse} from "../../../model/response/page-response.model";
+import {DropdownModule} from "primeng/dropdown";
 
 @Component({
     selector: 'app-product',
@@ -43,12 +43,13 @@ import {PageResponse} from "../../../model/response/page-response.model";
         DecimalPipe,
         DialogModule,
         SaveFormComponent,
-        FileUploadComponent,
         ConfirmDialogModule,
-        UpdateFormComponent
+        UpdateFormComponent,
+        DropdownModule
     ],
     templateUrl: './product.component.html',
     styleUrl: './product.component.css',
+    standalone: true,
     providers: [ConfirmationService, MessageService]
 })
 export class ProductComponent implements OnInit {
@@ -82,31 +83,33 @@ export class ProductComponent implements OnInit {
     }
 
     onFetchProducts() {
-        this.productService.fetchProducts(0, 10).subscribe({
+        const paginator = this.paginator();
+
+        this.productService.searchProducts(0, 10, "", this.filterSelection).subscribe({
                 next: res => {
                     this.products = res.data.content;
                     this.totalElements = res.data.totalElements;
+                    if (paginator) {
+                        paginator.changePage(0);
+                    }
                 }
             }
         );
-
     }
 
     searchKeyword() {
         const paginator = this.paginator();
-        setTimeout(() => {
-            this.productService.searchProducts(0, this.size, this.keyword, this.filterSelection).subscribe({
+        this.productService.searchProducts(0, this.size, this.keyword, this.filterSelection)
+            .subscribe({
                     next: res => {
                         this.products = res.data.content;
                         this.totalElements = res.data.totalElements;
                         if (paginator) {
-                            paginator.changePage(0);
+                            paginator.first=0;
                         }
                     }
                 }
             );
-        }, 500);
-
     }
 
     exportExcel() {

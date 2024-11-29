@@ -23,20 +23,21 @@
 		        <i class = "pi pi-search"></i>
 		    </p-inputIcon>
 		    <input
+			  (input) = "searchKeyword()"
 			  pInputText
 			  type = "text"
-			  (input) = "searchKeyword()"
 			  [(ngModel)] = "keyword"
 			  placeholder = "Tìm theo mã hoặc tên"/>
 		</p-iconField>
 		<p-dropdown
 		        [style.margin-left.px] = "10"
-		        (onChange) = "searchKeyword()"
 		        [options] = "filterOption"
+		        (click) = "searchKeyword()"
 		        optionLabel = "name"
 		        optionValue = "code"
 		        [(ngModel)] = "filterSelection"
 		        placeholder = "Bộ lọc"/>
+
 	      </div>
 	      <div class = "col-6 flex justify-content-end">
 		<p-button (click) = "showSaveDialog()" icon = "pi pi-plus" severity = "success" class = "mr-2"

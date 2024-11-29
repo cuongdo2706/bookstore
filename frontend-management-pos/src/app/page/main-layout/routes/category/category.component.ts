@@ -7,6 +7,7 @@ import {CardModule} from "primeng/card";
         CardModule
     ],
     templateUrl: './category.component.html',
+    standalone: true,
     styleUrl: './category.component.css'
 })
 export class CategoryComponent {

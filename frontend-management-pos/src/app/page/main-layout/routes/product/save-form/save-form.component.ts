@@ -7,11 +7,9 @@ import {FloatLabelModule} from "primeng/floatlabel";
 import {DropdownModule} from "primeng/dropdown";
 import {CategoryService} from "../../../../service/category.service";
 import {AuthorService} from "../../../../service/author.service";
-import {InputTextareaModule} from "primeng/inputtextarea";
 import {FileUploadModule} from "primeng/fileupload";
 import {AuthorResponse} from "../../../../model/response/author-response.model";
 import {CategoryResponse} from "../../../../model/response/category-response.model";
-import {FileUploadComponent} from "../../../../../shared/file-upload/file-upload.component";
 import {UploadImageService} from "../../../../service/upload-image.service";
 import {firstValueFrom, lastValueFrom} from "rxjs";
 import {BookCreatedRequest} from "../../../../model/request/book-created-request.model";
@@ -20,6 +18,7 @@ import {InputSwitchModule} from "primeng/inputswitch";
 import {ToastModule} from "primeng/toast";
 import {MessageService} from "primeng/api";
 import {ImageResponse} from "../../../../model/response/image-response.model";
+import {InputTextareaModule} from "primeng/inputtextarea";
 
 @Component({
     selector: 'app-save-form',
@@ -27,18 +26,18 @@ import {ImageResponse} from "../../../../model/response/image-response.model";
         DialogModule,
         Button,
         ReactiveFormsModule,
-        InputTextModule,
         FloatLabelModule,
         DropdownModule,
-        InputTextareaModule,
         FileUploadModule,
         FormsModule,
-        FileUploadComponent,
         InputSwitchModule,
-        ToastModule
+        ToastModule,
+        InputTextareaModule,
+        InputTextModule
     ],
     templateUrl: './save-form.component.html',
     styleUrl: './save-form.component.css',
+    standalone: true,
     providers: [MessageService]
 })
 export class SaveFormComponent implements OnInit {

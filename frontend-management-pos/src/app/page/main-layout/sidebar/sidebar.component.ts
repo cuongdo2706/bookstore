@@ -11,6 +11,7 @@ import {AuthService} from "../../../core/auth/service/auth.service";
     selector: 'app-sidebar',
     imports: [MenubarModule, MenuModule, PanelMenuModule, TieredMenuModule, RippleModule, CardModule],
     templateUrl: './sidebar.component.html',
+    standalone: true,
     styleUrl: './sidebar.component.css'
 })
 export class SidebarComponent {
