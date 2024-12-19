@@ -19,7 +19,7 @@ import {ImageModule} from "primeng/image";
 import {ToastModule} from "primeng/toast";
 import {firstValueFrom, lastValueFrom} from "rxjs";
 import {AppConstants} from "../../../../../app.constants";
-import {BookUpdatedRequest} from "../../../../model/request/book-updated-request.model";
+import {ProductUpdatedRequest} from "../../../../model/request/product-updated-request.model";
 import {ImageResponse} from "../../../../model/response/image-response.model";
 import {PageResponse} from "../../../../model/response/page-response.model";
 import {InputTextareaModule} from "primeng/inputtextarea";
@@ -108,7 +108,7 @@ export class UpdateFormComponent implements OnInit {
         this.submitted = true;
         if (this.updateForm.valid) {
             let fileReq: File | null = this.updateForm.controls.imgFile.value;
-            let bookReq: BookUpdatedRequest = {
+            let bookReq: ProductUpdatedRequest = {
                 ...(this.updateForm.controls.name.value !== this.defaultData.name ?
                     {name: this.updateForm.controls.name.value!} : null),
                 ...(this.updateForm.controls.quantity.value !== this.defaultData.quantity ?

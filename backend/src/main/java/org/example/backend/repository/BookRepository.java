@@ -1,32 +1,31 @@
 package org.example.backend.repository;
 
-import org.example.backend.dto.response.BookResponse;
-import org.example.backend.entity.Book;
+import org.example.backend.entity.Product;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import java.util.List;
-
-public interface BookRepository extends JpaRepository<Book, Long> , JpaSpecificationExecutor<Book> {
+public interface BookRepository extends JpaRepository<Product, Long> , JpaSpecificationExecutor<Product> {
     @Query(nativeQuery = true,
             value = """
             SELECT *
-            FROM tbl_book b
+            FROM tbl_product b
             WHERE b.is_active = TRUE AND b.is_deleted = FALSE
             ORDER BY b.name
             """)
-    Page<Book> findAllPage(Pageable pageable);
+    Page<Product> findAllPage(Pageable pageable);
 
     @Modifying
-    @Query(nativeQuery = true,value = "UPDATE tbl_book SET is_deleted = true WHERE id = :id")
+    @Query(nativeQuery = true,value = "UPDATE tbl_product SET is_deleted = true WHERE id = :id")
     void softDelete(@Param("id") Long id);
 
     boolean existsByCode(String code);
+
+    @Query(nativeQuery = true,value = "SELECT b.quantity FROM tbl_product b WHERE b.id = :id")
+    Integer getQuantityById(@Param("id") Long id);
 
 }

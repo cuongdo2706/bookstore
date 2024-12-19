@@ -1,5 +1,6 @@
 package org.example.backend.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -20,9 +21,10 @@ public class OrderDetail {
 
     @ManyToOne
     @JoinColumn(name = "book_id")
-    Book book;
+    Product product;
 
     @ManyToOne
+    @JsonIgnore
     @JoinColumn(name = "order_id")
     Order order;
 

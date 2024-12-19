@@ -18,7 +18,7 @@ import {SaveFormComponent} from "./save-form/save-form.component";
 import {ProductResponse} from "../../../model/response/product-response.model";
 import {ConfirmDialogModule} from "primeng/confirmdialog";
 import {ConfirmationService, MessageService} from "primeng/api";
-import {debounceTime, delay, distinctUntilChanged, firstValueFrom, lastValueFrom} from "rxjs";
+import {debounce, debounceTime, delay, distinctUntilChanged, firstValueFrom, lastValueFrom} from "rxjs";
 import {UpdateFormComponent} from "./update-form/update-form.component";
 import {AuthService} from "../../../../core/auth/service/auth.service";
 import {AppConstants} from "../../../../app.constants";
@@ -100,12 +100,13 @@ export class ProductComponent implements OnInit {
     searchKeyword() {
         const paginator = this.paginator();
         this.productService.searchProducts(0, this.size, this.keyword, this.filterSelection)
+            .pipe(delay(1000))
             .subscribe({
                     next: res => {
                         this.products = res.data.content;
                         this.totalElements = res.data.totalElements;
                         if (paginator) {
-                            paginator.first=0;
+                            paginator.first = 0;
                         }
                     }
                 }

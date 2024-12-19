@@ -1,4 +1,4 @@
-export interface BookCreatedRequest {
+export interface ProductCreatedRequest {
   name: string;
   publicId?: string;
   imgUrl?: string;

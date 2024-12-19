@@ -1,6 +1,41 @@
-
-.p-card-content {
-    padding-top: 0;
+.custom {
+    .p-card-body {
+        padding-top: 0;
+    }
+    .p-card-content {
+        padding-top: 0;
+    }
 }
 
+.tab-name {
+    list-style: none;
+    display: inline-block;
+}
+
+.item-list {
+    position: fixed;
+    overflow-y: auto;
+    bottom: 20px;
+    right: 550px;
+    left: 258px;
+    top: 180px;
+}
+.child-p-card{
+    .p-card-content{
+        padding-top:4px
+    }
+}
+.payment-p-card{
+    .p-card-content{
+        padding-top:10px
+    }
+    .p-card-body{
+        padding-left:15px
+    }
+}
+.tab-index-custom{
+    .p-button-icon{
+        font-size: 10px;
+    }
+}
 

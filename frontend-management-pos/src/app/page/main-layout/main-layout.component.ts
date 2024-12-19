@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {Component, ViewEncapsulation} from '@angular/core';
 import {NavbarComponent} from "./navbar/navbar.component";
 import {SidebarComponent} from "./sidebar/sidebar.component";
 import {CardModule} from "primeng/card";
@@ -14,6 +14,7 @@ import {ScrollPanelModule} from "primeng/scrollpanel";
         RouterOutlet,
         ScrollPanelModule
     ],
+    encapsulation: ViewEncapsulation.None,
     templateUrl: './main-layout.component.html',
     standalone: true,
     styleUrl: './main-layout.component.css'

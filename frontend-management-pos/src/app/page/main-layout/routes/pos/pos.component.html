@@ -1,22 +1,159 @@
-<p-card [style] = "{'top':'82px','bottom':'10px','right':'16px','left':'235px','position':'fixed', 'overflow-y': 'auto'}">
-    <p-tabView id = "closableTabView">
-        @for (tab of tabs(); track tab.id) {
-	  <p-tabPanel [header] = "tab.title">
-	      <h1>{{tab.total}}</h1>
-	  </p-tabPanel>
+<p-card styleClass = "custom"
+        [style] = "{'top':'82px','bottom':'10px','right':'16px','left':'235px','position':'fixed'}">
+
+    <ul style = "padding-left:0">
+        <p-iconField iconPosition = "left">
+	  <p-inputIcon>
+	      <i class = "pi pi-search"></i>
+	  </p-inputIcon>
+	  <input
+		[style] = "{'width':'400px'}"
+		pInputText
+		type = "text"
+		placeholder = "Tìm theo mã hoặc tên"/>
+        </p-iconField>
+        <p-button
+	      raised = "true"
+	      text = "true"
+	      [style] = "{'height':'2rem','width':'2rem','margin-bottom':'9px','margin-left':'10px'}"
+	      icon = "pi pi-barcode"></p-button>
+
+        @for (t of test(); let i = $index; track i) {
+	  <li class = "ml-2 tab-name">
+	      <p-splitButton
+		    label = "Hoá đơn {{i+1}}"
+		    (onClick) = "chooseTab(i)"
+		    (onDropdownClick) = "deleteTab(i)"
+		    rounded
+
+	      >
+		<ng-template pTemplate = "dropdownicon">
+		    <i class = "pi pi-times"></i>
+		</ng-template>
+	      </p-splitButton>
+
+	  </li>
         }
-        <!--        <p-tabPanel header = "Header I" [closable]="true" [selected] = "true">-->
-        <!--	  <p>-->
-        <!--	      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et-->
-        <!--	      dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip-->
-        <!--	      ex-->
-        <!--	      ea commodo-->
-        <!--	      consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla-->
-        <!--	      pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim-->
-        <!--	      id-->
-        <!--	      est laborum.-->
-        <!--	  </p>-->
-        <!--        </p-tabPanel>-->
-<button>a</button>
-    </p-tabView>
+        <p-button
+	      [style] = "{'height':'2rem','width':'2rem','margin-bottom':'9px','margin-left':'10px'}"
+	      [rounded] = "true"
+	      severity = "success"
+	      [disabled] = "test().length >= MAX_TABS"
+	      class = "ml-2"
+	      text = "true"
+	      raised = "true"
+	      icon = "pi pi-plus"
+	      (onClick) = "createNewTab()"></p-button>
+    </ul>
+    <form>
+        <div class = "item-list">
+	  <!--        @for (t of test();track $index){-->
+	  <p-card styleClass = "child-p-card"
+		[style] = "{'background-color':'white','height':'50px','margin-bottom':'10px','align-items': 'center'}">
+	      <div class = "flex-row">
+		<div style = "display:inline-block" class = "">1</div>
+		<div style = "display:inline-block" class = "ml-3"><i class = "pi pi-trash"></i></div>
+		<div style = "display:inline-block" class = "ml-3">SP12345</div>
+		<div style = "display:inline-block" class = "ml-5 col-5">Sản phẩm ABCDSDFJGaaaaaaaaaaaâaaaaaaaaa
+		</div>
+		<div style = "display:inline-block" class = "ml-2">
+		    <p-button
+			  class = "mr-1"
+			  [style] = "{'width':'1.5rem','height':'1.5rem'}"
+			  severity = "secondary"
+			  styleClass = "tab-index-custom"
+			  rounded = "true"
+			  raised = "true"
+			  icon = "pi pi-minus"></p-button>
+		    <p-inputNumber
+			  inputId = "integeronly"
+			  size = "1"
+			  min = "1"
+			  max = "50"
+			  [style] = "{'height':'10px','margin-bottom':'17px'}"
+		    />
+		    <p-button
+			  class = "ml-1"
+			  [style] = "{'width':'1.5rem','height':'1.5rem'}"
+			  styleClass = "tab-index-custom"
+			  rounded = "true"
+			  severity = "secondary"
+			  raised = "true"
+			  icon = "pi pi-plus"></p-button>
+		</div>
+		<div style = "display:inline-block;border-bottom: solid 1px" class = "ml-4">20.000.000</div>
+		<div style = "display:inline-block" class = "ml-4"><b>20.000.000</b></div>
+	      </div>
+	  </p-card>
+	  <!--        }-->
+        </div>
+
+        <div>
+	  <p-card styleClass = "payment-p-card" [style] = "{
+        	'position':'fixed',
+	'top':'180px',
+	'bottom':'20px',
+	'right':'30px',
+	'left':'1210px',
+	'background-color':'white'
+	  }"
+	  >
+
+	      <div class = "flex">
+		<p-dropdown
+		        [style] = "{'height':'35px','align-items': 'center','width':'300px'}"
+		        optionLabel = "name"
+		        [filter] = "true"
+		        filterBy = "name"
+		        [showClear] = "true"
+		        placeholder = "Tìm khách hàng">
+		    <ng-template pTemplate = "selectedItem" let-selectedOption>
+		        <div class = "flex align-items-center gap-2">
+			  <div>{{ selectedOption.name }}</div>
+		        </div>
+		    </ng-template>
+		    <ng-template let-country pTemplate = "item">
+		        <div class = "flex align-items-center gap-2">
+			  <div>{{ country.name }}</div>
+		        </div>
+		    </ng-template>
+		    <ng-template pTemplate = "dropdownicon">
+		        <i class = "pi pi-plus"></i>
+		    </ng-template>
+		</p-dropdown>
+		<!--	      <p-button-->
+		<!--		    class = "ml-1"-->
+		<!--		    [style] = "{'width':'1.5rem','height':'1.5rem'}"-->
+		<!--		    styleClass = "tab-index-custom"-->
+		<!--		    rounded = "true"-->
+		<!--		    raised = "true"-->
+		<!--		    icon = "pi pi-plus"></p-button>-->
+	      </div>
+	      <div class = "flex mt-3">
+		<div class = "col-6 pl-0"><b>Ngày tạo:</b></div>
+		<div class = "col-6" style = "text-align: end"><span>01/01/2024 - 10:50</span></div>
+	      </div>
+	      <div class = "flex mt-3">
+		<div class = "col-6 pl-0"><b>Tổng tiền hàng</b></div>
+		<div class = "col-6" style = "text-align: end">500,000,000</div>
+	      </div>
+	      <div class = "flex mt-3">
+		<div class = "col-6 pl-0"><b>Giảm giá</b></div>
+		<div class = "col-6" style = "text-align: end">500,000</div>
+	      </div>
+	      <div class = "flex mt-3">
+		<div class = "col-6 pl-0"><b>Khách cần trả</b></div>
+		<div class = "col-6" style = "text-align: end">500,000</div>
+	      </div>
+	      <div class = "flex mt-3">
+		<div class = "col-6 pl-0"><b>Khách thanh toán</b></div>
+		<div class = "col-6" style = "text-align: end">500,000</div>
+	      </div>
+	      <div class = "flex mt-5">
+		<p-button [style] = "{'height':'50px','width':'470px'}" label = "Thanh toán"></p-button>
+	      </div>
+	  </p-card>
+        </div>
+    </form>
+
 </p-card>

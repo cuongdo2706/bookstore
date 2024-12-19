@@ -3,11 +3,8 @@ package org.example.backend.entity;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -15,9 +12,9 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Builder
 @Entity
-@Table(name = "tbl_book")
+@Table(name = "tbl_product")
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class Book extends BaseEntity {
+public class Product extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
@@ -38,8 +35,8 @@ public class Book extends BaseEntity {
     @Column(name = "price", precision = 19, scale = 2)
     BigDecimal price;
 
-    @Column(name = "sell_price", precision = 19, scale = 2)
-    BigDecimal sellPrice;
+    @Column(name = "special_price", precision = 19, scale = 2)
+    BigDecimal specialPrice;
 
     String publisher;
 

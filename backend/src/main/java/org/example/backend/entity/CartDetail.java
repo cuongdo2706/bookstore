@@ -24,7 +24,7 @@ public class CartDetail {
 
     @ManyToOne
     @JoinColumn(name = "book_id")
-    Book book;
+    Product product;
 
     Integer quantity;
 

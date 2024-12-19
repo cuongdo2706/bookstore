@@ -9,7 +9,7 @@ import lombok.experimental.FieldDefaults;
 @Getter
 @Setter
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class BookSearchRequest {
+public class ProductSearchRequest {
     @PositiveOrZero(message = "Size must be greater than or equal 0")
     Integer size;
     @PositiveOrZero(message = "Page must be greater than or equal 0")

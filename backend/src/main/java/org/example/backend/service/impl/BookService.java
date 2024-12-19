@@ -1,14 +1,14 @@
 package org.example.backend.service.impl;
 
-import org.example.backend.dto.request.BookCreatedRequest;
-import org.example.backend.dto.request.BookUpdatedRequest;
-import org.example.backend.dto.response.BookResponse;
+import org.example.backend.dto.request.ProductCreatedRequest;
+import org.example.backend.dto.request.ProductUpdatedRequest;
+import org.example.backend.dto.response.ProductResponse;
 import org.example.backend.dto.response.PageResponse;
 import org.example.backend.entity.Author;
-import org.example.backend.entity.Book;
+import org.example.backend.entity.Product;
 import org.example.backend.entity.Category;
 import org.example.backend.exception.DataNotFoundException;
-import org.example.backend.mapper.BookMapper;
+import org.example.backend.mapper.ProductMapper;
 import org.example.backend.repository.AuthorRepository;
 import org.example.backend.repository.BookRepository;
 import org.example.backend.repository.CategoryRepository;
@@ -31,7 +31,7 @@ import java.util.List;
 @Service
 public class BookService implements IBookService {
     @Autowired
-    private BookMapper bookMapper;
+    private ProductMapper productMapper;
 
     @Autowired
     private BookRepository bookRepository;
@@ -47,33 +47,33 @@ public class BookService implements IBookService {
 
 
     @Override
-    public List<BookResponse> findAll() {
-        return bookMapper.toBookResponses(bookRepository.findAll());
+    public List<ProductResponse> findAll() {
+        return productMapper.toProductResponses(bookRepository.findAll());
     }
 
     @Override
-    public PageResponse<BookResponse> findAllPage(Integer page, Integer size) {
+    public PageResponse<ProductResponse> findAllPage(Integer page, Integer size) {
         if (page < 0) page = 0;
         Pageable pageable = PageRequest.of(page, size);
-        Page<Book> books = bookRepository.findAllPage(pageable);
-        return new PageResponse<BookResponse>(bookMapper.toBookResponses(books.getContent()), books.getNumber(), books.getSize(), books.getTotalElements(), books.getTotalPages());
+        Page<Product> books = bookRepository.findAllPage(pageable);
+        return new PageResponse<ProductResponse>(productMapper.toProductResponses(books.getContent()), books.getNumber(), books.getSize(), books.getTotalElements(), books.getTotalPages());
     }
 
     @Override
-    public Book findById(Long id) throws DataNotFoundException {
+    public Product findById(Long id) throws DataNotFoundException {
         return bookRepository.findById(id).orElseThrow(() -> new DataNotFoundException("Book not found"));
     }
 
 
     @Override
-    public PageResponse<BookResponse> findByCodeOrNameAndSort(Integer page, Integer size, String keyword, String sortInput) {
+    public PageResponse<ProductResponse> findByCodeOrNameAndSort(Integer page, Integer size, String keyword, String sortInput) {
         if (page < 0) page = 0;
         if (keyword.isEmpty() && sortInput.equals("name-asc")) {
             Pageable pageable = PageRequest.of(page, size);
-            Page<Book> books = bookRepository.findAllPage(pageable);
-            return new PageResponse<BookResponse>(bookMapper.toBookResponses(books.getContent()), books.getNumber(), books.getSize(), books.getTotalElements(), books.getTotalPages());
+            Page<Product> books = bookRepository.findAllPage(pageable);
+            return new PageResponse<ProductResponse>(productMapper.toProductResponses(books.getContent()), books.getNumber(), books.getSize(), books.getTotalElements(), books.getTotalPages());
         }
-        Specification<Book> spec = BookSpec.findByNameOrCode(keyword);
+        Specification<Product> spec = BookSpec.findByNameOrCode(keyword);
         Sort sort = null;
         switch (sortInput) {
             case "name-desc" -> sort = Sort.by(Sort.Direction.DESC, "name");
@@ -82,24 +82,24 @@ public class BookService implements IBookService {
             default -> sort = Sort.by(Sort.Direction.ASC, "name");
         }
         Pageable pageable = PageRequest.of(page, size, sort);
-        Page<Book> books = bookRepository.findAll(spec, pageable);
-        return new PageResponse<BookResponse>(bookMapper.toBookResponses(books.getContent()), books.getNumber(), books.getSize(), books.getTotalElements(), books.getTotalPages());
+        Page<Product> books = bookRepository.findAll(spec, pageable);
+        return new PageResponse<ProductResponse>(productMapper.toProductResponses(books.getContent()), books.getNumber(), books.getSize(), books.getTotalElements(), books.getTotalPages());
     }
 
     @Override
-    public Book save(BookCreatedRequest request) throws DataNotFoundException {
+    public Product save(ProductCreatedRequest request) throws DataNotFoundException {
         Author existAuthor = authorRepository.findById(request.getAuthorId()).orElseThrow(() -> new RuntimeException("Author not found"));
         Category existCategory = categoryRepository.findById(request.getCategoryId()).orElseThrow(() -> new RuntimeException("Category not found"));
         String productCode = GenerateCodeUtil.generateProductCode();
         while (bookRepository.existsByCode(productCode)) {
             productCode = GenerateCodeUtil.generateProductCode();
         }
-        Book book = bookMapper.toCreatedBook(request, existCategory, existAuthor);
-        return bookRepository.save(book);
+        Product product = productMapper.toCreatedProduct(request, existCategory, existAuthor);
+        return bookRepository.save(product);
     }
 
     @Override
-    public Book update(Long id, BookUpdatedRequest request) throws IOException, DataNotFoundException {
+    public Product update(Long id, ProductUpdatedRequest request) throws IOException, DataNotFoundException {
         Author existAuthor = null;
         Category existCategory = null;
         if (request.getAuthorId() != null) {
@@ -108,14 +108,19 @@ public class BookService implements IBookService {
         if (request.getCategoryId() != null) {
             existCategory = categoryRepository.findById(request.getCategoryId()).orElseThrow(() -> new RuntimeException("Category not found"));
         }
-        Book existedBook = findById(id);
-        Book updateBook = bookMapper.toUpdatedBook(existedBook, request, existCategory, existAuthor);
-        return bookRepository.save(updateBook);
+        Product existedProduct = findById(id);
+        Product updateProduct = productMapper.toUpdatedProduct(existedProduct, request, existCategory, existAuthor);
+        return bookRepository.save(updateProduct);
     }
 
     @Override
     @Transactional
     public void softDelete(Long id) {
         bookRepository.softDelete(id);
+    }
+
+    @Override
+    public Integer getQuantity(Long id) {
+        return bookRepository.getQuantityById(id);
     }
 }

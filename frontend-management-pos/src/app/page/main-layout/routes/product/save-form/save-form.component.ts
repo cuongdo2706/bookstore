@@ -12,7 +12,7 @@ import {AuthorResponse} from "../../../../model/response/author-response.model";
 import {CategoryResponse} from "../../../../model/response/category-response.model";
 import {UploadImageService} from "../../../../service/upload-image.service";
 import {firstValueFrom, lastValueFrom} from "rxjs";
-import {BookCreatedRequest} from "../../../../model/request/book-created-request.model";
+import {ProductCreatedRequest} from "../../../../model/request/product-created-request.model";
 import {ProductService} from "../../../../service/product.service";
 import {InputSwitchModule} from "primeng/inputswitch";
 import {ToastModule} from "primeng/toast";
@@ -126,7 +126,7 @@ export class SaveFormComponent implements OnInit {
         if (this.saveForm.valid) {
             let fileReq: File | null = this.saveForm.controls.imgFile.value;
             console.log(!fileReq);
-            let bookReq: BookCreatedRequest = {
+            let bookReq: ProductCreatedRequest = {
                 name: this.saveForm.controls.name.value!,
                 quantity: this.saveForm.controls.quantity.value!,
                 price: this.saveForm.controls.price.value!,

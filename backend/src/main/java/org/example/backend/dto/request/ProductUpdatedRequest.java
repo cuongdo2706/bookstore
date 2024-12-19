@@ -12,7 +12,7 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class BookUpdatedRequest {
+public class ProductUpdatedRequest {
     String name;
     @PositiveOrZero(message = "Quantity must be greater than or equal 0")
     Integer quantity;

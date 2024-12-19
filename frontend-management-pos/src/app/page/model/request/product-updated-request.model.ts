@@ -1,4 +1,4 @@
-export interface BookUpdatedRequest {
+export interface ProductUpdatedRequest {
     name?: string;
     publicId?: string|null;
     imgUrl?: string|null;

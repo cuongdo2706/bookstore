@@ -1,6 +1,5 @@
 package org.example.backend.dto.request;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -12,7 +11,7 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class BookCreatedRequest {
+public class ProductCreatedRequest {
     @NotBlank(message = "Name must have more than 1 digit")
     @NotNull(message = "Name cannot be null")
     String name;

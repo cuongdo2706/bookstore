@@ -1,30 +1,23 @@
 package org.example.backend.utility;
 
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.example.backend.dto.request.BookCreatedRequest;
-import org.example.backend.dto.response.BookResponse;
-import org.example.backend.entity.Book;
+import org.example.backend.dto.response.ProductResponse;
 import org.springframework.stereotype.Component;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.math.BigDecimal;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 @Component
 public class ExcelUtil {
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
 
-    public ByteArrayInputStream exportBookExcel(List<BookResponse> list) {
+    public ByteArrayInputStream exportBookExcel(List<ProductResponse> list) {
         try (
                 Workbook workbook = new XSSFWorkbook() ;
                 ByteArrayOutputStream out = new ByteArrayOutputStream()
@@ -48,7 +41,7 @@ public class ExcelUtil {
             headerRow.createCell(14).setCellValue("Ngày sửa");
 
             int rowNum = 1;
-            for (BookResponse p : list) {
+            for (ProductResponse p : list) {
                 Row row = sheet.createRow(rowNum++);
                 row.createCell(0).setCellValue(rowNum - 1);
                 row.createCell(1).setCellValue(p.code());

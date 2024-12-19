@@ -3,8 +3,8 @@ import {HttpClient, HttpParams} from "@angular/common/http";
 import {PageResponse} from "../model/response/page-response.model";
 import {ProductResponse} from "../model/response/product-response.model";
 import {ApiResponse} from "../model/response/api-response";
-import {BookUpdatedRequest} from "../model/request/book-updated-request.model";
-import {BookCreatedRequest} from "../model/request/book-created-request.model";
+import {ProductUpdatedRequest} from "../model/request/product-updated-request.model";
+import {ProductCreatedRequest} from "../model/request/product-created-request.model";
 import {AppConstants} from "../../app.constants";
 
 @Injectable({
@@ -40,11 +40,11 @@ export class ProductService {
         });
     }
 
-    saveProduct(product: BookCreatedRequest) {
+    saveProduct(product: ProductCreatedRequest) {
         return this.http.post<ApiResponse<ProductResponse>>(this.url, product);
     }
 
-    updateProduct(id: number, product: BookUpdatedRequest) {
+    updateProduct(id: number, product: ProductUpdatedRequest) {
         return this.http.put<ApiResponse<ProductResponse>>(`${this.url}/${id}`, product);
     }
 
