@@ -1,18 +1,19 @@
-import {Component, inject, OnInit} from '@angular/core';
-import {MenubarModule} from "primeng/menubar";
-import {MenuModule} from "primeng/menu";
-import {PanelMenuModule} from "primeng/panelmenu";
-import {TieredMenuModule} from "primeng/tieredmenu";
-import {RippleModule} from "primeng/ripple";
-import {CardModule} from "primeng/card";
+import {Component, inject} from '@angular/core';
+import {Menu} from "primeng/menu";
+import {Ripple} from "primeng/ripple";
 import {AuthService} from "../../../core/auth/service/auth.service";
+import {RouterLink, RouterLinkActive} from "@angular/router";
 
 @Component({
     selector: 'app-sidebar',
-    imports: [MenubarModule, MenuModule, PanelMenuModule, TieredMenuModule, RippleModule, CardModule],
+    imports: [
+        RouterLinkActive,
+        Menu,
+        Ripple,
+        RouterLink
+    ],
     templateUrl: './sidebar.component.html',
-    standalone: true,
-    styleUrl: './sidebar.component.css'
+    styleUrl: './sidebar.component.css',
 })
 export class SidebarComponent {
     private authService = inject(AuthService);

@@ -1,62 +1,63 @@
-<p-card styleClass = "custom"
-        [style] = "{'top':'82px','bottom':'10px','right':'16px','left':'235px','position':'fixed'}">
+<div class = "nav-tabs">
+    <p-iconfield iconPosition = "left">
+        <p-inputicon>
+	  <i class = "pi pi-search"></i>
+        </p-inputicon>
+        <input
+	      [style] = "{'width':'400px'}"
+	      pInputText
+	      type = "text"
+	      placeholder = "Tìm theo mã hoặc tên"/>
+    </p-iconfield>
+    <p-button
+	  raised = "true"
+	  text = "true"
+	  [style] = "{'height':'2rem','width':'2rem','margin-left':'10px'}"
+	  icon = "pi pi-barcode"></p-button>
 
-    <ul style = "padding-left:0">
-        <p-iconField iconPosition = "left">
-	  <p-inputIcon>
-	      <i class = "pi pi-search"></i>
-	  </p-inputIcon>
-	  <input
-		[style] = "{'width':'400px'}"
-		pInputText
-		type = "text"
-		placeholder = "Tìm theo mã hoặc tên"/>
-        </p-iconField>
-        <p-button
-	      raised = "true"
-	      text = "true"
-	      [style] = "{'height':'2rem','width':'2rem','margin-bottom':'9px','margin-left':'10px'}"
-	      icon = "pi pi-barcode"></p-button>
 
-        @for (t of test(); let i = $index; track i) {
-	  <li class = "ml-2 tab-name">
-	      <p-splitButton
-		    label = "Hoá đơn {{i+1}}"
-		    (onClick) = "chooseTab(i)"
-		    (onDropdownClick) = "deleteTab(i)"
-		    rounded
-
-	      >
-		<ng-template pTemplate = "dropdownicon">
-		    <i class = "pi pi-times"></i>
-		</ng-template>
-	      </p-splitButton>
-
-	  </li>
-        }
-        <p-button
-	      [style] = "{'height':'2rem','width':'2rem','margin-bottom':'9px','margin-left':'10px'}"
-	      [rounded] = "true"
-	      severity = "success"
-	      [disabled] = "test().length >= MAX_TABS"
+    @for (t of test(); let i = $index; track i) {
+        <p-splitbutton
 	      class = "ml-2"
-	      text = "true"
-	      raised = "true"
-	      icon = "pi pi-plus"
-	      (onClick) = "createNewTab()"></p-button>
-    </ul>
-    <form>
-        <div class = "item-list">
+	      label = "Hoá đơn {{i+1}}"
+	      (onClick) = "chooseTab(i)"
+	      (onDropdownClick) = "deleteTab(i)"
+	      rounded
+        >
+	  <ng-template #dropdownicon>
+	      <i class = "pi pi-times"></i>
+	  </ng-template>
+        </p-splitbutton>
+
+
+    }
+    <p-button
+	  [style] = "{'height':'2rem','width':'2rem','margin-left':'10px'}"
+	  [rounded] = "true"
+	  severity = "success"
+	  [disabled] = "test().length >= MAX_TABS"
+	  class = "ml-2"
+	  text = "true"
+	  raised = "true"
+	  icon = "pi pi-plus"
+	  (onClick) = "createNewTab()"></p-button>
+</div>
+<form style = "margin-top: 20px">
+    <div style = "display: flex; gap: 10px">
+        <div style = "width: 70%;flex-shrink: 0">
 	  <!--        @for (t of test();track $index){-->
-	  <p-card styleClass = "child-p-card"
-		[style] = "{'background-color':'white','height':'50px','margin-bottom':'10px','align-items': 'center'}">
-	      <div class = "flex-row">
-		<div style = "display:inline-block" class = "">1</div>
-		<div style = "display:inline-block" class = "ml-3"><i class = "pi pi-trash"></i></div>
-		<div style = "display:inline-block" class = "ml-3">SP12345</div>
-		<div style = "display:inline-block" class = "ml-5 col-5">Sản phẩm ABCDSDFJGaaaaaaaaaaaâaaaaaaaaa
+	  <p-card styleClass = "item">
+	      <div class = "flex align-items-center justify-content-between">
+		<div class = "flex align-items-center" style = "width: 50%">
+		    <span>1</span>
+		    <i style = "cursor: pointer" class = "pi pi-trash ml-3"></i>
+		    <span class = "ml-3">SP12345</span>
+		    <div class = "ml-5"
+		         style = "max-width: 300px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap">
+		        Sản phẩm ABCDSDFJGaaaaaaaaaaaâaaaaaaaaa
+		    </div>
 		</div>
-		<div style = "display:inline-block" class = "ml-2">
+		<div class = "flex align-items-center">
 		    <p-button
 			  class = "mr-1"
 			  [style] = "{'width':'1.5rem','height':'1.5rem'}"
@@ -65,13 +66,7 @@
 			  rounded = "true"
 			  raised = "true"
 			  icon = "pi pi-minus"></p-button>
-		    <p-inputNumber
-			  inputId = "integeronly"
-			  size = "1"
-			  min = "1"
-			  max = "50"
-			  [style] = "{'height':'10px','margin-bottom':'17px'}"
-		    />
+		    <p-input-number class = "quantity-input" min = "1" max = "50"/>
 		    <p-button
 			  class = "ml-1"
 			  [style] = "{'width':'1.5rem','height':'1.5rem'}"
@@ -81,53 +76,48 @@
 			  raised = "true"
 			  icon = "pi pi-plus"></p-button>
 		</div>
-		<div style = "display:inline-block;border-bottom: solid 1px" class = "ml-4">20.000.000</div>
-		<div style = "display:inline-block" class = "ml-4"><b>20.000.000</b></div>
+		<div class = "flex align-items-center gap-4">
+		    <span style = "border-bottom: solid 1px">20.000.000</span>
+		    <b>20.000.000</b>
+		</div>
 	      </div>
+
+
 	  </p-card>
 	  <!--        }-->
         </div>
-
-        <div>
-	  <p-card styleClass = "payment-p-card" [style] = "{
-        	'position':'fixed',
-	'top':'180px',
-	'bottom':'20px',
-	'right':'30px',
-	'left':'1210px',
-	'background-color':'white'
-	  }"
-	  >
-
+        <div style = "width: 30%;flex-shrink: 0">
+	  <p-card styleClass = "order-info">
 	      <div class = "flex">
-		<p-dropdown
+		<p-select
 		        [style] = "{'height':'35px','align-items': 'center','width':'300px'}"
 		        optionLabel = "name"
 		        [filter] = "true"
 		        filterBy = "name"
 		        [showClear] = "true"
 		        placeholder = "Tìm khách hàng">
-		    <ng-template pTemplate = "selectedItem" let-selectedOption>
+		    <ng-template #selectedItem let-selectedOption>
 		        <div class = "flex align-items-center gap-2">
 			  <div>{{ selectedOption.name }}</div>
 		        </div>
 		    </ng-template>
-		    <ng-template let-country pTemplate = "item">
+		    <ng-template let-country #item>
 		        <div class = "flex align-items-center gap-2">
 			  <div>{{ country.name }}</div>
 		        </div>
 		    </ng-template>
-		    <ng-template pTemplate = "dropdownicon">
+		    <ng-template #dropdownicon>
 		        <i class = "pi pi-plus"></i>
 		    </ng-template>
-		</p-dropdown>
-		<!--	      <p-button-->
-		<!--		    class = "ml-1"-->
-		<!--		    [style] = "{'width':'1.5rem','height':'1.5rem'}"-->
-		<!--		    styleClass = "tab-index-custom"-->
-		<!--		    rounded = "true"-->
-		<!--		    raised = "true"-->
-		<!--		    icon = "pi pi-plus"></p-button>-->
+		    <ng-template #footer>
+		        <div class = "p-3">
+			  <p-button label = "Thêm khách hàng" fluid size = "small" icon = "pi pi-plus"/>
+		        </div>
+		    </ng-template>
+		    <ng-template #empty>
+		        <span class = "flex justify-content-center">Không có bản ghi nào</span>
+		    </ng-template>
+		</p-select>
 	      </div>
 	      <div class = "flex mt-3">
 		<div class = "col-6 pl-0"><b>Ngày tạo:</b></div>
@@ -149,11 +139,12 @@
 		<div class = "col-6 pl-0"><b>Khách thanh toán</b></div>
 		<div class = "col-6" style = "text-align: end">500,000</div>
 	      </div>
-	      <div class = "flex mt-5">
-		<p-button [style] = "{'height':'50px','width':'470px'}" label = "Thanh toán"></p-button>
-	      </div>
+
+	      <p-button [style] = "{'width':'100%','margin-top':'20px'}" label = "Thanh toán"></p-button>
+
 	  </p-card>
         </div>
-    </form>
 
-</p-card>
+    </div>
+</form>
+

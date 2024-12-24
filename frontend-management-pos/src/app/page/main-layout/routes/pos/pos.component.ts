@@ -1,15 +1,14 @@
-import {Component, computed, inject, OnInit, Signal, signal, ViewEncapsulation} from '@angular/core';
-import {TabViewModule} from "primeng/tabview";
-import {CardModule} from "primeng/card";
+import {Component, inject, OnInit, signal, ViewEncapsulation} from '@angular/core';
 import {MessageService} from "primeng/api";
-import {Button, ButtonDirective} from "primeng/button";
-import {InputTextModule} from "primeng/inputtext";
+import {Button} from "primeng/button";
+import {InputText} from "primeng/inputtext";
 import {FormBuilder, FormsModule} from "@angular/forms";
-import {IconFieldModule} from "primeng/iconfield";
-import {InputIconModule} from "primeng/inputicon";
-import {SplitButtonModule} from "primeng/splitbutton";
-import {InputNumberModule} from "primeng/inputnumber";
-import {DropdownModule} from "primeng/dropdown";
+import {Select} from "primeng/select";
+import {SplitButton} from "primeng/splitbutton";
+import {IconField} from "primeng/iconfield";
+import {InputIcon} from "primeng/inputicon";
+import {Card} from "primeng/card";
+import {InputNumber} from "primeng/inputnumber";
 
 interface Tab {
     createdAt: Date;
@@ -27,23 +26,20 @@ interface Tab {
 @Component({
     selector: 'app-pos',
     imports: [
-        TabViewModule,
-        CardModule,
         Button,
-        InputTextModule,
         FormsModule,
-        IconFieldModule,
-        InputIconModule,
-        SplitButtonModule,
-        InputNumberModule,
-        DropdownModule
+        Select,
+        SplitButton,
+        IconField,
+        InputIcon,
+        Card,
+        InputText,
+        InputNumber,
     ],
     templateUrl: './pos.component.html',
     styleUrl: './pos.component.css',
-    encapsulation: ViewEncapsulation.None,
-    standalone: true,
-    providers: [MessageService]
-
+    providers: [MessageService],
+    encapsulation:ViewEncapsulation.None
 })
 
 export class PosComponent implements OnInit {

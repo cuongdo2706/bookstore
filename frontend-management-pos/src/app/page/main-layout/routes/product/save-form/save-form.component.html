@@ -8,39 +8,39 @@
         <!--Phần input chính -->
         <div class = "flex">
 	  <div class = "col-7">
-	      <p-floatLabel class = "mt-3 flex">
+	      <p-floatlabel class = "mt-3 flex">
 		<input aria-describedby = "name-error" type = "text" pInputText id = "name" style = "width:600px"
 		       [formControl] = "saveForm.controls.name"/>
 		<label for = "name">Tên sách</label>
-	      </p-floatLabel>
+	      </p-floatlabel>
 	      @if (submitted && saveForm.get('name')?.invalid) {
 		<small class = "p-error block mt-1">
 		    Tên không được để trống
 		</small>
 	      }
-	      <p-floatLabel class = "mt-5 flex">
+	      <p-floatlabel class = "mt-5 flex">
 		<input pInputText id = "publisher" style = "width:600px"
 		       [formControl] = "saveForm.controls.publisher"/>
 		<label for = "publisher">Nhà xuất bản</label>
-	      </p-floatLabel>
+	      </p-floatlabel>
 
-	      <p-floatLabel class = "mt-5 flex">
+	      <p-floatlabel class = "mt-5 flex">
 		<input pInputText id = "translator" style = "width:600px"
 		       [formControl] = "saveForm.controls.translator"/>
 		<label for = "name">Dịch giả</label>
-	      </p-floatLabel>
-	      <p-floatLabel class = "mt-5 flex">
+	      </p-floatlabel>
+	      <p-floatlabel class = "mt-5 flex">
 		<input pInputText id = "numOfPages" style = "width:600px"
 		       [formControl] = "saveForm.controls.numOfPages"/>
 		<label for = "numOfPages">Số trang</label>
-	      </p-floatLabel>
+	      </p-floatlabel>
 	      @if (submitted && saveForm.get('numOfPages')?.invalid && saveForm.get('numOfPages')?.value != null) {
 		<small class = "p-error block mt-1">
 		    Số trang phải là số và lớn hơn 0
 		</small>
 	      }
-	      <p-floatLabel class = "mt-5 flex">
-		<p-dropdown
+	      <p-floatlabel class = "mt-5 flex">
+		<p-select
 		        [style] = "{'width':'600px'}"
 		        formControlName = "publishedYear"
 		        [options] = "years"
@@ -48,10 +48,10 @@
 		        [showClear] = "true"
 		/>
 		<label>Năm phát hành</label>
-	      </p-floatLabel>
+	      </p-floatlabel>
 	      <div class = "mt-5 flex">
-		<p-floatLabel>
-		    <p-dropdown
+		<p-floatlabel>
+		    <p-select
 			  [style] = "{'width':'550px'}"
 			  [formControl] = "saveForm.controls.author"
 			  [options] = "authors"
@@ -60,12 +60,19 @@
 			  [filter] = "true"
 			  filterBy = "name"
 			  [showClear] = "true"
-		    />
+		    >
+		        <ng-template #empty>
+			  <span class = "flex justify-content-center">Không có bản ghi nào</span>
+		        </ng-template>
+		        <ng-template #footer>
+			  <div class = "p-3">
+			      <p-button (onClick)="saveAuthorForm()" label = "Thêm tác giả" fluid size = "small" icon = "pi pi-plus"/>
+			  </div>
+		        </ng-template>
+		    </p-select>
 		    <label>Tác giả</label>
-		</p-floatLabel>
-		<p-button (onClick) = "saveAuthorForm()" class = "ml-1" icon = "pi pi-plus" [rounded] = "true"
-			[text] = "true"
-			severity = "secondary"/>
+		</p-floatlabel>
+
 		<p-dialog
 		        header = "Thêm tác giả"
 		        [modal] = "true"
@@ -92,8 +99,8 @@
 	      }
 
 	      <div class = "mt-5 flex">
-		<p-floatLabel>
-		    <p-dropdown
+		<p-floatlabel>
+		    <p-select
 			  [style] = "{'width':'550px'}"
 			  [formControl] = "saveForm.controls.category"
 			  [options] = "categories"
@@ -101,13 +108,19 @@
 			  optionValue = "id"
 			  [filter] = "true"
 			  filterBy = "name"
-			  [showClear] = "true"/>
+			  [showClear] = "true">
+		        <ng-template #empty>
+			  <span class = "flex justify-content-center">Không có bản ghi nào</span>
+		        </ng-template>
+		        <ng-template #footer>
+			  <div class = "p-3">
+			      <p-button (onClick)="saveCategoryForm()" label = "Thêm danh mục" fluid size = "small" icon = "pi pi-plus"/>
+			  </div>
+		        </ng-template>
+		    </p-select>
 		    <label>Danh mục</label>
-		</p-floatLabel>
+		</p-floatlabel>
 
-		<p-button (onClick) = "saveCategoryForm()" class = "ml-1" icon = "pi pi-plus" [rounded] = "true"
-			[text] = "true"
-			severity = "secondary"/>
 		<p-dialog
 		        header = "Thêm thể loại"
 		        [modal] = "true"
@@ -135,21 +148,21 @@
 	      }
 	  </div>
 	  <div class = "col-5">
-	      <p-floatLabel class = "mt-3 flex">
+	      <p-floatlabel class = "mt-3 flex">
 		<input pInputText id = "quantity" style = "width:450px"
 		       [formControl] = "saveForm.controls.quantity"/>
 		<label for = "quantity">Số lượng</label>
-	      </p-floatLabel>
+	      </p-floatlabel>
 	      @if (submitted && saveForm.get('quantity')?.invalid) {
 		<small class = "p-error block mt-1">
 		    Số lượng phải là số và lớn hơn hoặc bằng 0
 		</small>
 	      }
-	      <p-floatLabel class = "mt-5 flex">
+	      <p-floatlabel class = "mt-5 flex">
 		<input pInputText id = "price" style = "width:450px"
 		       [formControl] = "saveForm.controls.price"/>
 		<label for = "price">Giá</label>
-	      </p-floatLabel>
+	      </p-floatlabel>
 	      @if (submitted && saveForm.get('price')?.invalid) {
 		<small class = "p-error block mt-1">
 		    Giá phải là số và lớn hơn 0
@@ -159,23 +172,23 @@
 		<p class = "mt-2">Đăng bán</p>
 		<p-inputSwitch class = "ml-3 pt-1" [formControl] = "saveForm.controls.isActive"></p-inputSwitch>
 	      </div>
-	      <p-floatLabel class = "mt-5 flex">
+	      <p-floatlabel class = "mt-5 flex">
           <textarea
 	        [formControl] = "saveForm.controls.description"
 	        [style] = "{'width':'450px'}"
 	        id = "description"
 	        rows = "10"
-	        pInputTextarea
+	        pTextarea
 	></textarea>
 		<label for = "description">Mô tả</label>
-	      </p-floatLabel>
+	      </p-floatlabel>
 	  </div>
         </div>
 
         <div class = "flex">
 	  <!--Phần input file -->
 	  <div class = "col-7">
-	      <p-fileUpload
+	      <p-fileupload
 		    (onSelect) = "chooseImage($event)"
 		    (onRemove) = "removeImage()"
 		    [multiple] = "false"
@@ -185,7 +198,7 @@
 		    [showUploadButton] = "false"
 		    fileLimit = "1"
 		    chooseLabel = "Chọn ảnh">
-	      </p-fileUpload>
+	      </p-fileupload>
 	  </div>
 	  <!--Phần button -->
 

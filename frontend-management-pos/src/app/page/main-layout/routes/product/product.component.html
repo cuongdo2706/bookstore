@@ -1,5 +1,5 @@
-<p-card header = "Sản phẩm"
-        [style] = "{'top':'82px','bottom':'10px','right':'16px','left':'235px','position':'fixed', 'overflow-y': 'auto'}">
+<div style = "overflow-y: auto;height: calc(100vh - 140px)">
+    <span style = "font-size: 25px"> <b>Sản phẩm</b> </span>
     @if (saveFormVisible) {
         <app-save-form
 	      [(visible)] = "saveFormVisible"
@@ -10,26 +10,25 @@
     <p-table [value] = "products"
 	   [lazy] = "true"
 	   [(selection)] = "selectedProductIds"
-	   styleClass = "p-datatable-sm p-datatable-gridlines"
 	   [tableStyle] = "{ 'min-width': '30rem' }"
 	   [expandedRowKeys] = "expandedRows"
 	   dataKey = "id"
 	   (onRowExpand) = "onRowExpand($event)">
-        <ng-template pTemplate = "caption">
+        <ng-template #caption>
 	  <div class = "flex">
 	      <div class = "col-6 flex">
-		<p-iconField iconPosition = "left">
-		    <p-inputIcon>
+		<p-iconfield iconPosition = "left">
+		    <p-inputicon>
 		        <i class = "pi pi-search"></i>
-		    </p-inputIcon>
+		    </p-inputicon>
 		    <input
 			  (input) = "searchKeyword()"
 			  pInputText
 			  type = "text"
 			  [(ngModel)] = "keyword"
 			  placeholder = "Tìm theo mã hoặc tên"/>
-		</p-iconField>
-		<p-dropdown
+		</p-iconfield>
+		<p-select
 		        [style.margin-left.px] = "10"
 		        [options] = "filterOption"
 		        (click) = "searchKeyword()"
@@ -49,7 +48,7 @@
 	      </div>
 	  </div>
         </ng-template>
-        <ng-template pTemplate = "header">
+        <ng-template #header>
 	  <tr>
 
 	      <th>Mã sách</th>
@@ -59,7 +58,7 @@
 	      <th>Số lượng</th>
 	  </tr>
         </ng-template>
-        <ng-template pTemplate = "body" let-product let-expanded = "expanded">
+        <ng-template #body let-product let-expanded = "expanded">
 	  <tr [pRowToggler] = "product">
 
 	      <td style = "width: 100px">{{ product.code }}</td>
@@ -76,7 +75,7 @@
 	      <td style = "width: 20px">{{ product.quantity }}</td>
 	  </tr>
         </ng-template>
-        <ng-template pTemplate = "rowexpansion" let-product>
+        <ng-template #expandedrow let-product>
 	  <tr class = "bg-primary-50">
 	      <td colspan = "7">
 		<div class = "p-3">
@@ -169,8 +168,9 @@
 		        <p-button (onClick) = "confirmDelete(product.id)" icon = "pi pi-trash" severity = "danger"
 			        label = "Xoá"></p-button>
 
-		        <p-confirmDialog #cd>
-			  <ng-template pTemplate = "headless" let-message>
+		        <p-confirm-dialog #cd>
+			  <ng-template #headless let-message let-onAccept = "onAccept"
+                                             let-onReject = "onReject">
 			      <div class = "flex flex-column align-items-center p-5 surface-overlay border-round">
 				<div class = "border-circle bg-primary inline-flex justify-content-center align-items-center h-6rem w-6rem">
 				    <i class = "pi pi-question text-5xl"></i>
@@ -179,37 +179,35 @@
                 {{ message.header }}
             </span>
 				<div class = "flex align-items-center gap-2 mt-4">
-				    <button
-					  pButton
+				    <p-button
 					  label = "Đồng ý"
 					  severity = "danger"
 					  icon = "pi pi-check"
-					  (click) = "cd.accept()"
+					  (onClick) = "onAccept()"
 					  class = "w-8rem">
-				    </button>
-				    <button
-					  pButton
+				    </p-button>
+				    <p-button
 					  label = "Bỏ qua"
 					  severity = "secondary"
 					  icon = "pi pi-times"
-					  (click) = "cd.reject()"
+					  (onClick) = "onReject()"
 					  class = "p-button-outlined w-8rem ">
-				    </button>
+				    </p-button>
 				</div>
 			      </div>
 			  </ng-template>
-		        </p-confirmDialog>
+		        </p-confirm-dialog>
 		    </div>
 		</div>
 	      </td>
 	  </tr>
         </ng-template>
-        <ng-template pTemplate = "emptymessage">
+        <ng-template #emptymessage>
 	  <tr>
 	      <td colspan = "7" style = "text-align: center">Không tìm thấy bản ghi nào</td>
 	  </tr>
         </ng-template>
-        <ng-template pTemplate = "footer" class = "flex justify-content-center">
+        <ng-template #footer class = "flex justify-content-center">
 	  <tr>
 	      <td colspan = "100%" style = "background-color: #ffffff">
 		<p-paginator #paginator
@@ -222,9 +220,6 @@
         </ng-template>
     </p-table>
     <p-toast [life] = "3000"/>
-</p-card>
 
 
-
-
-
+</div>

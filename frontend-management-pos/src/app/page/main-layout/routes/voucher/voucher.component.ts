@@ -7,7 +7,6 @@ import {CardModule} from "primeng/card";
         CardModule
     ],
     templateUrl: './voucher.component.html',
-    standalone: true,
     styleUrl: './voucher.component.css'
 })
 export class VoucherComponent {

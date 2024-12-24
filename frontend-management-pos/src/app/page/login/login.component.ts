@@ -1,9 +1,9 @@
 import {Component, inject} from '@angular/core';
-import {CardModule} from "primeng/card";
+import {Card, CardModule} from "primeng/card";
 import {FormBuilder, ReactiveFormsModule, Validators} from "@angular/forms";
-import {FloatLabelModule} from "primeng/floatlabel";
-import {InputTextModule} from "primeng/inputtext";
-import {PasswordModule} from "primeng/password";
+import {FloatLabel, FloatLabelModule} from "primeng/floatlabel";
+import {InputText, InputTextModule} from "primeng/inputtext";
+import {Password, PasswordModule} from "primeng/password";
 import {Button} from "primeng/button";
 import {AuthService} from "../../core/auth/service/auth.service";
 import {Login} from "../../core/auth/model/login.model";
@@ -11,15 +11,14 @@ import {Login} from "../../core/auth/model/login.model";
 @Component({
     selector: 'app-login',
     imports: [
-        CardModule,
+        Button,
+        Card,
         ReactiveFormsModule,
-        FloatLabelModule,
-        InputTextModule,
-        PasswordModule,
-        Button
+        FloatLabel,
+        Password,
+        InputText
     ],
     templateUrl: './login.component.html',
-    standalone: true,
     styleUrl: './login.component.css'
 })
 export class LoginComponent {

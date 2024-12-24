@@ -1,43 +1,42 @@
 import {Component, inject, model, OnInit, output} from '@angular/core';
-import {DialogModule} from "primeng/dialog";
+import {Dialog} from "primeng/dialog";
 import {Button} from "primeng/button";
 import {FormBuilder, FormsModule, ReactiveFormsModule, Validators} from "@angular/forms";
-import {InputTextModule} from "primeng/inputtext";
-import {FloatLabelModule} from "primeng/floatlabel";
-import {DropdownModule} from "primeng/dropdown";
+import {InputText} from "primeng/inputtext";
+import {FloatLabel} from "primeng/floatlabel";
 import {CategoryService} from "../../../../service/category.service";
 import {AuthorService} from "../../../../service/author.service";
-import {FileUploadModule} from "primeng/fileupload";
+import {FileUpload} from "primeng/fileupload";
 import {AuthorResponse} from "../../../../model/response/author-response.model";
 import {CategoryResponse} from "../../../../model/response/category-response.model";
 import {UploadImageService} from "../../../../service/upload-image.service";
 import {firstValueFrom, lastValueFrom} from "rxjs";
 import {ProductCreatedRequest} from "../../../../model/request/product-created-request.model";
 import {ProductService} from "../../../../service/product.service";
-import {InputSwitchModule} from "primeng/inputswitch";
-import {ToastModule} from "primeng/toast";
+import {InputSwitch} from "primeng/inputswitch";
+import {Toast} from "primeng/toast";
 import {MessageService} from "primeng/api";
 import {ImageResponse} from "../../../../model/response/image-response.model";
-import {InputTextareaModule} from "primeng/inputtextarea";
+import {Textarea} from "primeng/textarea";
+import {Select} from "primeng/select";
 
 @Component({
     selector: 'app-save-form',
     imports: [
-        DialogModule,
         Button,
-        ReactiveFormsModule,
-        FloatLabelModule,
-        DropdownModule,
-        FileUploadModule,
         FormsModule,
-        InputSwitchModule,
-        ToastModule,
-        InputTextareaModule,
-        InputTextModule
+        Textarea,
+        Dialog,
+        FloatLabel,
+        Select,
+        FileUpload,
+        InputSwitch,
+        Toast,
+        ReactiveFormsModule,
+        InputText
     ],
     templateUrl: './save-form.component.html',
     styleUrl: './save-form.component.css',
-    standalone: true,
     providers: [MessageService]
 })
 export class SaveFormComponent implements OnInit {

@@ -1,6 +1,6 @@
-import {Component, DestroyRef, effect, inject, input, model, OnDestroy, OnInit, output} from '@angular/core';
-import {DialogModule} from "primeng/dialog";
-import {FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators} from "@angular/forms";
+import {Component, inject, input, model, OnInit, output} from '@angular/core';
+import {Dialog} from "primeng/dialog";
+import {FormBuilder, ReactiveFormsModule, Validators} from "@angular/forms";
 import {ProductService} from "../../../../service/product.service";
 import {CategoryService} from "../../../../service/category.service";
 import {AuthorService} from "../../../../service/author.service";
@@ -8,40 +8,35 @@ import {UploadImageService} from "../../../../service/upload-image.service";
 import {MessageService} from "primeng/api";
 import {Button} from "primeng/button";
 import {ProductResponse} from "../../../../model/response/product-response.model";
-import {DropdownModule} from "primeng/dropdown";
-import {FloatLabelModule} from "primeng/floatlabel";
-import {InputTextModule} from "primeng/inputtext";
+import {FloatLabel} from "primeng/floatlabel";
+import {InputText} from "primeng/inputtext";
 import {AuthorResponse} from "../../../../model/response/author-response.model";
 import {CategoryResponse} from "../../../../model/response/category-response.model";
-import {InputSwitchModule} from "primeng/inputswitch";
-import {FileUploadModule} from "primeng/fileupload";
-import {ImageModule} from "primeng/image";
-import {ToastModule} from "primeng/toast";
+import {FileUpload} from "primeng/fileupload";
+import {Image} from "primeng/image";
 import {firstValueFrom, lastValueFrom} from "rxjs";
 import {AppConstants} from "../../../../../app.constants";
 import {ProductUpdatedRequest} from "../../../../model/request/product-updated-request.model";
 import {ImageResponse} from "../../../../model/response/image-response.model";
 import {PageResponse} from "../../../../model/response/page-response.model";
-import {InputTextareaModule} from "primeng/inputtextarea";
+import {Select} from "primeng/select";
+import {Toast} from "primeng/toast";
 
 @Component({
     selector: 'app-update-form',
     imports: [
-        DialogModule,
         ReactiveFormsModule,
         Button,
-        DropdownModule,
-        FloatLabelModule,
-        InputSwitchModule,
-        FileUploadModule,
-        ImageModule,
-        ToastModule,
-        InputTextareaModule,
-        InputTextModule
+        Dialog,
+        Select,
+        FloatLabel,
+        FileUpload,
+        Image,
+        InputText,
+        Toast
     ],
     templateUrl: './update-form.component.html',
     styleUrl: './update-form.component.css',
-    standalone: true,
     providers: [MessageService]
 })
 
@@ -150,7 +145,7 @@ export class UpdateFormComponent implements OnInit {
             this.visible.set(false);
 
         } else {
-            this.message.emit({
+            this.messageService.add({
                 severity: "error",
                 summary: "Lỗi",
                 detail: "Dữ liệu nhập vào không đúng yêu cầu, hãy nhập lại!!!"

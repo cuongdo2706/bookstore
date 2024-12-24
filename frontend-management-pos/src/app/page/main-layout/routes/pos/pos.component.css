@@ -1,40 +1,33 @@
-.custom {
+.nav-tabs {
+    display: flex;
+    align-items: center;
+}
+
+.item {
     .p-card-body {
-        padding-top: 0;
+        padding-bottom: 10px;
+        padding-top: 10px;
     }
-    .p-card-content {
-        padding-top: 0;
+}
+.quantity-input{
+    .p-inputnumber-input {
+        width: 80px;
+        height: 35px;
     }
 }
 
-.tab-name {
-    list-style: none;
-    display: inline-block;
+
+
+
+.order-info {
+    .p-card-body {
+        height: calc(100vh - 190px)
+    }
 }
 
-.item-list {
-    position: fixed;
-    overflow-y: auto;
-    bottom: 20px;
-    right: 550px;
-    left: 258px;
-    top: 180px;
-}
-.child-p-card{
-    .p-card-content{
-        padding-top:4px
-    }
-}
-.payment-p-card{
-    .p-card-content{
-        padding-top:10px
-    }
-    .p-card-body{
-        padding-left:15px
-    }
-}
-.tab-index-custom{
-    .p-button-icon{
+
+.tab-index-custom {
+    .p-button-icon {
         font-size: 10px;
     }
 }

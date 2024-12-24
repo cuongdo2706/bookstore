@@ -1,27 +1,21 @@
 import {Component, inject, OnInit} from '@angular/core';
-import {MenubarModule} from "primeng/menubar";
-import {AvatarModule} from "primeng/avatar";
-import {AvatarGroupModule} from "primeng/avatargroup";
-import {Button, ButtonDirective} from "primeng/button";
-import {TieredMenuModule} from "primeng/tieredmenu";
+import {Menubar} from "primeng/menubar";
+import {Button} from "primeng/button";
+import {TieredMenu} from "primeng/tieredmenu";
 import {ConfirmationService, MenuItem} from "primeng/api";
-import {ConfirmDialogModule} from "primeng/confirmdialog";
+import {ConfirmDialog} from "primeng/confirmdialog";
 import {Router} from "@angular/router";
 
 @Component({
     selector: 'app-navbar',
     imports: [
-        MenubarModule,
-        AvatarModule,
-        AvatarGroupModule,
         Button,
-        TieredMenuModule,
-        ButtonDirective,
-        ConfirmDialogModule
+        Menubar,
+        TieredMenu,
+        ConfirmDialog
     ],
     providers: [ConfirmationService],
     templateUrl: './navbar.component.html',
-    standalone: true,
     styleUrl: './navbar.component.css'
 })
 export class NavbarComponent implements OnInit {

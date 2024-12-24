@@ -1,55 +1,45 @@
 import {Component, inject, OnInit, viewChild} from '@angular/core';
-import {CardModule} from "primeng/card";
 import {TableModule} from "primeng/table";
 import {ProductService} from "../../../service/product.service";
-import {CheckboxModule} from "primeng/checkbox";
-import {ToastModule} from "primeng/toast";
-import {ButtonModule} from "primeng/button";
-import {IconFieldModule} from "primeng/iconfield";
-import {InputIconModule} from "primeng/inputicon";
-import {InputTextModule} from "primeng/inputtext";
-import {RippleModule} from "primeng/ripple";
+import {Toast} from "primeng/toast";
+import {Button} from "primeng/button";
+import {IconField} from "primeng/iconfield";
+import {InputIcon} from "primeng/inputicon";
+import {InputText} from "primeng/inputtext";
 import {FormsModule} from "@angular/forms";
-import {ImageModule} from "primeng/image";
-import {Paginator, PaginatorModule, PaginatorState} from "primeng/paginator";
+import {Image} from "primeng/image";
+import {Paginator, PaginatorState} from "primeng/paginator";
 import {DecimalPipe} from "@angular/common";
-import {DialogModule} from "primeng/dialog";
 import {SaveFormComponent} from "./save-form/save-form.component";
 import {ProductResponse} from "../../../model/response/product-response.model";
-import {ConfirmDialogModule} from "primeng/confirmdialog";
+import {ConfirmDialog} from "primeng/confirmdialog";
 import {ConfirmationService, MessageService} from "primeng/api";
-import {debounce, debounceTime, delay, distinctUntilChanged, firstValueFrom, lastValueFrom} from "rxjs";
+import {delay, firstValueFrom} from "rxjs";
 import {UpdateFormComponent} from "./update-form/update-form.component";
-import {AuthService} from "../../../../core/auth/service/auth.service";
 import {AppConstants} from "../../../../app.constants";
 import {PageResponse} from "../../../model/response/page-response.model";
-import {DropdownModule} from "primeng/dropdown";
+import {Select} from "primeng/select";
 
 @Component({
     selector: 'app-product',
     imports: [
-        CardModule,
-        TableModule,
-        CheckboxModule,
-        ToastModule,
-        ButtonModule,
-        IconFieldModule,
-        InputIconModule,
-        InputTextModule,
-        RippleModule,
         FormsModule,
-        ImageModule,
-        PaginatorModule,
         DecimalPipe,
-        DialogModule,
         SaveFormComponent,
-        ConfirmDialogModule,
         UpdateFormComponent,
-        DropdownModule
+        Select,
+        Toast,
+        Button,
+        IconField,
+        InputIcon,
+        InputText,
+        Image,
+        Paginator,
+        TableModule,
+        ConfirmDialog
     ],
     templateUrl: './product.component.html',
     styleUrl: './product.component.css',
-    standalone: true,
     providers: [ConfirmationService, MessageService]
 })
 export class ProductComponent implements OnInit {
@@ -100,7 +90,7 @@ export class ProductComponent implements OnInit {
     searchKeyword() {
         const paginator = this.paginator();
         this.productService.searchProducts(0, this.size, this.keyword, this.filterSelection)
-            .pipe(delay(1000))
+            .pipe(delay(500))
             .subscribe({
                     next: res => {
                         this.products = res.data.content;

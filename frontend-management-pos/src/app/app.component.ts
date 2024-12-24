@@ -1,13 +1,17 @@
-import { Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
-import {MainLayoutComponent} from "./page/main-layout/main-layout.component";
+import {Component, inject, OnInit} from '@angular/core';
+import {RouterOutlet} from '@angular/router';
+import {PrimeNG} from "primeng/config";
 
 @Component({
     selector: 'app-root',
     imports: [RouterOutlet],
     templateUrl: './app.component.html',
-    standalone: true,
     styleUrl: './app.component.css'
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
+    private primeng = inject(PrimeNG);
+
+    ngOnInit(): void {
+        this.primeng.ripple.set(true);
+    }
 }
