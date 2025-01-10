@@ -70,7 +70,7 @@
 		/>
 	      </td>
 	      <td
-		    style = "width: 120px">{{ (product.sellPrice ? product.sellPrice : product.price) | number:"1.0-0" }}
+		    style = "width: 120px">{{ product.price | number:"1.0-0" }}
 	      </td>
 	      <td style = "width: 20px">{{ product.quantity }}</td>
 	  </tr>
@@ -125,7 +125,7 @@
 			  </div>
 			  <div class = "grid mt-1">
 			      <div style = "font-weight: bold" class = "col-4">Giá:</div>
-			      <div class = "col-8">{{ (product.sellPrice ? product.sellPrice : product.price) | number:"1.0-0" }}</div>
+			      <div class = "col-8">{{product.price | number:"1.0-0" }}</div>
 			  </div>
 			  <div class = "grid mt-1">
 			      <div style = "font-weight: bold" class = "col-4">Số trang:</div>

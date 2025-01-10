@@ -1,6 +1,6 @@
 import {Component, inject, input, model, OnInit, output} from '@angular/core';
 import {Dialog} from "primeng/dialog";
-import {FormBuilder, ReactiveFormsModule, Validators} from "@angular/forms";
+import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from "@angular/forms";
 import {ProductService} from "../../../../service/product.service";
 import {CategoryService} from "../../../../service/category.service";
 import {AuthorService} from "../../../../service/author.service";
@@ -48,8 +48,30 @@ export class UpdateFormComponent implements OnInit {
         this.fetchAuthors();
         this.fetchCategories();
         this.getListYears();
+        this.updateForm = this.fb.group({
+            name: this.fb.control<string | null>(null, [Validators.required]),
+            imgFile: null,
+            publisher: this.fb.control<string | null>(null),
+            translator: this.fb.control<string | null>(null),
+            author: this.fb.control<number | null>(null, [Validators.required]),
+            category: this.fb.control<number | null>(null, [Validators.required]),
+            quantity: [0, [Validators.required, Validators.min(0), Validators.pattern('^[1-9]\\d*$')]],
+            price: this.fb.control<number | null>(null, [Validators.required, Validators.min(1)]),
+            numOfPages: this.fb.control<number | null>(null, [Validators.min(1), Validators.pattern('^[1-9]\\d*$')]),
+            publishedYear: this.fb.control<number | null>(null),
+            description: this.fb.control<string | null>(null)
+        });
+        this.categoryInput = this.fb.group({
+            name: ['', Validators.required]
+        });
+        this.authorInput = this.fb.group({
+            name: ['', Validators.required]
+        });
     }
 
+    updateForm!:FormGroup;
+    categoryInput!:FormGroup;
+    authorInput!:FormGroup;
     private defaultData!: ProductResponse;
     imageUrl!: string;
     publicId!: string | null;
@@ -69,27 +91,10 @@ export class UpdateFormComponent implements OnInit {
     message = output<{}>();
     onUpdate = output<PageResponse<ProductResponse>>();
     updateId = input<number>();
-    updateForm = this.fb.group({
-        name: this.fb.control<string | null>(null, [Validators.required]),
-        imgFile: null,
-        publisher: this.fb.control<string | null>(null),
-        translator: this.fb.control<string | null>(null),
-        author: this.fb.control<number | null>(null, [Validators.required]),
-        category: this.fb.control<number | null>(null, [Validators.required]),
-        quantity: [0, [Validators.required, Validators.min(0), Validators.pattern('^[1-9]\\d*$')]],
-        price: this.fb.control<number | null>(null, [Validators.required, Validators.min(1)]),
-        numOfPages: this.fb.control<number | null>(null, [Validators.min(1), Validators.pattern('^[1-9]\\d*$')]),
-        publishedYear: this.fb.control<number | null>(null),
-        description: this.fb.control<string | null>(null)
-    });
 
 
-    categoryInput = this.fb.group({
-        name: ['', Validators.required]
-    });
-    authorInput = this.fb.group({
-        name: ['', Validators.required]
-    });
+
+
 
     async uploadImage(file: File): Promise<ImageResponse> {
         return await lastValueFrom(this.uploadImageService.uploadImage(file));
@@ -102,28 +107,28 @@ export class UpdateFormComponent implements OnInit {
     async updateBook() {
         this.submitted = true;
         if (this.updateForm.valid) {
-            let fileReq: File | null = this.updateForm.controls.imgFile.value;
+            let fileReq: File | null = this.updateForm.controls['imgFile'].value;
             let bookReq: ProductUpdatedRequest = {
-                ...(this.updateForm.controls.name.value !== this.defaultData.name ?
-                    {name: this.updateForm.controls.name.value!} : null),
-                ...(this.updateForm.controls.quantity.value !== this.defaultData.quantity ?
-                    {quantity: this.updateForm.controls.quantity.value!} : null),
-                ...(this.updateForm.controls.price.value !== this.defaultData.price ?
-                    {price: this.updateForm.controls.price.value!} : null),
-                ...(this.updateForm.controls.publisher.value !== this.defaultData.publisher ?
-                    {publisher: this.updateForm.controls.publisher.value} : null),
-                ...(this.updateForm.controls.translator.value !== this.defaultData.translator ?
-                    {translator: this.updateForm.controls.translator.value} : null),
-                ...(this.updateForm.controls.numOfPages.value !== this.defaultData.numOfPages ?
-                    {numOfPages: this.updateForm.controls.numOfPages.value} : null),
-                ...(this.updateForm.controls.publishedYear.value !== this.defaultData.publishedYear ?
-                    {publishedYear: this.updateForm.controls.publishedYear.value} : null),
-                ...(this.updateForm.controls.description.value !== this.defaultData.description ?
-                    {description: this.updateForm.controls.description.value} : null),
-                ...(this.updateForm.controls.author.value !== this.defaultData.author.id ?
-                    {authorId: this.updateForm.controls.author.value!} : null),
-                ...(this.updateForm.controls.category.value !== this.defaultData.category.id ?
-                    {categoryId: this.updateForm.controls.category.value!} : null),
+                ...(this.updateForm.controls['name'].value !== this.defaultData.name ?
+                    {name: this.updateForm.controls['name'].value!} : null),
+                ...(this.updateForm.controls['quantity'].value !== this.defaultData.quantity ?
+                    {quantity: this.updateForm.controls['quantity'].value!} : null),
+                ...(this.updateForm.controls['price'].value !== this.defaultData.price ?
+                    {price: this.updateForm.controls['price'].value!} : null),
+                ...(this.updateForm.controls['publisher'].value !== this.defaultData.publisher ?
+                    {publisher: this.updateForm.controls['publisher'].value} : null),
+                ...(this.updateForm.controls['translator'].value !== this.defaultData.translator ?
+                    {translator: this.updateForm.controls['translator'].value} : null),
+                ...(this.updateForm.controls['numOfPages'].value !== this.defaultData.numOfPages ?
+                    {numOfPages: this.updateForm.controls['numOfPages'].value} : null),
+                ...(this.updateForm.controls['publishedYear'].value !== this.defaultData.publishedYear ?
+                    {publishedYear: this.updateForm.controls['publishedYear'].value} : null),
+                ...(this.updateForm.controls['description'].value !== this.defaultData.description ?
+                    {description: this.updateForm.controls['description'].value} : null),
+                ...(this.updateForm.controls['author'].value !== this.defaultData.author.id ?
+                    {authorId: this.updateForm.controls['author'].value!} : null),
+                ...(this.updateForm.controls['category'].value !== this.defaultData.category.id ?
+                    {categoryId: this.updateForm.controls['category'].value!} : null),
                 ...(this.defaultData.publicId !== null ?
                     (fileReq !== null ? await this.updateImage(fileReq, this.defaultData.publicId) : null) :
                     (fileReq !== null ? await this.uploadImage(fileReq) : null))

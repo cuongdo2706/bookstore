@@ -3,11 +3,10 @@ package org.example.backend.entity;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @Setter
@@ -17,7 +16,7 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "tbl_order")
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class Order {
+public class Order extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
@@ -25,26 +24,26 @@ public class Order {
     @Column(nullable = false, unique = true)
     String code;
 
-    @Column(name = "created_at")
-    LocalDateTime createdAt;
-
-    @Column(name = "updated_at")
-    LocalDateTime updatedAt;
+    @Column(name = "order_at")
+    LocalDateTime orderAt;
 
     @Column(name = "payment_at")
-    LocalDateTime paymentAt;
+    LocalDateTime paymentAt;  //online order
 
     @Column(name = "delivered_at")
-    LocalDateTime deliveredAt;
+    LocalDateTime deliveredAt; //online order
 
     @Column(name = "delivery_fee", precision = 19, scale = 2)
-    BigDecimal deliveryFee;
+    BigDecimal deliveryFee; //online order
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "order")
+    List<OrderDetail> orderDetails;
 
     @Column(name = "total_price", precision = 19, scale = 2)
     BigDecimal totalPrice;
 
     @Column(name = "total_receive", precision = 19, scale = 2)
-    BigDecimal totalReceive;
+    BigDecimal totalReceive;//offline
 
     @ManyToOne
     @JoinColumn(name = "customer_id")
@@ -55,20 +54,20 @@ public class Order {
     Staff staff;
 
     @Column(name = "customer_name")
-    String customerName;
+    String customerName;//online
 
-    String email;
+    String email;//online
 
     @Column(name = "phone_num")
-    String phoneNum;
+    String phoneNum;//online
 
-    String address;
+    String address;// online
 
     @Column(name = "order_type")
-    Boolean orderType;
+    String orderType;
 
     @Column(columnDefinition = "TEXT")
     String note;
 
-    String status;
+    String status;// online
 }

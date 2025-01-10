@@ -10,7 +10,7 @@ import org.example.backend.exception.DataNotFoundException;
 import java.io.IOException;
 import java.util.List;
 
-public interface IBookService {
+public interface IProductService {
     List<ProductResponse> findAll();
 
     PageResponse<ProductResponse> findAllPage(Integer page, Integer size);

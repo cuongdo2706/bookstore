@@ -20,7 +20,7 @@ public class OrderDetail {
     Long id;
 
     @ManyToOne
-    @JoinColumn(name = "book_id")
+    @JoinColumn(name = "product_id")
     Product product;
 
     @ManyToOne
@@ -28,8 +28,18 @@ public class OrderDetail {
     @JoinColumn(name = "order_id")
     Order order;
 
-    Integer quantity;
+    //thông tin snapshot
+    @Column(name = "product_code")
+    private String productCode;
+
+    @Column(name = "product_name")
+    private String productName;
 
     @Column(precision = 19, scale = 2)
     BigDecimal price;
+
+    Integer quantity;
+
+    @Column(precision = 19, scale = 2)
+    BigDecimal totalPrice;
 }

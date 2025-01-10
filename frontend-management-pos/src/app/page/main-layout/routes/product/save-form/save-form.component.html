@@ -10,7 +10,7 @@
 	  <div class = "col-7">
 	      <p-floatlabel class = "mt-3 flex">
 		<input aria-describedby = "name-error" type = "text" pInputText id = "name" style = "width:600px"
-		       [formControl] = "saveForm.controls.name"/>
+		       formControlName = "name"/>
 		<label for = "name">Tên sách</label>
 	      </p-floatlabel>
 	      @if (submitted && saveForm.get('name')?.invalid) {
@@ -20,18 +20,18 @@
 	      }
 	      <p-floatlabel class = "mt-5 flex">
 		<input pInputText id = "publisher" style = "width:600px"
-		       [formControl] = "saveForm.controls.publisher"/>
+		       formControlName="publisher"/>
 		<label for = "publisher">Nhà xuất bản</label>
 	      </p-floatlabel>
 
 	      <p-floatlabel class = "mt-5 flex">
 		<input pInputText id = "translator" style = "width:600px"
-		       [formControl] = "saveForm.controls.translator"/>
+		       formControlName="translator"/>
 		<label for = "name">Dịch giả</label>
 	      </p-floatlabel>
 	      <p-floatlabel class = "mt-5 flex">
 		<input pInputText id = "numOfPages" style = "width:600px"
-		       [formControl] = "saveForm.controls.numOfPages"/>
+		       formControlName="numOfPages"/>
 		<label for = "numOfPages">Số trang</label>
 	      </p-floatlabel>
 	      @if (submitted && saveForm.get('numOfPages')?.invalid && saveForm.get('numOfPages')?.value != null) {
@@ -53,7 +53,7 @@
 		<p-floatlabel>
 		    <p-select
 			  [style] = "{'width':'550px'}"
-			  [formControl] = "saveForm.controls.author"
+			  formControlName="author"
 			  [options] = "authors"
 			  optionLabel = "name"
 			  optionValue = "id"
@@ -66,7 +66,8 @@
 		        </ng-template>
 		        <ng-template #footer>
 			  <div class = "p-3">
-			      <p-button (onClick)="saveAuthorForm()" label = "Thêm tác giả" fluid size = "small" icon = "pi pi-plus"/>
+			      <p-button (onClick) = "saveAuthorForm()" label = "Thêm tác giả" fluid size = "small"
+				      icon = "pi pi-plus"/>
 			  </div>
 		        </ng-template>
 		    </p-select>
@@ -82,7 +83,7 @@
 		    <form [formGroup] = "authorInput" (ngSubmit) = "saveAuthor(authorInput.value)">
 		        <div class = "flex align-items-center gap-3 mb-3 mt-2">
 			  <label for = "authorName" class = "font-semibold w-6rem">Tên</label>
-			  <input pInputText id = "authorName" [formControl] = "authorInput.controls.name"
+			  <input pInputText id = "authorName" formControlName="name"
 			         class = "flex-auto"/>
 		        </div>
 		        <div class = "flex justify-content-end gap-2 mt-4">
@@ -102,7 +103,7 @@
 		<p-floatlabel>
 		    <p-select
 			  [style] = "{'width':'550px'}"
-			  [formControl] = "saveForm.controls.category"
+			  formControlName="category"
 			  [options] = "categories"
 			  optionLabel = "name"
 			  optionValue = "id"
@@ -114,7 +115,8 @@
 		        </ng-template>
 		        <ng-template #footer>
 			  <div class = "p-3">
-			      <p-button (onClick)="saveCategoryForm()" label = "Thêm danh mục" fluid size = "small" icon = "pi pi-plus"/>
+			      <p-button (onClick) = "saveCategoryForm()" label = "Thêm danh mục" fluid
+				      size = "small" icon = "pi pi-plus"/>
 			  </div>
 		        </ng-template>
 		    </p-select>
@@ -130,7 +132,7 @@
 		    <form [formGroup] = "categoryInput" (ngSubmit) = "saveCategory(categoryInput.value)">
 		        <div class = "flex align-items-center gap-3 mb-3 mt-2">
 			  <label for = "categoryName" class = "font-semibold w-6rem">Tên</label>
-			  <input pInputText [formControl] = "categoryInput.controls.name" id = "categoryName"
+			  <input pInputText formControlName="name" id = "categoryName"
 			         class = "flex-auto"/>
 		        </div>
 		        <div class = "flex justify-content-end gap-2 mt-4">
@@ -150,7 +152,7 @@
 	  <div class = "col-5">
 	      <p-floatlabel class = "mt-3 flex">
 		<input pInputText id = "quantity" style = "width:450px"
-		       [formControl] = "saveForm.controls.quantity"/>
+		       formControlName="quantity"/>
 		<label for = "quantity">Số lượng</label>
 	      </p-floatlabel>
 	      @if (submitted && saveForm.get('quantity')?.invalid) {
@@ -160,7 +162,7 @@
 	      }
 	      <p-floatlabel class = "mt-5 flex">
 		<input pInputText id = "price" style = "width:450px"
-		       [formControl] = "saveForm.controls.price"/>
+		       formControlName="price"/>
 		<label for = "price">Giá</label>
 	      </p-floatlabel>
 	      @if (submitted && saveForm.get('price')?.invalid) {
@@ -170,11 +172,11 @@
 	      }
 	      <div class = "mt-5 pb-0 flex">
 		<p class = "mt-2">Đăng bán</p>
-		<p-inputSwitch class = "ml-3 pt-1" [formControl] = "saveForm.controls.isActive"></p-inputSwitch>
+		<p-toggleswitch class = "ml-3 pt-1" formControlName="isActive"></p-toggleswitch>
 	      </div>
 	      <p-floatlabel class = "mt-5 flex">
           <textarea
-	        [formControl] = "saveForm.controls.description"
+	        formControlName="description"
 	        [style] = "{'width':'450px'}"
 	        id = "description"
 	        rows = "10"

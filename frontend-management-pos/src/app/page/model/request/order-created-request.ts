@@ -1,12 +1,10 @@
 export interface OrderCreatedRequest {
-    id: number;
-    totalMoney: number;
-    amountDiscount: number;
-    amountPayable: number;
-    amountPaid: number;
+    totalReceive: number;
     customerId: number;
     staffId: number;
-    orderDetail: any;
-    createdAt: Date;
-    paymentAt: Date;
+    note: String;
+    orderItems: {
+        productId: number;
+        quantity: number;
+    }[];
 }

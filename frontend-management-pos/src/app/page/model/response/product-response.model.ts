@@ -6,7 +6,7 @@ export interface ProductResponse {
   imgUrl: string|null;
   quantity: number;
   price: number;
-  sellPrice: number;
+  specialPrice: number;
   publisher: string|null;
   translator: string|null;
   numOfPages: number|null;

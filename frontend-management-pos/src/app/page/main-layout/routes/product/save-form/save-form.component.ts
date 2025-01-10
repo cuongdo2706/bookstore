@@ -1,7 +1,7 @@
 import {Component, inject, model, OnInit, output} from '@angular/core';
 import {Dialog} from "primeng/dialog";
 import {Button} from "primeng/button";
-import {FormBuilder, FormsModule, ReactiveFormsModule, Validators} from "@angular/forms";
+import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} from "@angular/forms";
 import {InputText} from "primeng/inputtext";
 import {FloatLabel} from "primeng/floatlabel";
 import {CategoryService} from "../../../../service/category.service";
@@ -13,12 +13,12 @@ import {UploadImageService} from "../../../../service/upload-image.service";
 import {firstValueFrom, lastValueFrom} from "rxjs";
 import {ProductCreatedRequest} from "../../../../model/request/product-created-request.model";
 import {ProductService} from "../../../../service/product.service";
-import {InputSwitch} from "primeng/inputswitch";
 import {Toast} from "primeng/toast";
 import {MessageService} from "primeng/api";
 import {ImageResponse} from "../../../../model/response/image-response.model";
 import {Textarea} from "primeng/textarea";
 import {Select} from "primeng/select";
+import {ToggleSwitch} from "primeng/toggleswitch";
 
 @Component({
     selector: 'app-save-form',
@@ -30,10 +30,10 @@ import {Select} from "primeng/select";
         FloatLabel,
         Select,
         FileUpload,
-        InputSwitch,
         Toast,
         ReactiveFormsModule,
-        InputText
+        InputText,
+        ToggleSwitch
     ],
     templateUrl: './save-form.component.html',
     styleUrl: './save-form.component.css',
@@ -44,8 +44,31 @@ export class SaveFormComponent implements OnInit {
         this.fetchAuthors();
         this.fetchCategories();
         this.getListYears();
+        this.saveForm = this.fb.group({
+            name: [null, [Validators.required]],
+            imgFile: null,
+            publisher: null,
+            translator: null,
+            author: [null, [Validators.required]],
+            category: [null, [Validators.required]],
+            quantity: [null, [Validators.required, Validators.min(0), Validators.pattern('^[1-9]\\d*$')]],
+            price: [null, [Validators.required, Validators.min(1)]],
+            numOfPages: [null, [Validators.min(1), Validators.pattern('^[1-9]\\d*$')]],
+            publishedYear: null,
+            isActive: true,
+            description: null,
+        });
+        this.categoryInput = this.fb.group({
+            name: ['', Validators.required]
+        });
+        this.authorInput = this.fb.group({
+            name: ['', Validators.required]
+        });
     }
 
+    saveForm!:FormGroup;
+    categoryInput!:FormGroup;
+    authorInput!:FormGroup;
     years: number[] = [];
     submitted = false;
     private messageService = inject(MessageService);
@@ -62,26 +85,8 @@ export class SaveFormComponent implements OnInit {
     onSave = output<any>();
     message = output<{}>();
 
-    saveForm = this.fb.group({
-        name: [null, [Validators.required]],
-        imgFile: null,
-        publisher: null,
-        translator: null,
-        author: [null, [Validators.required]],
-        category: [null, [Validators.required]],
-        quantity: [null, [Validators.required, Validators.min(0), Validators.pattern('^[1-9]\\d*$')]],
-        price: [null, [Validators.required, Validators.min(1)]],
-        numOfPages: [null, [Validators.min(1), Validators.pattern('^[1-9]\\d*$')]],
-        publishedYear: null,
-        isActive: true,
-        description: null,
-    });
-    categoryInput = this.fb.group({
-        name: ['', Validators.required]
-    });
-    authorInput = this.fb.group({
-        name: ['', Validators.required]
-    });
+
+
 
 
     fetchAuthors() {
@@ -123,25 +128,25 @@ export class SaveFormComponent implements OnInit {
     async saveBook() {
         this.submitted = true;
         if (this.saveForm.valid) {
-            let fileReq: File | null = this.saveForm.controls.imgFile.value;
+            let fileReq: File | null = this.saveForm.controls['imgFile'].value;
             console.log(!fileReq);
             let bookReq: ProductCreatedRequest = {
-                name: this.saveForm.controls.name.value!,
-                quantity: this.saveForm.controls.quantity.value!,
-                price: this.saveForm.controls.price.value!,
-                ...(this.saveForm.controls.publisher.value != null ?
-                    {publisher: this.saveForm.controls.publisher.value} : null),
-                ...(this.saveForm.controls.translator.value != null ?
-                    {translator: this.saveForm.controls.translator.value} : null),
-                ...(this.saveForm.controls.numOfPages.value != null ?
-                    {numOfPages: this.saveForm.controls.numOfPages.value} : null),
-                ...(this.saveForm.controls.publishedYear.value != null ?
-                    {publishedYear: this.saveForm.controls.publishedYear.value} : null),
+                name: this.saveForm.controls['name'].value!,
+                quantity: this.saveForm.controls['quantity'].value!,
+                price: this.saveForm.controls['price'].value!,
+                ...(this.saveForm.controls['publisher'].value != null ?
+                    {publisher: this.saveForm.controls['publisher'].value} : null),
+                ...(this.saveForm.controls['translator'].value != null ?
+                    {translator: this.saveForm.controls['translator'].value} : null),
+                ...(this.saveForm.controls['numOfPages'].value != null ?
+                    {numOfPages: this.saveForm.controls['numOfPages'].value} : null),
+                ...(this.saveForm.controls['publishedYear'].value != null ?
+                    {publishedYear: this.saveForm.controls['publishedYear'].value} : null),
                 isActive: true,
-                ...(this.saveForm.controls.description.value != null ?
-                    {description: this.saveForm.controls.description.value} : null),
-                authorId: this.saveForm.controls.author.value!,
-                categoryId: this.saveForm.controls.category.value!,
+                ...(this.saveForm.controls['description'].value != null ?
+                    {description: this.saveForm.controls['description'].value} : null),
+                authorId: this.saveForm.controls['author'].value!,
+                categoryId: this.saveForm.controls['category'].value!,
                 ...(fileReq !== null && await this.uploadImage(fileReq!))
             };
             console.log(bookReq);

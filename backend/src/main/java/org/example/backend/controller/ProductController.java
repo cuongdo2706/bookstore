@@ -9,7 +9,7 @@ import org.example.backend.dto.response.PageResponse;
 import org.example.backend.dto.response.SuccessResponse;
 import org.example.backend.entity.Product;
 import org.example.backend.exception.DataNotFoundException;
-import org.example.backend.service.IBookService;
+import org.example.backend.service.IProductService;
 import org.example.backend.utility.ExcelUtil;
 import org.example.backend.utility.ImageUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,12 +26,12 @@ import java.io.IOException;
 import java.util.List;
 
 @RestController
-@RequestMapping("book")
+@RequestMapping("product")
 public class ProductController {
     @Autowired
     private ExcelUtil excelUtil;
     @Autowired
-    private IBookService bookService;
+    private IProductService bookService;
     @Autowired
     private ImageUtil imageUtil;
 
@@ -74,12 +74,12 @@ public class ProductController {
     }
 
     @PostMapping
-    public SuccessResponse<Product> createBook(@RequestBody ProductCreatedRequest request) throws IOException, DataNotFoundException {
+    public SuccessResponse<Product> createBook(@Valid @RequestBody ProductCreatedRequest request) throws IOException, DataNotFoundException {
         return new SuccessResponse<>(HttpStatus.CREATED.value(), "Adding data success", bookService.save(request));
     }
 
     @PutMapping("/{id}")
-    public SuccessResponse<Product> updateBook(@PathVariable(name = "id") Long id, @RequestBody ProductUpdatedRequest request) throws IOException, DataNotFoundException {
+    public SuccessResponse<Product> updateBook(@PathVariable(name = "id") Long id, @Valid @RequestBody ProductUpdatedRequest request) throws IOException, DataNotFoundException {
         return new SuccessResponse<>(HttpStatus.ACCEPTED.value(), "Editing data success", bookService.update(id, request));
     }
 

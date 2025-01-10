@@ -14,4 +14,16 @@ public class GenerateCodeUtil {
         }
         return prefix.concat(sb.toString());
     }
+
+    public static String generateOrderCode() {
+        int length = 10;
+        StringBuilder sb = new StringBuilder(length);
+        String prefix = "HĐ";
+        Random random = new Random();
+
+        for (int i = 0 ; i < length ; i++) {
+            sb.append(random.nextInt(10));
+        }
+        return prefix.concat(sb.toString());
+    }
 }

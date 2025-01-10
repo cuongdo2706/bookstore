@@ -12,7 +12,7 @@ import {AppConstants} from "../../app.constants";
 })
 export class ProductService {
     private http = inject(HttpClient);
-    private readonly url: string = AppConstants.API_BASE_URL + "book";
+    private readonly url: string = AppConstants.API_BASE_URL + "product";
 
     fetchProducts(page: number, size: number) {
         let params = new HttpParams()

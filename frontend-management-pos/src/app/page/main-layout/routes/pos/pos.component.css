@@ -15,10 +15,14 @@
         height: 35px;
     }
 }
-
-
-
-
+.searchInput{
+    .p-inputtext{
+        width: 400px;
+    }
+    .p-virtualscroller{
+        width: 450px;
+    }
+}
 .order-info {
     .p-card-body {
         height: calc(100vh - 190px)

@@ -1,14 +1,38 @@
 <div class = "nav-tabs">
-    <p-iconfield iconPosition = "left">
-        <p-inputicon>
-	  <i class = "pi pi-search"></i>
-        </p-inputicon>
-        <input
-	      [style] = "{'width':'400px'}"
-	      pInputText
-	      type = "text"
-	      placeholder = "Tìm theo mã hoặc tên"/>
-    </p-iconfield>
+
+    <!--        <p-select [style] = "{'width':'400px'}">-->
+    <!--	  <ng-template #dropdownicon>-->
+    <!--	      <i class = "pi pi-search"></i>-->
+    <!--	  </ng-template>-->
+    <!--	  <ng-template #footer>-->
+    <!--	      <div class = "p-3">-->
+    <!--		<p-button  label = "Thêm sản phẩm" fluid-->
+    <!--			 size = "small" icon = "pi pi-plus"/>-->
+    <!--	      </div>-->
+    <!--	  </ng-template>-->
+    <!--	  <ng-template #empty>-->
+    <!--	      <span class = "flex justify-content-center">Không có bản ghi nào</span>-->
+    <!--	  </ng-template>-->
+    <!--        </p-select>-->
+    <p-auto-complete
+	  delay = "500"
+	  styleClass = "searchInput"
+	  placeholder = "Tìm sản phẩm theo tên hoặc mã"
+
+	  (completeMethod) = "searchProduct($event)"
+	  (onSelect)="selectProduct($event)"
+	  [suggestions] = "products()"
+    >
+        <ng-template let-product #item>
+	  <div class="flex align-items-center gap-2">
+	      <img src="{{product.imgUrl}}" style="width: 30px">
+	      <span>{{ product.name }}</span>
+	  </div>
+        </ng-template>
+        <ng-template #selectedItem>{{selectedProduct}}</ng-template>
+    </p-auto-complete>
+
+
     <p-button
 	  raised = "true"
 	  text = "true"
@@ -16,9 +40,9 @@
 	  icon = "pi pi-barcode"></p-button>
 
 
-    @for (t of test(); let i = $index; track i) {
+    @for (t of tabs(); let i = $index; track i) {
         <p-splitbutton
-	      class = "ml-2"
+	      class = "ml-3"
 	      label = "Hoá đơn {{i+1}}"
 	      (onClick) = "chooseTab(i)"
 	      (onDropdownClick) = "deleteTab(i)"
@@ -28,21 +52,19 @@
 	      <i class = "pi pi-times"></i>
 	  </ng-template>
         </p-splitbutton>
-
-
     }
     <p-button
 	  [style] = "{'height':'2rem','width':'2rem','margin-left':'10px'}"
 	  [rounded] = "true"
 	  severity = "success"
-	  [disabled] = "test().length >= MAX_TABS"
+	  [disabled] = "tabs().length >= MAX_TABS"
 	  class = "ml-2"
 	  text = "true"
 	  raised = "true"
 	  icon = "pi pi-plus"
 	  (onClick) = "createNewTab()"></p-button>
 </div>
-<form style = "margin-top: 20px">
+<form [formGroup] = "posForm" (ngSubmit) = "placeOrder()" style = "margin-top: 20px">
     <div style = "display: flex; gap: 10px">
         <div style = "width: 70%;flex-shrink: 0">
 	  <!--        @for (t of test();track $index){-->
@@ -106,9 +128,7 @@
 			  <div>{{ country.name }}</div>
 		        </div>
 		    </ng-template>
-		    <ng-template #dropdownicon>
-		        <i class = "pi pi-plus"></i>
-		    </ng-template>
+
 		    <ng-template #footer>
 		        <div class = "p-3">
 			  <p-button label = "Thêm khách hàng" fluid size = "small" icon = "pi pi-plus"/>
@@ -118,10 +138,6 @@
 		        <span class = "flex justify-content-center">Không có bản ghi nào</span>
 		    </ng-template>
 		</p-select>
-	      </div>
-	      <div class = "flex mt-3">
-		<div class = "col-6 pl-0"><b>Ngày tạo:</b></div>
-		<div class = "col-6" style = "text-align: end"><span>01/01/2024 - 10:50</span></div>
 	      </div>
 	      <div class = "flex mt-3">
 		<div class = "col-6 pl-0"><b>Tổng tiền hàng</b></div>
