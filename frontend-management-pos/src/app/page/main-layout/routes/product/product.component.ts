@@ -85,6 +85,7 @@ export class ProductComponent implements OnInit {
                 }
             }
         );
+
     }
 
     searchKeyword() {

@@ -1,4 +1,4 @@
-import {Component, inject, model, OnInit, output} from '@angular/core';
+import {Component, inject, model, OnInit, output, ViewEncapsulation} from '@angular/core';
 import {Dialog} from "primeng/dialog";
 import {Button} from "primeng/button";
 import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} from "@angular/forms";
@@ -19,6 +19,7 @@ import {ImageResponse} from "../../../../model/response/image-response.model";
 import {Textarea} from "primeng/textarea";
 import {Select} from "primeng/select";
 import {ToggleSwitch} from "primeng/toggleswitch";
+import {InputNumber} from "primeng/inputnumber";
 
 @Component({
     selector: 'app-save-form',
@@ -33,11 +34,13 @@ import {ToggleSwitch} from "primeng/toggleswitch";
         Toast,
         ReactiveFormsModule,
         InputText,
-        ToggleSwitch
+        ToggleSwitch,
+        InputNumber
     ],
     templateUrl: './save-form.component.html',
     styleUrl: './save-form.component.css',
-    providers: [MessageService]
+    providers: [MessageService],
+    encapsulation: ViewEncapsulation.None
 })
 export class SaveFormComponent implements OnInit {
     ngOnInit(): void {

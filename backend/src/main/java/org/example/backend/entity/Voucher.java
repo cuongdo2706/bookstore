@@ -13,9 +13,9 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @Builder
 @Entity
-@Table(name = "tbl_promotion")
+@Table(name = "tbl_voucher")
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class Promotion extends BaseEntity {
+public class Voucher extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
@@ -28,6 +28,9 @@ public class Promotion extends BaseEntity {
     String promotionType;
     @Column(precision = 19, scale = 2)
     BigDecimal promotionValue;
+    Integer quantity;
+    @Column(columnDefinition = "INTEGER DEFAULT 0")
+    Integer usedCount;
     @Column(columnDefinition = "BOOLEAN DEFAULT TRUE")
     Boolean isActive;
 }

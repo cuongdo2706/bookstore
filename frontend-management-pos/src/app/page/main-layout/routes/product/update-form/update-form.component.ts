@@ -1,4 +1,4 @@
-import {Component, inject, input, model, OnInit, output} from '@angular/core';
+import {Component, inject, input, model, OnInit, output, ViewEncapsulation} from '@angular/core';
 import {Dialog} from "primeng/dialog";
 import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from "@angular/forms";
 import {ProductService} from "../../../../service/product.service";
@@ -21,6 +21,7 @@ import {ImageResponse} from "../../../../model/response/image-response.model";
 import {PageResponse} from "../../../../model/response/page-response.model";
 import {Select} from "primeng/select";
 import {Toast} from "primeng/toast";
+import {InputNumber} from "primeng/inputnumber";
 
 @Component({
     selector: 'app-update-form',
@@ -33,11 +34,13 @@ import {Toast} from "primeng/toast";
         FileUpload,
         Image,
         InputText,
-        Toast
+        Toast,
+        InputNumber
     ],
     templateUrl: './update-form.component.html',
     styleUrl: './update-form.component.css',
-    providers: [MessageService]
+    providers: [MessageService],
+    encapsulation: ViewEncapsulation.None
 })
 
 

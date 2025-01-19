@@ -17,7 +17,6 @@ public class Cart {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
-
-    @Column(name = "total_price", precision = 19, scale = 2)
+    @Column(precision = 19, scale = 2)
     BigDecimal totalPrice;
 }

@@ -11,7 +11,7 @@ import java.util.List;
 @Setter
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class OrderOfflineRequest {
-    BigDecimal totalReceive;
+    BigDecimal amountPaid;
     Long customerId;
     Long staffId;
     String note;

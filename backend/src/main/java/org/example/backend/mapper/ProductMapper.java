@@ -4,8 +4,8 @@ import org.example.backend.dto.request.ProductCreatedRequest;
 import org.example.backend.dto.request.ProductUpdatedRequest;
 import org.example.backend.dto.response.ProductResponse;
 import org.example.backend.entity.Author;
-import org.example.backend.entity.Product;
 import org.example.backend.entity.Category;
+import org.example.backend.entity.Product;
 import org.example.backend.utility.GenerateCodeUtil;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -29,7 +29,6 @@ public class ProductMapper {
             product.setImgUrl(request.getImgUrl());
         }
         product.setPrice(request.getPrice());
-        product.setSpecialPrice(request.getPrice());
         if (request.getPublisher() != null) {
             product.setPublisher(request.getPublisher());
         }
@@ -67,7 +66,6 @@ public class ProductMapper {
         }
         if (request.getPrice() != null) {
             existedProduct.setPrice(request.getPrice());
-            existedProduct.setSpecialPrice(request.getPrice());
         }
         if (request.getPublisher() != null) {
             existedProduct.setPublisher(request.getPublisher());
@@ -94,6 +92,20 @@ public class ProductMapper {
     }
 
     public ProductResponse toProductResponse(Product product) {
+        ProductResponse.PromotionResponse promotionResponse = null;
+        if (product.getPromotion() != null) {
+            promotionResponse = new ProductResponse.PromotionResponse(
+                    product.getPromotion().getId(),
+                    product.getPromotion().getCode(),
+                    product.getPromotion().getName(),
+                    product.getPromotion().getDescription(),
+                    product.getPromotion().getStartDate(),
+                    product.getPromotion().getEndDate(),
+                    product.getPromotion().getPromotionType(),
+                    product.getPromotion().getPromotionValue(),
+                    product.getPromotion().getIsActive()
+            );
+        }
         return new ProductResponse(
                 product.getId(),
                 product.getCode(),
@@ -101,15 +113,21 @@ public class ProductMapper {
                 product.getImgUrl(),
                 product.getQuantity(),
                 product.getPrice(),
-                product.getSpecialPrice(),
                 product.getPublisher(),
                 product.getTranslator(),
                 product.getNumOfPages(),
                 product.getPublishedYear(),
                 product.getIsActive(),
                 product.getDescription(),
-                new ProductResponse.AuthorResponse(product.getAuthor().getId(), product.getAuthor().getName()),
-                new ProductResponse.CategoryResponse(product.getCategory().getId(), product.getCategory().getName()),
+                new ProductResponse.AuthorResponse(
+                        product.getAuthor().getId(),
+                        product.getAuthor().getName()
+                ),
+                new ProductResponse.CategoryResponse(
+                        product.getCategory().getId(),
+                        product.getCategory().getName()
+                ),
+                promotionResponse,
                 product.getCreatedAt(),
                 product.getUpdatedAt()
         );

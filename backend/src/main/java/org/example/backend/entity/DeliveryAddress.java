@@ -12,25 +12,17 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class DeliveryAddress extends BaseEntity  {
+public class DeliveryAddress extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
-
     String name;
-
-    @Column(name = "phone_num")
     String phoneNum;
-
     String address;
-
     String province;
-
     String district;
-
     String commune;
-
     @ManyToOne
-    @JoinColumn(name = "delivery_address")
-    Customer customer;
+    @JoinColumn(name = "delivery_address_id")
+    User user;
 }

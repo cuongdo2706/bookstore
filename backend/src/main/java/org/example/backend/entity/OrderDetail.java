@@ -18,28 +18,19 @@ public class OrderDetail {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
-
     @ManyToOne
     @JoinColumn(name = "product_id")
     Product product;
-
     @ManyToOne
     @JsonIgnore
     @JoinColumn(name = "order_id")
     Order order;
-
     //thông tin snapshot
-    @Column(name = "product_code")
-    private String productCode;
-
-    @Column(name = "product_name")
-    private String productName;
-
+    String productCode;
+    String productName;
     @Column(precision = 19, scale = 2)
     BigDecimal price;
-
     Integer quantity;
-
     @Column(precision = 19, scale = 2)
     BigDecimal totalPrice;
 }

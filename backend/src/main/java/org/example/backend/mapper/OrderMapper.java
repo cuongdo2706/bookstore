@@ -10,8 +10,8 @@ public class OrderMapper {
         return new OrderOfflineResponse(
                 order.getCode(),
                 order.getOrderAt(),
-                order.getTotalPrice(),
-                order.getTotalReceive(),
+                order.getTotalAmount(),
+                order.getAmountPaid(),
                 order.getCustomer().getName(),
                 order.getStaff().getName(),
                 order.getOrderDetails(),

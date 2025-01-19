@@ -9,20 +9,30 @@
         padding-top: 10px;
     }
 }
+
 .quantity-input{
     .p-inputnumber-input {
         width: 80px;
         height: 35px;
     }
 }
-.searchInput{
-    .p-inputtext{
+.amount-paid-input{
+    .p-inputnumber-input {
+        width: 220px;
+        height: 35px;
+    }
+}
+
+.searchInput {
+    .p-inputtext {
         width: 400px;
     }
-    .p-virtualscroller{
+
+    .p-virtualscroller {
         width: 450px;
     }
 }
+
 .order-info {
     .p-card-body {
         height: calc(100vh - 190px)
@@ -34,5 +44,16 @@
     .p-button-icon {
         font-size: 10px;
     }
+}
+
+.select-tab-button {
+    border: 1px solid;
+    padding: 9px 13px;
+    height: 41px;
+    border-radius: 20px;
+    color: white;
+    font-size: 17px;
+    font-weight: 500;
+    cursor: pointer;
 }
 

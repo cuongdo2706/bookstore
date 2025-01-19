@@ -29,16 +29,15 @@ public class ExcelUtil {
             headerRow.createCell(2).setCellValue("Tên sách");
             headerRow.createCell(3).setCellValue("Hình ảnh");
             headerRow.createCell(4).setCellValue("Số lượng");
-            headerRow.createCell(5).setCellValue("Giá gốc");
-            headerRow.createCell(6).setCellValue("Giá bán");
-            headerRow.createCell(7).setCellValue("Nhà xuất bản");
-            headerRow.createCell(8).setCellValue("Dịch giả");
-            headerRow.createCell(9).setCellValue("Số trang");
-            headerRow.createCell(10).setCellValue("Năm xuất bản");
-            headerRow.createCell(11).setCellValue("Tác giả");
-            headerRow.createCell(12).setCellValue("Danh mục");
-            headerRow.createCell(13).setCellValue("Ngày tạo");
-            headerRow.createCell(14).setCellValue("Ngày sửa");
+            headerRow.createCell(5).setCellValue("Giá bán");
+            headerRow.createCell(6).setCellValue("Nhà xuất bản");
+            headerRow.createCell(7).setCellValue("Dịch giả");
+            headerRow.createCell(8).setCellValue("Số trang");
+            headerRow.createCell(9).setCellValue("Năm xuất bản");
+            headerRow.createCell(10).setCellValue("Tác giả");
+            headerRow.createCell(11).setCellValue("Danh mục");
+            headerRow.createCell(12).setCellValue("Ngày tạo");
+            headerRow.createCell(13).setCellValue("Ngày sửa");
 
             int rowNum = 1;
             for (ProductResponse p : list) {
@@ -49,15 +48,14 @@ public class ExcelUtil {
                 row.createCell(3).setCellValue(p.imgUrl());
                 row.createCell(4).setCellValue(p.quantity());
                 row.createCell(5).setCellValue(String.valueOf(p.price()));
-                row.createCell(6).setCellValue(String.valueOf(p.sellPrice()));
-                row.createCell(7).setCellValue(p.publisher());
-                row.createCell(8).setCellValue(p.translator());
-                row.createCell(9).setCellValue(p.numOfPages() == null ? null : p.numOfPages().toString());
-                row.createCell(10).setCellValue(p.publishedYear() == null ? null : p.publishedYear().toString());
-                row.createCell(11).setCellValue(p.author().name());
-                row.createCell(12).setCellValue(p.category().name());
-                row.createCell(13).setCellValue(p.createdAt().format(formatter));
-                row.createCell(14).setCellValue(p.updatedAt().format(formatter));
+                row.createCell(6).setCellValue(p.publisher());
+                row.createCell(7).setCellValue(p.translator());
+                row.createCell(8).setCellValue(p.numOfPages() == null ? null : p.numOfPages().toString());
+                row.createCell(9).setCellValue(p.publishedYear() == null ? null : p.publishedYear().toString());
+                row.createCell(10).setCellValue(p.author().name());
+                row.createCell(11).setCellValue(p.category().name());
+                row.createCell(12).setCellValue(p.createdAt().format(formatter));
+                row.createCell(13).setCellValue(p.updatedAt().format(formatter));
             }
             workbook.write(out);
             return new ByteArrayInputStream(out.toByteArray());
