@@ -25,5 +25,5 @@ public interface IProductService {
 
     void softDelete(Long id);
 
-    Integer getQuantity(Long id);
+    Integer getStockQuantity(Long id);
 }

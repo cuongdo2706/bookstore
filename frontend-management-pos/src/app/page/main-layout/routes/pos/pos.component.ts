@@ -1,10 +1,10 @@
-import {Component, inject, OnInit, signal, ViewEncapsulation} from '@angular/core';
+import {Component, computed, inject, linkedSignal, OnInit, signal, ViewEncapsulation} from '@angular/core';
 import {MessageService} from "primeng/api";
 import {Button} from "primeng/button";
-import {AbstractControl, FormArray, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule} from "@angular/forms";
+import {FormArray, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {Select} from "primeng/select";
 import {Card} from "primeng/card";
-import {InputNumber} from "primeng/inputnumber";
+import {InputNumber, InputNumberInputEvent} from "primeng/inputnumber";
 import {OrderService} from "../../../service/order.service";
 import {ProductService} from "../../../service/product.service";
 import {AutoComplete, AutoCompleteCompleteEvent, AutoCompleteSelectEvent} from "primeng/autocomplete";
@@ -12,6 +12,10 @@ import {ProductResponse} from "../../../model/response/product-response.model";
 import {DecimalPipe} from "@angular/common";
 import {v4 as uuidv4} from 'uuid';
 import {InputText} from "primeng/inputtext";
+import {firstValueFrom} from "rxjs";
+import {ApiResponse} from "../../../model/response/api-response";
+import {VoucherService} from "../../../service/voucher.service";
+import {VoucherResponse} from "../../../model/response/voucher-response.model";
 
 interface Tab {
     tabId: string;
@@ -19,11 +23,11 @@ interface Tab {
         amountPaid: number;
         customerId: number | null;
         staffId: number | null;
-        orderDetails: OrderDetails[];
+        orderDetails: OrderDetail[];
     };
 }
 
-interface OrderDetails {
+interface OrderDetail {
     bookId: number;
     bookCode: string;
     bookName: string;
@@ -59,15 +63,33 @@ export class PosComponent implements OnInit {
     products = signal<ProductResponse[]>([]);
     private orderService = inject(OrderService);
     private productService = inject(ProductService);
+    private voucherService = inject(VoucherService);
     private fb = inject(FormBuilder);
     private formMap = new Map<string, FormGroup>();
+    voucher = signal<VoucherResponse | null>(null);
+    voucherNotFoundError = signal<string | null>(null);
+    orderDetailsValues = signal<any[]>([]);
 
-    get orderDetailsFormArray(): FormArray {
-        return this.posForm.get("orderDetails") as FormArray;
+    get orderDetailsFormArray(): FormArray<FormGroup> {
+        return this.posForm.get("orderDetails") as FormArray<FormGroup>;
     }
 
     ngOnInit() {
         this.loadDataFromLocalStorage();
+        this.orderDetailsFormArray.valueChanges.subscribe(values => {
+            this.orderDetailsValues.set(values);
+        });
+    }
+
+    async findVoucherById(value: string) {
+        setTimeout(async () => {
+            if (value != "") {
+                const result = await firstValueFrom(this.voucherService.findVoucherByCode(value));
+                this.voucher.set(result.data === undefined ? null : result.data);
+                this.voucherNotFoundError.set(this.voucher() === null ? "Voucher không hợp lệ" : null);
+            }
+        }, 500);
+        this.voucherNotFoundError.set(null);
     }
 
     searchProduct(event: AutoCompleteCompleteEvent) {
@@ -180,10 +202,7 @@ export class PosComponent implements OnInit {
             this.saveActiveTabIdToLocalStorage(this.activeTabId());
         } else {
             this.posForm.reset({
-                totalAmount: 0,
-                amountDue: 0,
                 amountPaid: 0,
-                changeAmount: 0,
                 customerId: null,
                 staffId: null,
                 orderDetails: this.fb.array([])
@@ -234,10 +253,11 @@ export class PosComponent implements OnInit {
                 bookName: selectedProduct.name,
                 quantity: 1,
                 price: selectedProduct.price,
+                totalPrice: selectedProduct.price
             });
             orderDetailsFormArray.push(newItem);
             this.tabs.update(tabs => {
-                const newOrderDetail: OrderDetails = {
+                const newOrderDetail: OrderDetail = {
                     bookId: selectedProduct.id,
                     bookCode: selectedProduct.code,
                     bookName: selectedProduct.name,
@@ -259,52 +279,168 @@ export class PosComponent implements OnInit {
 
     private createForm(): FormGroup {
         return this.fb.group({
-            totalAmount: 0,
-            amountDue: 0,
             amountPaid: 0,
-            changeAmount: 0,
             customerId: null,
             staffId: null,
             orderDetails: this.fb.array([])
         });
     }
 
-    private createItemFormArray(item: OrderDetails): FormGroup {
+    private createItemFormArray(item: OrderDetail): FormGroup {
         return this.fb.group({
             bookId: item.bookId,
             bookCode: item.bookCode,
             bookName: item.bookName,
             quantity: item.quantity,
             price: item.price,
+            totalPrice: item.price * item.quantity
         });
     }
 
-    removeItem() {
-
+    removeItem(index: number, id: number) {
+        this.orderDetailsFormArray.removeAt(index);
+        this.formMap.set(this.activeTabId(), this.posForm);
+        this.tabs.update(tabs => {
+            let newTabs = tabs;
+            let selectedTab = newTabs.find(tab => tab.tabId === this.activeTabId())!;
+            selectedTab.formData.orderDetails = selectedTab.formData.orderDetails.filter(item => item.bookId != id);
+            return newTabs;
+        });
+        this.saveTabsToLocalStorage(this.tabs());
     }
 
-    calculateItemTotalPrice(item: AbstractControl): number {
+    updateTabs(item: FormGroup) {
+        this.tabs.update(tabs => {
+            let newTabs = tabs;
+            newTabs.forEach(tab => {
+                if (tab.tabId === this.activeTabId()) {
+                    tab.formData.orderDetails.forEach(orderDetail => {
+                        if (orderDetail.bookId === item.get("bookId")?.value) {
+                            orderDetail.quantity = item.get("quantity")?.value;
+                        }
+                    });
+                }
+            });
+            return newTabs;
+        });
+        this.saveTabsToLocalStorage(this.tabs());
+    }
+
+    async increaseItemQuantity(item: FormGroup) {
+        let quantity = item.get('quantity')?.value;
+        const stockQuantity = await this.getStockQuantity(item.get('bookId')?.value);
+        if ((stockQuantity < 50 && quantity < stockQuantity)) {
+            item.get('quantity')?.patchValue(quantity + 1);
+        }
+        if ((quantity < 50 && stockQuantity > 50)) {
+            item.get('quantity')?.patchValue(quantity + 1);
+        }
+        this.formMap.set(this.activeTabId(), this.posForm);
+        this.updateTabs(item);
+    }
+
+    async decreaseItemQuantity(item: FormGroup, index: number) {
+        let quantity = item.get('quantity')?.value;
+        const stockQuantity = await this.getStockQuantity(item.get('bookId')?.value);
+        if (quantity > stockQuantity) {
+            item.get('quantity')?.patchValue(stockQuantity);
+        }
+        if (quantity > 1) {
+            item.get('quantity')?.patchValue(quantity - 1);
+        } else this.removeItem(index, item.get("bookId")?.value);
+        this.formMap.set(this.activeTabId(), this.posForm);
+        this.updateTabs(item);
+    }
+
+    async checkEmptyItemQuantity(item: FormGroup) {
+        let quantity = item.get('quantity')?.value;
+        const stockQuantity = await this.getStockQuantity(item.get('bookId')?.value);
+        if (!quantity || quantity === "") {
+            item.get('quantity')?.patchValue(1);
+        }
+        if (quantity > 50) {
+            item.get('quantity')?.patchValue(stockQuantity > 50 ? 50 : stockQuantity);
+        }
+        if (quantity > stockQuantity) {
+            item.get('quantity')?.patchValue(stockQuantity);
+        }
+        this.formMap.set(this.activeTabId(), this.posForm);
+        this.updateTabs(item);
+    }
+
+    totalPrice = signal(0);
+
+    calculateItemTotalPrice(item: FormGroup): number {
+
         const quantity = item.get('quantity')?.value;
         const price = item.get('price')?.value;
+        item.get('totalPrice')?.patchValue(quantity * price);
         return quantity * price;
     }
 
-    calculateTotalAmount(): number {
-        let priceCount = 0;
-        let item = this.orderDetailsFormArray.controls;
-        for (let i = 0; i < this.orderDetailsFormArray.length; i++) {
-            priceCount += this.calculateItemTotalPrice(item[i]);
+    totalAmount = computed(() => {
+        this.orderDetailsValues();
+        return this.orderDetailsFormArray.controls.reduce((sum, item) =>
+            sum + (item.get('totalPrice')?.value), 0
+        );
+    });
+
+    discount = computed(() => {
+        if (this.voucher() === null) {
+            return 0;
         }
-        return priceCount;
+        if (this.voucher()?.promotionType === "FIXED") {
+            return this.voucher()?.promotionValue!;
+        }
+        return 0;
+    });
+    amountDue = linkedSignal({
+        source: () => ({
+            totalAmount: this.totalAmount,
+            discount: this.discount
+        }),
+        computation: (source) => source.totalAmount() - source.discount()
+    });
+
+    validateAmountPaid() {
+        if (this.posForm.get('amountPaid')?.value < this.amountDue()) {
+            this.amountPaid.set(this.amountDue());
+            this.posForm.get('amountPaid')?.patchValue(this.amountDue());
+        }
     }
 
-    calculateAmountDue() {
+    amountPaid = linkedSignal({
+        source: () => this.amountDue,
+        computation: (source) => {
+            const result = source;
+            this.posForm.get('amountPaid')?.patchValue(result());
+            return result();
+        }
+    });
 
+    changeAmount = linkedSignal({
+        source: () => ({
+            amountPaid: this.amountPaid,
+            amountDue: this.amountDue
+        }),
+        computation: (source) => source.amountPaid() - source.amountDue()
+    });
+
+    fillAmountPaid(event: InputNumberInputEvent) {
+        this.amountPaid.set(event.value as number);
+        this.posForm.get('amountPaid')?.patchValue(event.value);
     }
 
-    isValidVoucher(){}
+    async getStockQuantity(id: number): Promise<number> {
+        let response: ApiResponse<number> = await firstValueFrom(this.productService.getProductStock(id));
+        return response.data;
+    }
+
+    isValidVoucher() {
+    }
 
     placeOrder() {
 
     }
+
 }

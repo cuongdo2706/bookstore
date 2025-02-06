@@ -1,6 +1,5 @@
 package org.example.backend.controller;
 
-import lombok.AllArgsConstructor;
 import org.example.backend.dto.response.SuccessResponse;
 import org.example.backend.entity.User;
 import org.example.backend.exception.DataNotFoundException;
@@ -13,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@AllArgsConstructor
 @RequestMapping("user")
 public class UserController {
     @Autowired

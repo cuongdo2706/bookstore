@@ -42,9 +42,6 @@ public class ProductService implements IProductService {
     @Autowired
     private AuthorRepository authorRepository;
 
-    @Autowired
-    private ImageUtil imageUtil;
-
 
     @Override
     public List<ProductResponse> findAll() {
@@ -120,7 +117,9 @@ public class ProductService implements IProductService {
     }
 
     @Override
-    public Integer getQuantity(Long id) {
-        return productRepository.getQuantityById(id);
+    public Integer getStockQuantity(Long id) {
+        return productRepository.getStockQuantity(id);
     }
+
+
 }

@@ -38,4 +38,16 @@ public class GenerateCodeUtil {
         }
         return prefix.concat(sb.toString());
     }
+
+    public static String generateVoucherCode() {
+        int length = 10;
+        StringBuilder sb = new StringBuilder(length);
+        String prefix = "VC";
+        Random random = new Random();
+
+        for (int i = 0 ; i < length ; i++) {
+            sb.append(random.nextInt(10));
+        }
+        return prefix.concat(sb.toString());
+    }
 }

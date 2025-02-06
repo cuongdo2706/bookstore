@@ -1,13 +1,14 @@
 package org.example.backend.repository;
 
+import jakarta.persistence.LockModeType;
+import lombok.NonNull;
 import org.example.backend.entity.Product;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
-import org.springframework.data.jpa.repository.Modifying;
-import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.jpa.repository.*;
 import org.springframework.data.repository.query.Param;
+
+import java.util.Optional;
 
 public interface ProductRepository extends JpaRepository<Product, Long>, JpaSpecificationExecutor<Product> {
     @Query(nativeQuery = true, value = """
@@ -33,6 +34,6 @@ public interface ProductRepository extends JpaRepository<Product, Long>, JpaSpec
     boolean existsByCode(String code);
 
     @Query(nativeQuery = true, value = "SELECT quantity FROM tbl_product WHERE id = :id")
-    Integer getQuantityById(@Param("id") Long id);
+    Integer getStockQuantity(@Param("id") Long id);
 
 }

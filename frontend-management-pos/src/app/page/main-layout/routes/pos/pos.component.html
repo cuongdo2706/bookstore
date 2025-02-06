@@ -58,7 +58,8 @@
 		<div class = "flex align-items-center justify-content-between">
 		    <div class = "flex align-items-center" style = "width: 50%">
 		        <span>{{ i + 1 }}</span>
-		        <i style = "cursor: pointer" class = "pi pi-trash ml-3" click></i>
+		        <i (click) = "removeItem(i,item.get('bookId')?.value)" style = "cursor: pointer"
+			 class = "pi pi-trash ml-3"></i>
 		        <span class = "ml-3">{{ item.get('bookCode')?.value }}</span>
 		        <div class = "ml-5"
 			   style = "max-width: 300px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap">
@@ -73,9 +74,13 @@
 			      styleClass = "tab-index-custom"
 			      rounded = "true"
 			      raised = "true"
-			      icon = "pi pi-minus"></p-button>
-		        <p-input-number formControlName = "quantity" class = "quantity-input" min = "1"
-				    max = "50"/>
+			      icon = "pi pi-minus"
+			      (click) = "decreaseItemQuantity(orderDetailsFormArray.controls[i],i)"></p-button>
+		        <p-input-number
+			      min = "1"
+			      (onBlur) = "checkEmptyItemQuantity(orderDetailsFormArray.controls[i])"
+			      formControlName = "quantity"
+			      class = "quantity-input"/>
 		        <p-button
 			      class = "ml-1"
 			      [style] = "{'width':'1.5rem','height':'1.5rem'}"
@@ -83,21 +88,16 @@
 			      rounded = "true"
 			      severity = "secondary"
 			      raised = "true"
-			      icon = "pi pi-plus"></p-button>
+			      icon = "pi pi-plus"
+			      (click) = "increaseItemQuantity(orderDetailsFormArray.controls[i])"></p-button>
 		    </div>
 		    <div class = "flex align-items-center gap-4">
-		        <span style = "border-bottom: solid 1px">{{ item.get('price')?.value|number:'1.0-0' }}</span>
-		        <b>{{ calculateItemTotalPrice(item)|number:'1.0-0' }}</b>
+		        <span style = "width: 100px;text-align: right"><u>{{ item.get('price')?.value|number:'1.0-0' }}</u></span>
+		        <b style = "width: 100px;text-align: right">{{ calculateItemTotalPrice(item)|number:'1.0-0' }}</b>
 		    </div>
 		</div>
-
-
 	      </p-card>
-
-
 	  }
-
-
         </div>
         <div style = "width: 30%;flex-shrink: 0">
 	  <p-card styleClass = "order-info">
@@ -133,37 +133,48 @@
 	      <div class = "flex mt-3">
 		<div class = "col-6 pl-0"><b>Tổng tiền hàng</b></div>
 		<div class = "col-6"
-		     style = "text-align: end">{{ calculateTotalAmount()|number:'1.0-0' }}
+		     style = "text-align: end">{{ totalAmount()|number:'1.0-0' }}
 		</div>
 	      </div>
 	      <div class = "flex mt-3">
 		<div class = "col-5 pl-0"><b>Voucher</b></div>
-		<div class = "col-7" style="position: relative;padding: 0">
-		    <input [style] = "{'height':'35px','width':'220px'}" type = "text" pInputText/>
+		<div class = "col-7" style = "position: relative;padding: 0">
+		    <input #voucherInput (input) = "findVoucherById(voucherInput.value)"
+			 [style] = "{'height':'35px','width':'220px'}"
+			 type = "text" pInputText/>
+		    @if (voucherNotFoundError() != null && voucherInput.value != "") {
+		        <span style = "color: red">{{ voucherNotFoundError() }}</span>
+		    }
 		</div>
 	      </div>
 	      <div class = "flex mt-3">
 		<div class = "col-6 pl-0"><b>Giảm giá</b></div>
 		<div class = "col-6"
-		     style = "text-align: end">{{ posForm.get('discount')?.value |number:'1.0-0' }}
+		     style = "text-align: end">{{ discount() |number:'1.0-0' }}
 		</div>
 	      </div>
 	      <div class = "flex mt-3">
 		<div class = "col-6 pl-0"><b>Khách cần trả</b></div>
 		<div class = "col-6"
-		     style = "text-align: end">{{ posForm.get('amountDue')?.value|number:'1.0-0' }}
+		     style = "text-align: end">{{ amountDue()|number:'1.0-0' }}
 		</div>
 	      </div>
 	      <div class = "flex mt-3">
 		<div class = "col-5 pl-0"><b>Khách thanh toán</b></div>
-		<div class = "col-7" style="position: relative;padding:0">
-		    <p-input-number class="amount-paid-input" inputId="integeronly" [style] = "{'position': 'absolute'}"/>
+		<div class = "col-7" style = "position: relative;padding:0">
+		    <p-input-number #amountPaid
+				(onInput) = "fillAmountPaid($event)"
+				(onBlur) = "validateAmountPaid()"
+				formControlName = "amountPaid" class = "amount-paid-input"
+				inputId = "integeronly"
+				[style] = "{'position': 'absolute'}"/>
+
 		</div>
 	      </div>
 	      <div class = "flex mt-3">
 		<div class = "col-6 pl-0"><b>Tiền thừa</b></div>
 		<div class = "col-6"
-		     style = "text-align: end">{{ posForm.get('changeAmount')?.value|number:'1.0-0' }}
+		     style = "text-align: end">{{ changeAmount()|number:'1.0-0' }}
 		</div>
 	      </div>
 

@@ -33,4 +33,6 @@ public class Voucher extends BaseEntity {
     Integer usedCount;
     @Column(columnDefinition = "BOOLEAN DEFAULT TRUE")
     Boolean isActive;
+    @Column(columnDefinition = "BOOLEAN DEFAULT FALSE")
+    Boolean isDeleted;
 }

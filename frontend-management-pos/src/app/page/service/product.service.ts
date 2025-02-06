@@ -51,4 +51,8 @@ export class ProductService {
     deleteProduct(id: number) {
         return this.http.delete<ApiResponse<any>>(`${this.url}/${id}`);
     }
+
+    getProductStock(id: number) {
+        return this.http.get<ApiResponse<number>>(`${this.url}/stock/${id}`);
+    };
 }

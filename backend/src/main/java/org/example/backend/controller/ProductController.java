@@ -31,20 +31,18 @@ public class ProductController {
     @Autowired
     private ExcelUtil excelUtil;
     @Autowired
-    private IProductService bookService;
-    @Autowired
-    private ImageUtil imageUtil;
+    private IProductService productService;
 
     @GetMapping
-    public SuccessResponse<PageResponse<ProductResponse>> getAllBooks(@Valid @RequestParam(defaultValue = "0", name = "page") @PositiveOrZero(message = "Page must be greater than or equal 0") Integer page,
+    public SuccessResponse<PageResponse<ProductResponse>> getAllProducts(@Valid @RequestParam(defaultValue = "0", name = "page") @PositiveOrZero(message = "Page must be greater than or equal 0") Integer page,
                                                                       @Valid @RequestParam(defaultValue = "10", name = "size") @PositiveOrZero(message = "Size must be greater than or equal 0") Integer size) {
 
-        return new SuccessResponse<>(HttpStatus.OK.value(), "Getting data success", bookService.findAllPage(page, size));
+        return new SuccessResponse<>(HttpStatus.OK.value(), "Getting data success", productService.findAllPage(page, size));
     }
 
-    @GetMapping("/quantity/{id}")
-    public SuccessResponse<Integer> getQuantity(@PathVariable Long id) {
-        return null;
+    @GetMapping("/stock/{id}")
+    public SuccessResponse<Integer> getProductStock(@PathVariable(name = "id") Long id) {
+        return new SuccessResponse<>(HttpStatus.OK.value(),"Getting data success",productService.getStockQuantity(id));
     }
 
     @GetMapping("/search")
@@ -53,17 +51,17 @@ public class ProductController {
                                                                                   @RequestParam(defaultValue = "", name = "keyword") String keyword,
                                                                                   @RequestParam(defaultValue = "name-asc", name = "sort") String sort
     ) {
-        return new SuccessResponse<>(HttpStatus.OK.value(), "Getting data success", bookService.findByCodeOrNameAndSort(page, size, keyword, sort));
+        return new SuccessResponse<>(HttpStatus.OK.value(), "Getting data success", productService.findByCodeOrNameAndSort(page, size, keyword, sort));
     }
 
     @GetMapping("/{id}")
-    public SuccessResponse<Product> getBookById(@PathVariable Long id) throws DataNotFoundException {
-        return new SuccessResponse<>(HttpStatus.OK.value(), "Getting data success",bookService.findById(id));
+    public SuccessResponse<Product> findProductById(@PathVariable(name = "id") Long id) throws DataNotFoundException {
+        return new SuccessResponse<>(HttpStatus.OK.value(), "Getting data success",productService.findById(id));
     }
 
     @GetMapping("/export-excel")
     public ResponseEntity<Resource> exportExcel() {
-        List<ProductResponse> list = bookService.findAll();
+        List<ProductResponse> list = productService.findAll();
         ByteArrayInputStream bais = excelUtil.exportBookExcel(list);
         HttpHeaders headers = new HttpHeaders();
         headers.add("Content-Disposition", "attachment; filename=Danh-sach-san-pham.xlsx");
@@ -75,17 +73,17 @@ public class ProductController {
 
     @PostMapping
     public SuccessResponse<Product> createBook(@Valid @RequestBody ProductCreatedRequest request) throws IOException, DataNotFoundException {
-        return new SuccessResponse<>(HttpStatus.CREATED.value(), "Adding data success", bookService.save(request));
+        return new SuccessResponse<>(HttpStatus.CREATED.value(), "Adding data success", productService.save(request));
     }
 
     @PutMapping("/{id}")
     public SuccessResponse<Product> updateBook(@PathVariable(name = "id") Long id, @Valid @RequestBody ProductUpdatedRequest request) throws IOException, DataNotFoundException {
-        return new SuccessResponse<>(HttpStatus.ACCEPTED.value(), "Editing data success", bookService.update(id, request));
+        return new SuccessResponse<>(HttpStatus.ACCEPTED.value(), "Editing data success", productService.update(id, request));
     }
 
     @DeleteMapping("/{id}")
     public SuccessResponse<?> deleteById(@PathVariable Long id) {
-        bookService.softDelete(id);
+        productService.softDelete(id);
         return new SuccessResponse<>(HttpStatus.NO_CONTENT.value(), "Deleting data success", null);
     }
 }
