@@ -24,7 +24,7 @@ public class AuthorService implements IAuthorService {
     }
 
     @Override
-    public List<Author> findAllPage(Integer page,Integer size) {
+    public List<Author> findAllPage(Integer page, Integer size) {
         if (page == null || page < 1) page = 1;
         if (size == null) size = 10;
         Pageable pageable = PageRequest.of(page - 1, size);
@@ -33,20 +33,20 @@ public class AuthorService implements IAuthorService {
 
     @Override
     public Author findById(Long id) throws DataNotFoundException {
-        return authorRepository.findById(id).orElseThrow(()->new DataNotFoundException("Author not found: "+id));
+        return authorRepository.findById(id).orElseThrow(() -> new DataNotFoundException("Author not found: " + id));
     }
 
     @Override
-    public List<Author> findByName(Integer page,Integer size, String name) {
+    public List<Author> findByName(Integer page, Integer size, String name) {
         if (page == null || page < 1) page = 1;
         if (size == null) size = 10;
         Pageable pageable = PageRequest.of(page - 1, size);
-        return authorRepository.findByName(pageable,name).getContent();
+        return authorRepository.findByName(pageable, name).getContent();
     }
 
     @Override
     public Author save(String name) {
-        if (authorRepository.existsByName(name)){
+        if (authorRepository.existsByName(name)) {
             throw new DataExistedException("Author is already existed");
         }
         Author author = Author.builder()
@@ -58,14 +58,14 @@ public class AuthorService implements IAuthorService {
 
     @Override
     public Author update(Long id, String name) throws DataNotFoundException {
-        Author existedAuthor=findById(id);
+        Author existedAuthor = findById(id);
         existedAuthor.setName(name);
         return authorRepository.save(existedAuthor);
     }
 
     @Override
     public void delete(Long id) throws DataNotFoundException {
-        Author existedAuthor=findById(id);
+        Author existedAuthor = findById(id);
         existedAuthor.setIsDeleted(true);
     }
 }

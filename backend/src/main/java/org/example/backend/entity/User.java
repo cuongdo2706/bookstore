@@ -26,7 +26,6 @@ public class User extends BaseEntity {
     String phoneNum;
     String address;
     String email;
-    String status;
     String role;
 
     @OneToOne(mappedBy = "user")

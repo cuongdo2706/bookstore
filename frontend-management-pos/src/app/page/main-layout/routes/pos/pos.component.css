@@ -10,16 +10,18 @@
     }
 }
 
-.quantity-input{
+.quantity-input {
     .p-inputnumber-input {
         width: 80px;
         height: 35px;
     }
 }
-.amount-paid-input{
+
+.amount-paid-input {
     .p-inputnumber-input {
         width: 220px;
         height: 35px;
+        text-align: right;
     }
 }
 
@@ -55,5 +57,15 @@
     font-size: 17px;
     font-weight: 500;
     cursor: pointer;
+}
+
+.customerInput {
+    .p-inputtext {
+        width: 300px;
+    }
+
+    /*.p-virtualscroller {*/
+    /*    width: 450px;*/
+    /*}*/
 }
 

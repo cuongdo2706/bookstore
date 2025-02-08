@@ -18,7 +18,7 @@ public class VoucherController {
     private IVoucherService voucherService;
 
     @GetMapping("/{code}")
-    public SuccessResponse<Voucher>findVoucherByCode(@PathVariable String code) {
-        return new SuccessResponse<>(HttpStatus.OK.value(),"Getting data success",voucherService.findByCode(code));
+    public SuccessResponse<Voucher>findValidVoucherByCode(@PathVariable String code) {
+        return new SuccessResponse<>(HttpStatus.OK.value(),"Getting data success",voucherService.findValidVoucherByCode(code));
     }
 }

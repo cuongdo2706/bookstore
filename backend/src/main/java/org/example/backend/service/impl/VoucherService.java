@@ -12,7 +12,7 @@ public class VoucherService implements IVoucherService {
     private VoucherRepository repo;
 
     @Override
-    public Voucher findByCode(String code) {
-        return repo.findByCode(code);
+    public Voucher findValidVoucherByCode(String code) {
+        return repo.findValidVoucherByCode(code);
     }
 }

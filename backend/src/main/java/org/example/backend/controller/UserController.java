@@ -17,13 +17,13 @@ public class UserController {
     @Autowired
     private IUserService userService;
 
-    @GetMapping("/customer/{id}")
-    public SuccessResponse<User> findCustomerById(@PathVariable("id") Long id) throws DataNotFoundException {
-        return new SuccessResponse<>(HttpStatus.OK.value(), "Getting data success", userService.findCustomerById(id));
+    @GetMapping("/customer/{keyword}")
+    public SuccessResponse<User> findCustomerById(@PathVariable("keyword") String keyword) throws DataNotFoundException {
+        return new SuccessResponse<>(HttpStatus.OK.value(), "Getting data success", userService.findCustomerByNameOrPhoneNum(keyword));
     }
 
-    @GetMapping("/staff/{id}")
-    public SuccessResponse<User> findStaffById(@PathVariable("id") Long id) throws DataNotFoundException {
-        return new SuccessResponse<>(HttpStatus.OK.value(), "Getting data success", userService.findStaffById(id));
+    @GetMapping("/staff/{keyword}")
+    public SuccessResponse<User> findStaffById(@PathVariable("keyword") String keyword) throws DataNotFoundException {
+        return new SuccessResponse<>(HttpStatus.OK.value(), "Getting data success", userService.findStaffByNameOrPhoneNum(keyword));
     }
 }

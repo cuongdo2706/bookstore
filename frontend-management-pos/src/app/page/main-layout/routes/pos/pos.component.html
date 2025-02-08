@@ -4,7 +4,7 @@
 	  (onSelect) = "selectProduct($event)"
 	  [suggestions] = "products()"
 	  delay = "500"
-	  optionLabel = "name"
+	  optionLabel = "code"
 	  placeholder = "Tìm sản phẩm theo tên hoặc mã"
 	  showClear = "true"
 	  styleClass = "searchInput"
@@ -102,21 +102,32 @@
         <div style = "width: 30%;flex-shrink: 0">
 	  <p-card styleClass = "order-info">
 	      <div class = "flex">
-		<p-select
-		        [filter] = "true"
+		<!--		<p-auto-complete-->
+		<!--		        (completeMethod) = "searchProduct($event)"-->
+		<!--		        (onSelect) = "selectProduct($event)"-->
+		<!--		        [suggestions] = "products()"-->
+		<!--		        delay = "500"-->
+		<!--		        optionLabel = "name"-->
+		<!--		        placeholder = "Tìm sản phẩm theo tên hoặc mã"-->
+		<!--		        showClear = "true"-->
+		<!--		        styleClass = "searchInput"-->
+		<!--		>-->
+		<p-auto-complete
+		        (completeMethod) = "findCustomerByNameOrPhoneNum($event)"
+		        delay = "500"
 		        [showClear] = "true"
 		        [style] = "{'height':'35px','align-items': 'center','width':'300px'}"
-		        filterBy = "name"
-		        optionLabel = "name"
+		        styleClass = "customerInput"
+		        optionLabel = "phoneNum"
 		        placeholder = "Tìm khách hàng">
-		    <ng-template #selectedItem let-selectedOption>
+		    <ng-template #selectedItem>
 		        <div class = "flex align-items-center gap-2">
-			  <div>{{ selectedOption.name }}</div>
+
 		        </div>
 		    </ng-template>
-		    <ng-template #item let-country>
+		    <ng-template #item>
 		        <div class = "flex align-items-center gap-2">
-			  <div>{{ country.name }}</div>
+
 		        </div>
 		    </ng-template>
 
@@ -128,7 +139,7 @@
 		    <ng-template #empty>
 		        <span class = "flex justify-content-center">Không có bản ghi nào</span>
 		    </ng-template>
-		</p-select>
+		</p-auto-complete>
 	      </div>
 	      <div class = "flex mt-3">
 		<div class = "col-6 pl-0"><b>Tổng tiền hàng</b></div>

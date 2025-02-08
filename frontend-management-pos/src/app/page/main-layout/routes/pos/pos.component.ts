@@ -2,7 +2,6 @@ import {Component, computed, inject, linkedSignal, OnInit, signal, ViewEncapsula
 import {MessageService} from "primeng/api";
 import {Button} from "primeng/button";
 import {FormArray, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule} from "@angular/forms";
-import {Select} from "primeng/select";
 import {Card} from "primeng/card";
 import {InputNumber, InputNumberInputEvent} from "primeng/inputnumber";
 import {OrderService} from "../../../service/order.service";
@@ -16,6 +15,8 @@ import {firstValueFrom} from "rxjs";
 import {ApiResponse} from "../../../model/response/api-response";
 import {VoucherService} from "../../../service/voucher.service";
 import {VoucherResponse} from "../../../model/response/voucher-response.model";
+import {UserService} from "../../../service/user.service";
+import {UserResponse} from "../../../model/response/user-response";
 
 interface Tab {
     tabId: string;
@@ -40,7 +41,6 @@ interface OrderDetail {
     imports: [
         Button,
         FormsModule,
-        Select,
         Card,
         InputNumber,
         ReactiveFormsModule,
@@ -61,9 +61,11 @@ export class PosComponent implements OnInit {
     tabs = signal<Tab[]>([]);
     activeTabId = signal<string>("");
     products = signal<ProductResponse[]>([]);
+    customers = signal<UserResponse[]>([]);
     private orderService = inject(OrderService);
     private productService = inject(ProductService);
     private voucherService = inject(VoucherService);
+    private userService = inject(UserService);
     private fb = inject(FormBuilder);
     private formMap = new Map<string, FormGroup>();
     voucher = signal<VoucherResponse | null>(null);
@@ -185,6 +187,12 @@ export class PosComponent implements OnInit {
         this.posForm = this.getForm(tabId);
         this.activeTabId.set(tabId);
         this.saveActiveTabIdToLocalStorage(tabId);
+        this.orderDetailsValues.set(this.posForm.get('orderDetails')?.value || []);
+
+        // Subscribe để theo dõi thay đổi của tab mới
+        this.posForm.get('orderDetails')?.valueChanges.subscribe(values => {
+            this.orderDetailsValues.set(values);
+        });
     }
 
     deleteTab(tabId: string) {
@@ -368,7 +376,6 @@ export class PosComponent implements OnInit {
         this.updateTabs(item);
     }
 
-    totalPrice = signal(0);
 
     calculateItemTotalPrice(item: FormGroup): number {
 
@@ -436,7 +443,15 @@ export class PosComponent implements OnInit {
         return response.data;
     }
 
-    isValidVoucher() {
+    findCustomerByNameOrPhoneNum(event: AutoCompleteCompleteEvent) {
+        this.userService.findCustomerByCodeOrPhoneNum(event.query).subscribe({
+            next: res => {
+                // this.customers.set()
+            }
+        });
+    }
+
+    validateOrder() {
     }
 
     placeOrder() {

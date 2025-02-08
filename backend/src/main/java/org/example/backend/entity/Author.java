@@ -17,5 +17,6 @@ public class Author extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
     String name;
+    @Column(columnDefinition = "BOOLEAN DEFAULT FALSE")
     Boolean isDeleted;
 }
