@@ -14,7 +14,7 @@ public class OrderOfflineRequest {
     BigDecimal amountPaid;
     Long customerId;
     Long staffId;
-    String note;
+    Long voucherId;
     List<OrderItem>orderItems;
 
     @Getter
@@ -23,5 +23,6 @@ public class OrderOfflineRequest {
     public class OrderItem {
         Long productId;
         Integer quantity;
+        BigDecimal price;
     }
 }

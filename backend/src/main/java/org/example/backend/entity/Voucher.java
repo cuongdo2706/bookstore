@@ -28,6 +28,10 @@ public class Voucher extends BaseEntity {
     String promotionType;
     @Column(precision = 19, scale = 2)
     BigDecimal promotionValue;
+    @Column(precision = 19, scale = 2)
+    BigDecimal minAmount; //giá trị đơn hàng tối thiểu
+    @Column(precision = 19, scale = 2)
+    BigDecimal maxDiscount; //số tiền được giảm tối đa
     Integer quantity;
     @Column(columnDefinition = "INTEGER DEFAULT 0")
     Integer usedCount;

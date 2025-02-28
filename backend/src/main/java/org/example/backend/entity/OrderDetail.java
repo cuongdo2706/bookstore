@@ -8,6 +8,7 @@ import lombok.experimental.FieldDefaults;
 import java.math.BigDecimal;
 
 @Entity
+@Builder
 @Table(name = "tbl_order_detail")
 @AllArgsConstructor
 @NoArgsConstructor

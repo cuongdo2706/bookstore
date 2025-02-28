@@ -26,4 +26,6 @@ public interface IProductService {
     void softDelete(Long id);
 
     Integer getStockQuantity(Long id);
+
+    List<ProductResponse> findAllById(List<Long> ids);
 }

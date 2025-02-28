@@ -11,5 +11,8 @@ public record UserResponse(
         String phoneNum,
         String address,
         String email,
+        Boolean isActive,
+        Boolean isDeleted
 ) {
+
 }

@@ -30,8 +30,7 @@ import java.util.List;
 
 @Service
 public class ProductService implements IProductService {
-    @Autowired
-    private ProductMapper productMapper;
+
 
     @Autowired
     private ProductRepository productRepository;
@@ -45,7 +44,7 @@ public class ProductService implements IProductService {
 
     @Override
     public List<ProductResponse> findAll() {
-        return productMapper.toProductResponses(productRepository.findAll());
+        return ProductMapper.toProductResponses(productRepository.findAll());
     }
 
     @Override
@@ -53,7 +52,7 @@ public class ProductService implements IProductService {
         if (page < 0) page = 0;
         Pageable pageable = PageRequest.of(page, size);
         Page<Product> books = productRepository.findAllPage(pageable);
-        return new PageResponse<ProductResponse>(productMapper.toProductResponses(books.getContent()), books.getNumber(), books.getSize(), books.getTotalElements(), books.getTotalPages());
+        return new PageResponse<ProductResponse>(ProductMapper.toProductResponses(books.getContent()), books.getNumber(), books.getSize(), books.getTotalElements(), books.getTotalPages());
     }
 
     @Override
@@ -68,7 +67,7 @@ public class ProductService implements IProductService {
         if (keyword.isEmpty() && sortInput.equals("name-asc")) {
             Pageable pageable = PageRequest.of(page, size);
             Page<Product> books = productRepository.findAllPage(pageable);
-            return new PageResponse<ProductResponse>(productMapper.toProductResponses(books.getContent()), books.getNumber(), books.getSize(), books.getTotalElements(), books.getTotalPages());
+            return new PageResponse<>(ProductMapper.toProductResponses(books.getContent()), books.getNumber(), books.getSize(), books.getTotalElements(), books.getTotalPages());
         }
         Specification<Product> spec = BookSpec.findByNameOrCode(keyword);
         Sort sort = null;
@@ -80,7 +79,12 @@ public class ProductService implements IProductService {
         }
         Pageable pageable = PageRequest.of(page, size, sort);
         Page<Product> books = productRepository.findAll(spec, pageable);
-        return new PageResponse<ProductResponse>(productMapper.toProductResponses(books.getContent()), books.getNumber(), books.getSize(), books.getTotalElements(), books.getTotalPages());
+        return new PageResponse<>(
+                ProductMapper.toProductResponses(books.getContent()),
+                books.getNumber(),
+                books.getSize(),
+                books.getTotalElements(),
+                books.getTotalPages());
     }
 
     @Override
@@ -91,7 +95,7 @@ public class ProductService implements IProductService {
         while (productRepository.existsByCode(productCode)) {
             productCode = GenerateCodeUtil.generateProductCode();
         }
-        Product product = productMapper.toCreatedProduct(request, existCategory, existAuthor);
+        Product product = ProductMapper.toCreatedProduct(request, existCategory, existAuthor);
         return productRepository.save(product);
     }
 
@@ -106,7 +110,7 @@ public class ProductService implements IProductService {
             existCategory = categoryRepository.findById(request.getCategoryId()).orElseThrow(() -> new RuntimeException("Category not found"));
         }
         Product existedProduct = findById(id);
-        Product updateProduct = productMapper.toUpdatedProduct(existedProduct, request, existCategory, existAuthor);
+        Product updateProduct = ProductMapper.toUpdatedProduct(existedProduct, request, existCategory, existAuthor);
         return productRepository.save(updateProduct);
     }
 
@@ -119,6 +123,12 @@ public class ProductService implements IProductService {
     @Override
     public Integer getStockQuantity(Long id) {
         return productRepository.getStockQuantity(id);
+    }
+
+    @Override
+    public List<ProductResponse> findAllById(List<Long> ids) {
+        List<Product>products=productRepository.findAllById(ids);
+        return ProductMapper.toProductResponses(products);
     }
 
 

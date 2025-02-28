@@ -34,6 +34,12 @@ export class ProductService {
         return this.http.get<ApiResponse<ProductResponse>>(`${this.url}/${id}`);
     }
 
+    findAllProductById(ids: number[]) {
+        let params = new HttpParams()
+            .set("ids", ids.toString());
+        return this.http.get<ApiResponse<ProductResponse[]>>(`${this.url}/by-ids`, {params});
+    }
+
     exportExcel() {
         return this.http.get(`${this.url}/export-excel`, {
             responseType: "blob"

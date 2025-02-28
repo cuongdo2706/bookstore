@@ -7,6 +7,8 @@ export interface VoucherResponse {
     endDate: Date,
     promotionType: string,
     promotionValue: number,
+    minAmount: number,
+    maxDiscount: number,
     quantity: number,
     usedCount: number,
     isActive: boolean,

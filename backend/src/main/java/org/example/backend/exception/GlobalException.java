@@ -112,6 +112,7 @@ public class GlobalException {
                 ex.getMessage()
         );
     }
+
     @ExceptionHandler(UnsupportedJwtException.class)
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     public ErrorResponse handleUnsupportedJwtException(UnsupportedJwtException ex, WebRequest request) {
@@ -123,6 +124,7 @@ public class GlobalException {
                 ex.getMessage()
         );
     }
+
     @ExceptionHandler(IllegalArgumentException.class)
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     public ErrorResponse handleIllegalArgumentException(IllegalArgumentException ex, WebRequest request) {
@@ -135,5 +137,16 @@ public class GlobalException {
         );
     }
 
+    @ExceptionHandler(DataConflictException.class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public ErrorResponse handleDataConflictException(DataConflictException ex, WebRequest request) {
+        return new ErrorResponse(
+                LocalDateTime.now(),
+                HttpStatus.CONFLICT.value(),
+                request.getDescription(false).replace("uri=", ""),
+                "Data conflicted",
+                ex.getMessage()
+        );
+    }
 
 }

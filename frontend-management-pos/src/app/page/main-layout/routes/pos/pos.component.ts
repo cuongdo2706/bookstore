@@ -17,11 +17,14 @@ import {VoucherService} from "../../../service/voucher.service";
 import {VoucherResponse} from "../../../model/response/voucher-response.model";
 import {UserService} from "../../../service/user.service";
 import {UserResponse} from "../../../model/response/user-response";
+import {Toast} from "primeng/toast";
+import {OrderCreatedRequest} from '../../../model/request/order-created-request';
 
 interface Tab {
     tabId: string;
     formData: {
         amountPaid: number;
+        voucherId: number | null
         customerId: number | null;
         staffId: number | null;
         orderDetails: OrderDetail[];
@@ -47,6 +50,7 @@ interface OrderDetail {
         AutoComplete,
         DecimalPipe,
         InputText,
+        Toast,
     ],
     templateUrl: './pos.component.html',
     styleUrl: './pos.component.css',
@@ -124,6 +128,7 @@ export class PosComponent implements OnInit {
         return activeTabId === null ? null : JSON.parse(activeTabId);
     }
 
+// THỨ TỰ LOAD DATA: LOCAL STORAGE -> SIGNAL ARRAY -> FORM MAP -> FORM
     loadDataFromLocalStorage() {
         //Lấy data từ LS
         const savedTabs = localStorage.getItem("pos_tabs");
@@ -133,34 +138,41 @@ export class PosComponent implements OnInit {
             if (parseData.length < 1) {
                 this.createNewTab();
             } else {
-                //Duyệt mảng để gán value cho form
-                //ĐOẠN NÀY XỬ LÍ VIỆC GÁN VALUE CHO FORM
-                parseData.forEach(item => {
-                    //tạo form rỗng,(dùng hàm createForm)
-                    const form = this.createForm();
-                    //gán value của item vào form rỗng
-                    form.patchValue(item.formData);
-                    const orderDetails = form.get('orderDetails') as FormArray;
-                    //duyệt orderDetail để gán value cho orderDetails của form
-                    item.formData.orderDetails.forEach(orderDetail => {
-                        orderDetails.push(this.createItemFormArray(orderDetail));
-                    });
-                    this.formMap.set(item.tabId, form);
-                    return item;
-                });
                 this.tabs.set(parseData);
+                this.loadDataFromSignalToFormMap();
                 if (this.getActiveTabIdFromLocalStorage() !== null) {
                     this.activeTabId.set(<string>this.getActiveTabIdFromLocalStorage());
                 } else {
                     this.activeTabId.set(parseData[0].tabId);
                     this.saveActiveTabIdToLocalStorage(this.activeTabId());
                 }
-                this.posForm = this.formMap.get(this.activeTabId())!;
+                this.loadDataFromFormMapToForm(this.activeTabId());
             }
 
         } else {
             this.createNewTab();
         }
+    }
+
+    loadDataFromSignalToFormMap() {
+        //Duyệt mảng để gán value cho form
+        this.tabs().forEach(item => {
+            //tạo form rỗng,(dùng hàm createForm)
+            const form = this.createForm();
+            //gán value của item vào form rỗng
+            form.patchValue(item.formData);
+            const orderDetails = form.get('orderDetails') as FormArray;
+            //duyệt orderDetail để gán value cho orderDetails của form
+            item.formData.orderDetails.forEach(orderDetail => {
+                orderDetails.push(this.createItemFormArray(orderDetail));
+            });
+            this.formMap.set(item.tabId, form);
+            return item;
+        });
+    }
+
+    loadDataFromFormMapToForm(tabId: string) {
+        this.posForm = this.formMap.get(tabId)!;
     }
 
     createNewTab() {
@@ -171,21 +183,20 @@ export class PosComponent implements OnInit {
             tabId: tabId,
             formData: {
                 amountPaid: 0,
+                voucherId: null,
                 customerId: null,
                 staffId: null,
                 orderDetails: [],
             }
         };
         this.tabs.update(tabs => [...tabs, newTab]);
-        this.activeTabId.set(tabId);
-        this.posForm = this.getForm(this.activeTabId());
+        this.chooseTab(tabId);
         this.saveTabsToLocalStorage(this.tabs());
-        this.saveActiveTabIdToLocalStorage(this.activeTabId());
     }
 
     chooseTab(tabId: string) {
-        this.posForm = this.getForm(tabId);
         this.activeTabId.set(tabId);
+        this.posForm = this.getForm(tabId);
         this.saveActiveTabIdToLocalStorage(tabId);
         this.orderDetailsValues.set(this.posForm.get('orderDetails')?.value || []);
 
@@ -211,6 +222,7 @@ export class PosComponent implements OnInit {
         } else {
             this.posForm.reset({
                 amountPaid: 0,
+                voucherId: null,
                 customerId: null,
                 staffId: null,
                 orderDetails: this.fb.array([])
@@ -220,6 +232,7 @@ export class PosComponent implements OnInit {
                 tabId: tabId,
                 formData: {
                     amountPaid: 0,
+                    voucherId: null,
                     customerId: null,
                     staffId: null,
                     orderDetails: [],
@@ -244,15 +257,13 @@ export class PosComponent implements OnInit {
         }
         if (existedProductIndex !== -1) {
             let quantity = orderDetailsFormArray.controls[existedProductIndex].get('quantity')?.value;
+            console.log(quantity);
             orderDetailsFormArray.controls[existedProductIndex].get('quantity')?.patchValue(quantity + 1);
+            console.log(orderDetailsFormArray.controls[existedProductIndex].get('quantity')?.value);
             this.tabs.update(tabs => {
-                const newTab = tabs;
-                newTab.map(tab => {
-                    if (tab.tabId === this.activeTabId()) {
-                        tab.formData.orderDetails[existedProductIndex].quantity += 1;
-                    }
-                });
-                return newTab;
+                let newTabs = tabs;
+                newTabs!.find(tab => tab.tabId === this.activeTabId())!.formData.orderDetails[existedProductIndex].quantity += 1;
+                return newTabs;
             });
         } else {
             const newItem = this.fb.group({
@@ -263,7 +274,7 @@ export class PosComponent implements OnInit {
                 price: selectedProduct.price,
                 totalPrice: selectedProduct.price
             });
-            orderDetailsFormArray.push(newItem);
+            orderDetailsFormArray.insert(0, newItem);
             this.tabs.update(tabs => {
                 const newOrderDetail: OrderDetail = {
                     bookId: selectedProduct.id,
@@ -272,14 +283,11 @@ export class PosComponent implements OnInit {
                     quantity: 1,
                     price: selectedProduct.price,
                 };
-                const newTabs = tabs;
-                newTabs.map(tab => {
-                    if (tab.tabId === this.activeTabId()) {
-                        tab.formData.orderDetails.push(newOrderDetail);
-                    }
-                });
+                let newTabs = tabs;
+                newTabs!.find(tab => tab.tabId === this.activeTabId())?.formData.orderDetails.unshift(newOrderDetail);
                 return newTabs;
             });
+
         }
         this.saveTabsToLocalStorage(this.tabs());
     }
@@ -288,6 +296,7 @@ export class PosComponent implements OnInit {
     private createForm(): FormGroup {
         return this.fb.group({
             amountPaid: 0,
+            voucherId: null,
             customerId: null,
             staffId: null,
             orderDetails: this.fb.array([])
@@ -320,15 +329,9 @@ export class PosComponent implements OnInit {
     updateTabs(item: FormGroup) {
         this.tabs.update(tabs => {
             let newTabs = tabs;
-            newTabs.forEach(tab => {
-                if (tab.tabId === this.activeTabId()) {
-                    tab.formData.orderDetails.forEach(orderDetail => {
-                        if (orderDetail.bookId === item.get("bookId")?.value) {
-                            orderDetail.quantity = item.get("quantity")?.value;
-                        }
-                    });
-                }
-            });
+            let tab = newTabs.find(tab => tab.tabId === this.activeTabId());
+            let orderDetail = tab?.formData.orderDetails.find(orderDetail => orderDetail.bookId === item.get("bookId")?.value);
+            orderDetail!.quantity = item.get("quantity")?.value;
             return newTabs;
         });
         this.saveTabsToLocalStorage(this.tabs());
@@ -352,12 +355,14 @@ export class PosComponent implements OnInit {
         const stockQuantity = await this.getStockQuantity(item.get('bookId')?.value);
         if (quantity > stockQuantity) {
             item.get('quantity')?.patchValue(stockQuantity);
+            this.updateTabs(item);
         }
         if (quantity > 1) {
             item.get('quantity')?.patchValue(quantity - 1);
+            this.updateTabs(item);
         } else this.removeItem(index, item.get("bookId")?.value);
         this.formMap.set(this.activeTabId(), this.posForm);
-        this.updateTabs(item);
+
     }
 
     async checkEmptyItemQuantity(item: FormGroup) {
@@ -443,19 +448,112 @@ export class PosComponent implements OnInit {
         return response.data;
     }
 
-    findCustomerByNameOrPhoneNum(event: AutoCompleteCompleteEvent) {
-        this.userService.findCustomerByCodeOrPhoneNum(event.query).subscribe({
+    searchCustomer(event: AutoCompleteCompleteEvent) {
+        this.userService.searchCustomer(0, 10, event.query, "created-at-desc").subscribe({
             next: res => {
-                // this.customers.set()
+                this.customers.set(res.data.content);
             }
         });
     }
 
-    validateOrder() {
+    selectCustomer(event: AutoCompleteSelectEvent) {
+        let customer: UserResponse = event.value;
+        this.posForm.get('customerId')?.patchValue(customer.id);
+        this.formMap.set(this.activeTabId(), this.posForm);
+        this.tabs.update(tabs => {
+            let newTabs = tabs;
+            let tab = newTabs.find(tab => tab.tabId === this.activeTabId());
+            tab!.formData.customerId = customer.id;
+            return newTabs;
+        });
+        this.saveTabsToLocalStorage(this.tabs());
     }
 
-    placeOrder() {
-
+    clearCustomer() {
+        this.posForm.get('customerId')?.patchValue(null);
+        this.formMap.set(this.activeTabId(), this.posForm);
+        this.tabs.update(tabs => {
+            let newTabs = tabs;
+            let tab = newTabs.find(tab => tab.tabId === this.activeTabId());
+            tab!.formData.customerId = null;
+            return newTabs;
+        });
+        this.saveTabsToLocalStorage(this.tabs());
     }
+
+    itemInfoIsChanged = async (): Promise<boolean> => {
+        let isChanged = false;
+        let tab = this.tabs().find(tabs => tabs.tabId === this.activeTabId());
+        let ids = tab!.formData.orderDetails.map(orderDetail => orderDetail.bookId);
+        let products: ProductResponse[] = [];
+        if (ids.length < 1) {
+            return isChanged;
+        }
+        products = (await firstValueFrom(this.productService.findAllProductById(ids))).data;
+
+        this.tabs.update(tabs => {
+            let newTabs = [...tabs];
+            let tab = newTabs.find(tab => tab.tabId === this.activeTabId());
+            let orderDetail = tab!.formData.orderDetails;
+            tab!.formData.orderDetails = tab!.formData.orderDetails.filter(orderDetail => {
+                let product = products.find(product =>
+                    product.id === orderDetail.bookId
+                    && product.isActive
+                    && !product.isDeleted);
+                if (product === undefined) isChanged = true;
+                return product !== undefined;
+            });
+            if (isChanged) return newTabs;
+            orderDetail.forEach(orderDetail => {
+                let product = products.find(product => product.id === orderDetail.bookId)!;
+                if (orderDetail.price !== product.price) {
+                    orderDetail.price = product.price;
+                    isChanged = true;
+                }
+                if (orderDetail.quantity > product.quantity) {
+                    orderDetail.quantity = product.quantity;
+                    isChanged = true;
+                }
+            });
+            return newTabs;
+        });
+        this.saveTabsToLocalStorage(this.tabs());
+        this.loadDataFromSignalToFormMap();
+        this.loadDataFromFormMapToForm(this.activeTabId());
+        if (isChanged) {
+            this.messageService.add({
+                severity: "info",
+                summary: "Cảnh báo",
+                detail: "Có sự thay đổi về thông tin sản phẩm so với kho"
+            });
+        }
+        return isChanged;
+    };
+
+    placeOrder = async (value: any) => {
+        if (!await this.itemInfoIsChanged()) {
+            this.messageService.add({
+                severity: "success",
+                summary: "Ổn",
+                detail: "Ổn"
+            });
+            let newOrder: OrderCreatedRequest = {
+                amountPaid: value.amountPaid,
+                voucherId: value.voucherId,
+                customerId: value.customerId,
+                staffId: value.staffId,
+                orderItems: []
+            };
+            value.orderDetails.forEach((item: { bookId: number; quantity: number; price: number; }) => {
+                let newItem = {
+                    productId: item.bookId,
+                    quantity: item.quantity,
+                    price: item.price
+                };
+                newOrder.orderItems.push(newItem);
+            });
+            console.log(newOrder);
+        }
+    };
 
 }

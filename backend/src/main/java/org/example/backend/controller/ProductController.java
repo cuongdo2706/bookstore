@@ -35,14 +35,14 @@ public class ProductController {
 
     @GetMapping
     public SuccessResponse<PageResponse<ProductResponse>> getAllProducts(@Valid @RequestParam(defaultValue = "0", name = "page") @PositiveOrZero(message = "Page must be greater than or equal 0") Integer page,
-                                                                      @Valid @RequestParam(defaultValue = "10", name = "size") @PositiveOrZero(message = "Size must be greater than or equal 0") Integer size) {
+                                                                         @Valid @RequestParam(defaultValue = "10", name = "size") @PositiveOrZero(message = "Size must be greater than or equal 0") Integer size) {
 
         return new SuccessResponse<>(HttpStatus.OK.value(), "Getting data success", productService.findAllPage(page, size));
     }
 
     @GetMapping("/stock/{id}")
     public SuccessResponse<Integer> getProductStock(@PathVariable(name = "id") Long id) {
-        return new SuccessResponse<>(HttpStatus.OK.value(),"Getting data success",productService.getStockQuantity(id));
+        return new SuccessResponse<>(HttpStatus.OK.value(), "Getting data success", productService.getStockQuantity(id));
     }
 
     @GetMapping("/search")
@@ -56,7 +56,13 @@ public class ProductController {
 
     @GetMapping("/{id}")
     public SuccessResponse<Product> findProductById(@PathVariable(name = "id") Long id) throws DataNotFoundException {
-        return new SuccessResponse<>(HttpStatus.OK.value(), "Getting data success",productService.findById(id));
+        return new SuccessResponse<>(HttpStatus.OK.value(), "Getting data success", productService.findById(id));
+    }
+
+    @GetMapping("/by-ids")
+    public SuccessResponse<List<ProductResponse>> findAllByIds(@RequestParam(name = "ids") List<Long> ids){
+        return new SuccessResponse<>(HttpStatus.OK.value(), "Getting data success", productService.findAllById(ids));
+
     }
 
     @GetMapping("/export-excel")

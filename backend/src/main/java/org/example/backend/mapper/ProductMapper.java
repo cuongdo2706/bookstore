@@ -15,9 +15,8 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Component
 public class ProductMapper {
-    public Product toCreatedProduct(ProductCreatedRequest request, Category existedCategory, Author existedAuthor) {
+    public static Product toCreatedProduct(ProductCreatedRequest request, Category existedCategory, Author existedAuthor) {
         Product product = new Product();
         product.setCode(GenerateCodeUtil.generateProductCode());
         product.setName(request.getName());
@@ -51,7 +50,7 @@ public class ProductMapper {
         return product;
     }
 
-    public Product toUpdatedProduct(Product existedProduct, ProductUpdatedRequest request, Category existedCategory, Author existedAuthor) {
+    public static Product toUpdatedProduct(Product existedProduct, ProductUpdatedRequest request, Category existedCategory, Author existedAuthor) {
         if (request.getName() != null) {
             existedProduct.setName(request.getName());
         }
@@ -91,7 +90,7 @@ public class ProductMapper {
         return existedProduct;
     }
 
-    public ProductResponse toProductResponse(Product product) {
+    public static ProductResponse toProductResponse(Product product) {
         ProductResponse.PromotionResponse promotionResponse = null;
         if (product.getPromotion() != null) {
             promotionResponse = new ProductResponse.PromotionResponse(
@@ -133,15 +132,15 @@ public class ProductMapper {
         );
     }
 
-    public List<ProductResponse> toProductResponses(List<Product> products) {
+    public static List<ProductResponse> toProductResponses(List<Product> products) {
         return products.stream()
-                .map(this::toProductResponse)
-                .collect(Collectors.toList());
+                .map(ProductMapper::toProductResponse)
+                .toList();
     }
 
-    public Page<ProductResponse> toProductPageResponse(Page<Product> products) {
+    public static Page<ProductResponse> toProductPageResponse(Page<Product> products) {
         List<ProductResponse> productResponse = products.stream()
-                .map(this::toProductResponse)
+                .map(ProductMapper::toProductResponse)
                 .toList();
         return new PageImpl<>(productResponse, PageRequest.of(products.getNumber(), products.getSize()), products.getTotalElements());
     }

@@ -38,7 +38,7 @@ public class Order extends BaseEntity {
     @Column(precision = 19, scale = 2) //Tiền khách trả
     BigDecimal amountPaid;//offline
     @Column(precision = 19, scale = 2)
-    BigDecimal changeAmount;
+    BigDecimal changeAmount;//offline
     @ManyToOne
     @JoinColumn(name = "customer_id")
     User customer;
@@ -51,7 +51,7 @@ public class Order extends BaseEntity {
     String address;// online
     String orderType;
     @Column(columnDefinition = "TEXT")
-    String note;
+    String note;//online
     @ManyToOne
     @JoinColumn(name = "voucher_id")
     Voucher voucher;

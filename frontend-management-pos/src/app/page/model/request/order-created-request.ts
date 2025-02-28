@@ -1,10 +1,11 @@
 export interface OrderCreatedRequest {
-    totalReceive: number;
-    customerId: number;
+    amountPaid: number;
+    voucherId: number | null;
+    customerId: number | null;
     staffId: number;
-    note: String;
     orderItems: {
         productId: number;
         quantity: number;
+        price: number;
     }[];
 }

@@ -1,3 +1,4 @@
+<p-toast/>
 <div class = "nav-tabs">
     <p-auto-complete
 	  (completeMethod) = "searchProduct($event)"
@@ -25,7 +26,7 @@
 	  text = "true"></p-button>
 
 
-    @for (t of tabs(); let i = $index; track i) {
+    @for (t of tabs(); let i = $index; track t.tabId) {
 
         <div [style.background-color] = "t.tabId===activeTabId()?'#10F6B6':'#10B981'"
 	   (click) = "chooseTab(t.tabId)"
@@ -48,12 +49,13 @@
 	  severity = "success"
 	  text = "true"></p-button>
 </div>
-<form (ngSubmit) = "placeOrder()" [formGroup] = "posForm" style = "margin-top: 20px">
+<form (ngSubmit) = "placeOrder(posForm.value)" [formGroup] = "posForm" style = "margin-top: 20px">
     <div style = "display: flex; column-gap: 10px">
 
         <div formArrayName = "orderDetails"
 	   style = "width: 70%;flex-shrink: 0;row-gap: 10px;display: flex; flex-direction: column">
-	  @for (item of orderDetailsFormArray.controls; let i = $index; track i) {
+	  @for (item of orderDetailsFormArray.controls; let i = $index; track item.get('bookId')!.value) {
+
 	      <p-card styleClass = "item" [formGroupName] = "i">
 		<div class = "flex align-items-center justify-content-between">
 		    <div class = "flex align-items-center" style = "width: 50%">
@@ -102,32 +104,20 @@
         <div style = "width: 30%;flex-shrink: 0">
 	  <p-card styleClass = "order-info">
 	      <div class = "flex">
-		<!--		<p-auto-complete-->
-		<!--		        (completeMethod) = "searchProduct($event)"-->
-		<!--		        (onSelect) = "selectProduct($event)"-->
-		<!--		        [suggestions] = "products()"-->
-		<!--		        delay = "500"-->
-		<!--		        optionLabel = "name"-->
-		<!--		        placeholder = "Tìm sản phẩm theo tên hoặc mã"-->
-		<!--		        showClear = "true"-->
-		<!--		        styleClass = "searchInput"-->
-		<!--		>-->
 		<p-auto-complete
-		        (completeMethod) = "findCustomerByNameOrPhoneNum($event)"
+		        (completeMethod) = "searchCustomer($event)"
+		        (onSelect) = "selectCustomer($event)"
+		        (onClear) = "clearCustomer()"
+		        [suggestions] = "customers()"
 		        delay = "500"
 		        [showClear] = "true"
 		        [style] = "{'height':'35px','align-items': 'center','width':'300px'}"
 		        styleClass = "customerInput"
 		        optionLabel = "phoneNum"
 		        placeholder = "Tìm khách hàng">
-		    <ng-template #selectedItem>
+		    <ng-template #item let-user>
 		        <div class = "flex align-items-center gap-2">
-
-		        </div>
-		    </ng-template>
-		    <ng-template #item>
-		        <div class = "flex align-items-center gap-2">
-
+			  <span>{{ user.name }}</span>
 		        </div>
 		    </ng-template>
 
@@ -189,11 +179,13 @@
 		</div>
 	      </div>
 
-	      <p-button [style] = "{'width':'100%','margin-top':'20px'}" label = "Thanh toán"></p-button>
+	      <p-button type = "submit" [style] = "{'width':'100%','margin-top':'20px'}"
+		      label = "Thanh toán"></p-button>
 
 	  </p-card>
         </div>
 
     </div>
 </form>
+
 

@@ -13,9 +13,12 @@ import java.util.Optional;
 public interface ProductRepository extends JpaRepository<Product, Long>, JpaSpecificationExecutor<Product> {
     @Query(nativeQuery = true, value = """
             SELECT * FROM tbl_product 
-            WHERE is_active = TRUE AND is_deleted = FALSE
+            WHERE is_active = TRUE 
+            AND is_deleted = FALSE
             ORDER BY name
-            """)
+            """,
+    countQuery = "SELECT count(*) FROM tbl_product WHERE is_active = TRUE AND is_deleted = FALSE "
+    )
     Page<Product> findAllPage(Pageable pageable);
 
 //    @Query(nativeQuery = true,
@@ -26,6 +29,7 @@ public interface ProductRepository extends JpaRepository<Product, Long>, JpaSpec
 //                    ORDER BY name
 //                    """)
 //    Product findByCode(@Param("code") String code);
+
 
     @Modifying
     @Query(nativeQuery = true, value = "UPDATE tbl_product SET is_deleted = true WHERE id = :id")
