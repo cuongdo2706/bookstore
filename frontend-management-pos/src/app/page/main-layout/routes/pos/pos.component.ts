@@ -456,18 +456,18 @@ export class PosComponent implements OnInit {
         });
     }
 
-    selectCustomer(event: AutoCompleteSelectEvent) {
-        let customer: UserResponse = event.value;
-        this.posForm.get('customerId')?.patchValue(customer.id);
-        this.formMap.set(this.activeTabId(), this.posForm);
-        this.tabs.update(tabs => {
-            let newTabs = tabs;
-            let tab = newTabs.find(tab => tab.tabId === this.activeTabId());
-            tab!.formData.customerId = customer.id;
-            return newTabs;
-        });
-        this.saveTabsToLocalStorage(this.tabs());
-    }
+    // selectCustomer(event: AutoCompleteSelectEvent) {
+    //     let customer: UserResponse = event.value;
+    //     this.posForm.get('customerId')?.patchValue(customer.id);
+    //     this.formMap.set(this.activeTabId(), this.posForm);
+    //     this.tabs.update(tabs => {
+    //         let newTabs = tabs;
+    //         let tab = newTabs.find(tab => tab.tabId === this.activeTabId());
+    //         tab!.formData.customerId = customer.id;
+    //         return newTabs;
+    //     });
+    //     this.saveTabsToLocalStorage(this.tabs());
+    // }
 
     clearCustomer() {
         this.posForm.get('customerId')?.patchValue(null);
