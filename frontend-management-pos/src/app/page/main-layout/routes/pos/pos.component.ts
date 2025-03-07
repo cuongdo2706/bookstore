@@ -26,6 +26,7 @@ interface Tab {
         amountPaid: number;
         voucherId: number | null
         customerId: number | null;
+        // customer: UserResponse | null
         staffId: number | null;
         orderDetails: OrderDetail[];
     };
@@ -360,7 +361,7 @@ export class PosComponent implements OnInit {
         if (quantity > 1) {
             item.get('quantity')?.patchValue(quantity - 1);
             this.updateTabs(item);
-        } else this.removeItem(index, item.get("bookId")?.value);
+        }
         this.formMap.set(this.activeTabId(), this.posForm);
 
     }
@@ -424,9 +425,8 @@ export class PosComponent implements OnInit {
     amountPaid = linkedSignal({
         source: () => this.amountDue,
         computation: (source) => {
-            const result = source;
-            this.posForm.get('amountPaid')?.patchValue(result());
-            return result();
+            this.posForm.get('amountPaid')?.patchValue(source());
+            return source();
         }
     });
 
@@ -518,8 +518,8 @@ export class PosComponent implements OnInit {
             return newTabs;
         });
         this.saveTabsToLocalStorage(this.tabs());
-        this.loadDataFromSignalToFormMap();
-        this.loadDataFromFormMapToForm(this.activeTabId());
+        // this.loadDataFromSignalToFormMap();
+        // this.loadDataFromFormMapToForm(this.activeTabId());
         if (isChanged) {
             this.messageService.add({
                 severity: "info",
