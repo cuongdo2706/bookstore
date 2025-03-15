@@ -4,6 +4,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
+
 import java.math.BigDecimal;
 import java.util.List;
 
@@ -14,8 +15,8 @@ public class OrderOfflineRequest {
     BigDecimal amountPaid;
     Long customerId;
     Long staffId;
-    Long voucherId;
-    List<OrderItem>orderItems;
+    Long couponId;
+    List<OrderItem> orderItems;
 
     @Getter
     @Setter

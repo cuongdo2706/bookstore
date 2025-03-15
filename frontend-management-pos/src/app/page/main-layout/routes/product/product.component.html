@@ -31,7 +31,7 @@
 		<p-select
 		        [style.margin-left.px] = "10"
 		        [options] = "filterOption"
-		        (click) = "searchKeyword()"
+		        (onChange) = "searchKeyword()"
 		        optionLabel = "name"
 		        optionValue = "code"
 		        [(ngModel)] = "filterSelection"
@@ -80,7 +80,7 @@
 	      <td colspan = "7">
 		<div class = "p-3">
 		    <div>
-		        <span class = "text-primary-700">{{ product.name }}</span>
+		        <span class = "text-primary-700"><b>{{ product.name }}</b></span>
 		    </div>
 		    <div class = "grid mt-3">
 		        <div class = "col-3 flex justify-content-center">

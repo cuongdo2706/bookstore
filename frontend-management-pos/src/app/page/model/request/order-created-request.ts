@@ -1,6 +1,6 @@
 export interface OrderCreatedRequest {
     amountPaid: number;
-    voucherId: number | null;
+    couponId: number | null;
     customerId: number | null;
     staffId: number;
     orderItems: {

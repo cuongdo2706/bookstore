@@ -1,7 +1,8 @@
 package org.example.backend.dto.request;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import jakarta.validation.constraints.*;
+import jakarta.validation.constraints.DecimalMin;
+import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.PositiveOrZero;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -16,12 +17,7 @@ public class ProductUpdatedRequest {
     String name;
     @PositiveOrZero(message = "Quantity must be greater than or equal 0")
     Integer quantity;
-    @JsonProperty("publicId")
-    String publicId;
-    @JsonProperty("imgUrl")
-    String imgUrl;
     @DecimalMin(value = "1.0", message = "Price must be greater than 0")
-    @NotNull(message = "Price is required")
     BigDecimal price;
     String publisher;
     String translator;
@@ -29,8 +25,6 @@ public class ProductUpdatedRequest {
     Integer numOfPages;
     Integer publishedYear;
     String description;
-    @NotNull(message = "Author Id is required")
     Long authorId;
-    @NotNull(message = "Category Id is required")
     Long categoryId;
 }

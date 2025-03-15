@@ -1,4 +1,4 @@
-export interface VoucherResponse {
+export interface CouponResponse {
     id: number,
     code: string,
     name: string,

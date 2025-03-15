@@ -1,4 +1,4 @@
-import {Component, inject, OnInit, viewChild} from '@angular/core';
+import {Component, inject, OnInit, signal, viewChild} from '@angular/core';
 import {TableModule} from "primeng/table";
 import {ProductService} from "../../../service/product.service";
 import {Toast} from "primeng/toast";
@@ -8,7 +8,7 @@ import {InputIcon} from "primeng/inputicon";
 import {InputText} from "primeng/inputtext";
 import {FormsModule} from "@angular/forms";
 import {Image} from "primeng/image";
-import {Paginator, PaginatorState} from "primeng/paginator";
+import {Paginator, PaginatorModule, PaginatorState} from "primeng/paginator";
 import {DecimalPipe} from "@angular/common";
 import {SaveFormComponent} from "./save-form/save-form.component";
 import {ProductResponse} from "../../../model/response/product-response.model";
@@ -34,7 +34,7 @@ import {Select} from "primeng/select";
         InputIcon,
         InputText,
         Image,
-        Paginator,
+        PaginatorModule,
         TableModule,
         ConfirmDialog
     ],
@@ -66,6 +66,7 @@ export class ProductComponent implements OnInit {
     updateFormVisible: boolean = false;
     updateId!: number;
     baseImg = AppConstants.BASE_IMAGE;
+    isFilter = signal(false);
 
 
     ngOnInit() {
@@ -89,6 +90,7 @@ export class ProductComponent implements OnInit {
     }
 
     searchKeyword() {
+        this.isFilter.set(true);
         const paginator = this.paginator();
         this.productService.searchProducts(0, this.size, this.keyword, this.filterSelection)
             .pipe(delay(500))
@@ -97,11 +99,13 @@ export class ProductComponent implements OnInit {
                         this.products = res.data.content;
                         this.totalElements = res.data.totalElements;
                         if (paginator) {
-                            paginator.first = 0;
+                            paginator.changePage(0);
                         }
+                        this.isFilter.set(false);
                     }
                 }
             );
+
     }
 
     exportExcel() {
@@ -135,6 +139,7 @@ export class ProductComponent implements OnInit {
     }
 
     onPageChange(event: PaginatorState) {
+        if (this.isFilter()) return;
         this.productService.searchProducts(event.page!, event.rows!, this.keyword, this.filterSelection).subscribe({
                 next: res => {
                     this.products = res.data.content;

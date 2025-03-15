@@ -8,8 +8,8 @@ import {CategoryComponent} from "./page/main-layout/routes/category/category.com
 import {OrderComponent} from "./page/main-layout/routes/order/order.component";
 import {CustomerComponent} from "./page/main-layout/routes/customer/customer.component";
 import {StaffComponent} from "./page/main-layout/routes/staff/staff.component";
-import {DiscountComponent} from "./page/main-layout/routes/discount/discount.component";
-import {VoucherComponent} from "./page/main-layout/routes/voucher/voucher.component";
+import {PromotionComponent} from "./page/main-layout/routes/promotion/promotion.component";
+import {CouponComponent} from "./page/main-layout/routes/coupon/coupon.component";
 import {PageNotFoundComponent} from "./page/main-layout/routes/page-not-found/page-not-found.component";
 import {AuthGuard} from "./core/auth/guard/auth.guard";
 import {LoginGuard} from "./core/auth/guard/login.guard";
@@ -18,7 +18,7 @@ export const routes: Routes = [
     {
         path: "dang-nhap",
         component: LoginComponent,
-        canActivate:[LoginGuard]
+        canActivate: [LoginGuard]
     },
     {
         path: "",
@@ -76,13 +76,13 @@ export const routes: Routes = [
                 path: "khuyen-mai",
                 title: "Khuyến mãi",
                 canActivate: [AuthGuard],
-                component: DiscountComponent
+                component: PromotionComponent
             },
             {
                 path: "ma-giam-gia",
                 title: "Mã giảm giá",
                 canActivate: [AuthGuard],
-                component: VoucherComponent
+                component: CouponComponent
             }
         ]
     },

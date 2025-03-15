@@ -13,20 +13,20 @@ import {v4 as uuidv4} from 'uuid';
 import {InputText} from "primeng/inputtext";
 import {firstValueFrom} from "rxjs";
 import {ApiResponse} from "../../../model/response/api-response";
-import {VoucherService} from "../../../service/voucher.service";
-import {VoucherResponse} from "../../../model/response/voucher-response.model";
+import {CouponService} from "../../../service/coupon.service";
 import {UserService} from "../../../service/user.service";
 import {UserResponse} from "../../../model/response/user-response";
 import {Toast} from "primeng/toast";
 import {OrderCreatedRequest} from '../../../model/request/order-created-request';
+import {CouponResponse} from "../../../model/response/coupon-response.model";
 
 interface Tab {
     tabId: string;
     formData: {
         amountPaid: number;
-        voucherId: number | null
+        couponId: number | null
         customerId: number | null;
-        // customer: UserResponse | null
+        customer: UserResponse | null
         staffId: number | null;
         orderDetails: OrderDetail[];
     };
@@ -69,12 +69,12 @@ export class PosComponent implements OnInit {
     customers = signal<UserResponse[]>([]);
     private orderService = inject(OrderService);
     private productService = inject(ProductService);
-    private voucherService = inject(VoucherService);
+    private couponService = inject(CouponService);
     private userService = inject(UserService);
     private fb = inject(FormBuilder);
     private formMap = new Map<string, FormGroup>();
-    voucher = signal<VoucherResponse | null>(null);
-    voucherNotFoundError = signal<string | null>(null);
+    coupon = signal<CouponResponse | null>(null);
+    couponNotFoundError = signal<string | null>(null);
     orderDetailsValues = signal<any[]>([]);
 
     get orderDetailsFormArray(): FormArray<FormGroup> {
@@ -88,15 +88,15 @@ export class PosComponent implements OnInit {
         });
     }
 
-    async findVoucherById(value: string) {
+    async findCouponById(value: string) {
         setTimeout(async () => {
             if (value != "") {
-                const result = await firstValueFrom(this.voucherService.findVoucherByCode(value));
-                this.voucher.set(result.data === undefined ? null : result.data);
-                this.voucherNotFoundError.set(this.voucher() === null ? "Voucher không hợp lệ" : null);
+                const result = await firstValueFrom(this.couponService.findCouponByCode(value));
+                this.coupon.set(result.data === undefined ? null : result.data);
+                this.couponNotFoundError.set(this.coupon() === null ? "Coupon không hợp lệ" : null);
             }
         }, 500);
-        this.voucherNotFoundError.set(null);
+        this.couponNotFoundError.set(null);
     }
 
     searchProduct(event: AutoCompleteCompleteEvent) {
@@ -184,8 +184,9 @@ export class PosComponent implements OnInit {
             tabId: tabId,
             formData: {
                 amountPaid: 0,
-                voucherId: null,
+                couponId: null,
                 customerId: null,
+                customer: null,
                 staffId: null,
                 orderDetails: [],
             }
@@ -200,7 +201,6 @@ export class PosComponent implements OnInit {
         this.posForm = this.getForm(tabId);
         this.saveActiveTabIdToLocalStorage(tabId);
         this.orderDetailsValues.set(this.posForm.get('orderDetails')?.value || []);
-
         // Subscribe để theo dõi thay đổi của tab mới
         this.posForm.get('orderDetails')?.valueChanges.subscribe(values => {
             this.orderDetailsValues.set(values);
@@ -223,8 +223,9 @@ export class PosComponent implements OnInit {
         } else {
             this.posForm.reset({
                 amountPaid: 0,
-                voucherId: null,
+                couponId: null,
                 customerId: null,
+                customer: null,
                 staffId: null,
                 orderDetails: this.fb.array([])
             });
@@ -233,8 +234,9 @@ export class PosComponent implements OnInit {
                 tabId: tabId,
                 formData: {
                     amountPaid: 0,
-                    voucherId: null,
+                    couponId: null,
                     customerId: null,
+                    customer: null,
                     staffId: null,
                     orderDetails: [],
                 }
@@ -297,8 +299,9 @@ export class PosComponent implements OnInit {
     private createForm(): FormGroup {
         return this.fb.group({
             amountPaid: 0,
-            voucherId: null,
+            couponId: null,
             customerId: null,
+            customer: null,
             staffId: null,
             orderDetails: this.fb.array([])
         });
@@ -340,43 +343,26 @@ export class PosComponent implements OnInit {
 
     async increaseItemQuantity(item: FormGroup) {
         let quantity = item.get('quantity')?.value;
-        const stockQuantity = await this.getStockQuantity(item.get('bookId')?.value);
-        if ((stockQuantity < 50 && quantity < stockQuantity)) {
-            item.get('quantity')?.patchValue(quantity + 1);
-        }
-        if ((quantity < 50 && stockQuantity > 50)) {
-            item.get('quantity')?.patchValue(quantity + 1);
-        }
+
+        item.get('quantity')?.patchValue(quantity + 1);
+
         this.formMap.set(this.activeTabId(), this.posForm);
         this.updateTabs(item);
     }
 
-    async decreaseItemQuantity(item: FormGroup, index: number) {
+    async decreaseItemQuantity(item: FormGroup) {
         let quantity = item.get('quantity')?.value;
-        const stockQuantity = await this.getStockQuantity(item.get('bookId')?.value);
-        if (quantity > stockQuantity) {
-            item.get('quantity')?.patchValue(stockQuantity);
-            this.updateTabs(item);
-        }
         if (quantity > 1) {
             item.get('quantity')?.patchValue(quantity - 1);
             this.updateTabs(item);
         }
         this.formMap.set(this.activeTabId(), this.posForm);
-
     }
 
     async checkEmptyItemQuantity(item: FormGroup) {
         let quantity = item.get('quantity')?.value;
-        const stockQuantity = await this.getStockQuantity(item.get('bookId')?.value);
         if (!quantity || quantity === "") {
             item.get('quantity')?.patchValue(1);
-        }
-        if (quantity > 50) {
-            item.get('quantity')?.patchValue(stockQuantity > 50 ? 50 : stockQuantity);
-        }
-        if (quantity > stockQuantity) {
-            item.get('quantity')?.patchValue(stockQuantity);
         }
         this.formMap.set(this.activeTabId(), this.posForm);
         this.updateTabs(item);
@@ -399,11 +385,11 @@ export class PosComponent implements OnInit {
     });
 
     discount = computed(() => {
-        if (this.voucher() === null) {
+        if (this.coupon() === null) {
             return 0;
         }
-        if (this.voucher()?.promotionType === "FIXED") {
-            return this.voucher()?.promotionValue!;
+        if (this.coupon()?.promotionType === "FIXED") {
+            return this.coupon()?.promotionValue!;
         }
         return 0;
     });
@@ -456,26 +442,30 @@ export class PosComponent implements OnInit {
         });
     }
 
-    // selectCustomer(event: AutoCompleteSelectEvent) {
-    //     let customer: UserResponse = event.value;
-    //     this.posForm.get('customerId')?.patchValue(customer.id);
-    //     this.formMap.set(this.activeTabId(), this.posForm);
-    //     this.tabs.update(tabs => {
-    //         let newTabs = tabs;
-    //         let tab = newTabs.find(tab => tab.tabId === this.activeTabId());
-    //         tab!.formData.customerId = customer.id;
-    //         return newTabs;
-    //     });
-    //     this.saveTabsToLocalStorage(this.tabs());
-    // }
+    selectCustomer(event: AutoCompleteSelectEvent) {
+        let customer: UserResponse = event.value;
+        this.posForm.get('customerId')?.patchValue(customer.id);
+        this.posForm.get('customer')?.patchValue(customer);
+        this.formMap.set(this.activeTabId(), this.posForm);
+        this.tabs.update(tabs => {
+            let newTabs = tabs;
+            let tab = newTabs.find(tab => tab.tabId === this.activeTabId())!;
+            tab.formData.customerId = customer.id;
+            tab.formData.customer = customer;
+            return newTabs;
+        });
+        this.saveTabsToLocalStorage(this.tabs());
+    }
 
     clearCustomer() {
         this.posForm.get('customerId')?.patchValue(null);
+        this.posForm.get('customer')?.patchValue(null);
         this.formMap.set(this.activeTabId(), this.posForm);
         this.tabs.update(tabs => {
             let newTabs = tabs;
             let tab = newTabs.find(tab => tab.tabId === this.activeTabId());
             tab!.formData.customerId = null;
+            tab!.formData.customer = null;
             return newTabs;
         });
         this.saveTabsToLocalStorage(this.tabs());
@@ -539,7 +529,7 @@ export class PosComponent implements OnInit {
             });
             let newOrder: OrderCreatedRequest = {
                 amountPaid: value.amountPaid,
-                voucherId: value.voucherId,
+                couponId: value.couponId,
                 customerId: value.customerId,
                 staffId: value.staffId,
                 orderItems: []
@@ -556,4 +546,6 @@ export class PosComponent implements OnInit {
         }
     };
 
+    setPrice = () => {
+    };
 }

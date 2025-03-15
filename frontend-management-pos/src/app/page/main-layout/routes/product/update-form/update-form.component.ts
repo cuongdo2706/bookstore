@@ -72,9 +72,9 @@ export class UpdateFormComponent implements OnInit {
         });
     }
 
-    updateForm!:FormGroup;
-    categoryInput!:FormGroup;
-    authorInput!:FormGroup;
+    updateForm!: FormGroup;
+    categoryInput!: FormGroup;
+    authorInput!: FormGroup;
     private defaultData!: ProductResponse;
     imageUrl!: string;
     publicId!: string | null;
@@ -96,9 +96,6 @@ export class UpdateFormComponent implements OnInit {
     updateId = input<number>();
 
 
-
-
-
     async uploadImage(file: File): Promise<ImageResponse> {
         return await lastValueFrom(this.uploadImageService.uploadImage(file));
     }
@@ -112,31 +109,18 @@ export class UpdateFormComponent implements OnInit {
         if (this.updateForm.valid) {
             let fileReq: File | null = this.updateForm.controls['imgFile'].value;
             let bookReq: ProductUpdatedRequest = {
-                ...(this.updateForm.controls['name'].value !== this.defaultData.name ?
-                    {name: this.updateForm.controls['name'].value!} : null),
-                ...(this.updateForm.controls['quantity'].value !== this.defaultData.quantity ?
-                    {quantity: this.updateForm.controls['quantity'].value!} : null),
-                ...(this.updateForm.controls['price'].value !== this.defaultData.price ?
-                    {price: this.updateForm.controls['price'].value!} : null),
-                ...(this.updateForm.controls['publisher'].value !== this.defaultData.publisher ?
-                    {publisher: this.updateForm.controls['publisher'].value} : null),
-                ...(this.updateForm.controls['translator'].value !== this.defaultData.translator ?
-                    {translator: this.updateForm.controls['translator'].value} : null),
-                ...(this.updateForm.controls['numOfPages'].value !== this.defaultData.numOfPages ?
-                    {numOfPages: this.updateForm.controls['numOfPages'].value} : null),
-                ...(this.updateForm.controls['publishedYear'].value !== this.defaultData.publishedYear ?
-                    {publishedYear: this.updateForm.controls['publishedYear'].value} : null),
-                ...(this.updateForm.controls['description'].value !== this.defaultData.description ?
-                    {description: this.updateForm.controls['description'].value} : null),
-                ...(this.updateForm.controls['author'].value !== this.defaultData.author.id ?
-                    {authorId: this.updateForm.controls['author'].value!} : null),
-                ...(this.updateForm.controls['category'].value !== this.defaultData.category.id ?
-                    {categoryId: this.updateForm.controls['category'].value!} : null),
-                ...(this.defaultData.publicId !== null ?
-                    (fileReq !== null ? await this.updateImage(fileReq, this.defaultData.publicId) : null) :
-                    (fileReq !== null ? await this.uploadImage(fileReq) : null))
+                name: this.updateForm.controls['name'].value!,
+                quantity: this.updateForm.controls['quantity'].value!,
+                price: this.updateForm.controls['price'].value!,
+                publisher: this.updateForm.controls['publisher'].value,
+                translator: this.updateForm.controls['translator'].value,
+                numOfPages: this.updateForm.controls['numOfPages'].value,
+                publishedYear: this.updateForm.controls['publishedYear'].value,
+                description: this.updateForm.controls['description'].value,
+                authorId: this.updateForm.controls['author'].value!,
+                categoryId: this.updateForm.controls['category'].value!
             };
-            await firstValueFrom(this.productService.updateProduct(this.updateId()!, bookReq));
+            await firstValueFrom(this.productService.updateProduct(this.updateId()!, bookReq, fileReq));
             await firstValueFrom(this.productService.fetchProducts(0, 10))
                 .then(res => {
                     this.onUpdate.emit(res.data);

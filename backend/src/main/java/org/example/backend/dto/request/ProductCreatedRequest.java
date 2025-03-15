@@ -4,6 +4,7 @@ import jakarta.validation.constraints.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 
 @Getter
@@ -11,7 +12,7 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class ProductCreatedRequest {
+public class ProductCreatedRequest implements Serializable {
     @NotBlank(message = "Name must have more than 1 digit")
     @NotNull(message = "Name cannot be null")
     String name;
@@ -19,10 +20,6 @@ public class ProductCreatedRequest {
     @PositiveOrZero(message = "Quantity must be greater than or equal 0")
     @NotNull(message = "Quantity must not be null")
     Integer quantity;
-
-    String publicId;
-
-    String imgUrl;
 
     @DecimalMin(value = "1.0", message = "Price must be greater than 0")
     @NotNull(message = "Price is required")
@@ -38,8 +35,6 @@ public class ProductCreatedRequest {
     Integer publishedYear;
 
     String description;
-
-    Boolean isActive;
 
     @NotNull(message = "Author Id is required")
     @Positive(message = "Author Id must be greater than 0")

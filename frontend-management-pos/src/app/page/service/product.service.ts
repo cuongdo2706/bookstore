@@ -46,12 +46,24 @@ export class ProductService {
         });
     }
 
-    saveProduct(product: ProductCreatedRequest) {
-        return this.http.post<ApiResponse<ProductResponse>>(this.url, product);
+    saveProduct(product: ProductCreatedRequest, file: File | null) {
+        const formData = new FormData();
+        const productBlob = new Blob([JSON.stringify(product)], {type: 'application/json'});
+        formData.append('product', productBlob);
+        if (file) {
+            formData.append('file', file);
+        }
+        return this.http.post<ApiResponse<ProductResponse>>(this.url, formData);
     }
 
-    updateProduct(id: number, product: ProductUpdatedRequest) {
-        return this.http.put<ApiResponse<ProductResponse>>(`${this.url}/${id}`, product);
+    updateProduct(id: number, product: ProductUpdatedRequest, file: File | null) {
+        const formData = new FormData();
+        const productBlob = new Blob([JSON.stringify(product)], {type: 'application/json'});
+        formData.append('product', productBlob);
+        if (file) {
+            formData.append('file', file);
+        }
+        return this.http.put<ApiResponse<ProductResponse>>(`${this.url}/${id}`, formData);
     }
 
     deleteProduct(id: number) {

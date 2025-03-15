@@ -53,7 +53,7 @@
     <div style = "display: flex; column-gap: 10px">
 
         <div formArrayName = "orderDetails"
-	   style = "width: 70%;flex-shrink: 0;row-gap: 10px;display: flex; flex-direction: column">
+	   style = "width: 70%;flex-shrink: 0;row-gap: 3px;display: flex; flex-direction: column">
 	  @for (item of orderDetailsFormArray.controls; let i = $index; track item.get('bookId')!.value) {
 
 	      <p-card styleClass = "item" [formGroupName] = "i">
@@ -77,7 +77,7 @@
 			      rounded = "true"
 			      raised = "true"
 			      icon = "pi pi-minus"
-			      (click) = "decreaseItemQuantity(orderDetailsFormArray.controls[i],i)"></p-button>
+			      (click) = "decreaseItemQuantity(orderDetailsFormArray.controls[i])"></p-button>
 		        <p-input-number
 			      min = "1"
 			      (onBlur) = "checkEmptyItemQuantity(orderDetailsFormArray.controls[i])"
@@ -94,7 +94,11 @@
 			      (click) = "increaseItemQuantity(orderDetailsFormArray.controls[i])"></p-button>
 		    </div>
 		    <div class = "flex align-items-center gap-4">
-		        <span style = "width: 100px;text-align: right"><u>{{ item.get('price')?.value|number:'1.0-0' }}</u></span>
+		        <button (click) = "setPrice()"
+			      class = "itemPrice"
+			      type = "button">
+			  {{ item.get('price')?.value|number:'1.0-0' }}
+		        </button>
 		        <b style = "width: 100px;text-align: right">{{ calculateItemTotalPrice(item)|number:'1.0-0' }}</b>
 		    </div>
 		</div>
@@ -107,13 +111,14 @@
 		<p-auto-complete
 		        (completeMethod) = "searchCustomer($event)"
 		        (onClear) = "clearCustomer()"
+		        (onSelect) = "selectCustomer($event)"
 		        [suggestions] = "customers()"
 		        delay = "500"
 		        [showClear] = "true"
 		        [style] = "{'height':'35px','align-items': 'center','width':'300px'}"
 		        styleClass = "customerInput"
-		        optionLabel = "phoneNum"
-		        formControlName = "customerId"
+		        optionLabel = "name"
+		        formControlName = "customer"
 		        placeholder = "Tìm khách hàng">
 		    <ng-template #item let-user>
 		        <div class = "flex align-items-center gap-2">
@@ -140,11 +145,11 @@
 	      <div class = "flex mt-3">
 		<div class = "col-5 pl-0"><b>Voucher</b></div>
 		<div class = "col-7" style = "position: relative;padding: 0">
-		    <input #voucherInput (input) = "findVoucherById(voucherInput.value)"
+		    <input #voucherInput (input) = "findCouponById(voucherInput.value)"
 			 [style] = "{'height':'35px','width':'220px'}"
 			 type = "text" pInputText/>
-		    @if (voucherNotFoundError() != null && voucherInput.value != "") {
-		        <span style = "color: red">{{ voucherNotFoundError() }}</span>
+		    @if (couponNotFoundError() != null && voucherInput.value != "") {
+		        <span style = "color: red">{{ couponNotFoundError() }}</span>
 		    }
 		</div>
 	      </div>
@@ -157,7 +162,7 @@
 	      <div class = "flex mt-3">
 		<div class = "col-6 pl-0"><b>Khách cần trả</b></div>
 		<div class = "col-6"
-		     style = "text-align: end">{{ amountDue()|number:'1.0-0' }}
+		     style = "text-align: end;font-weight: bold;font-size: 18px;color: green">{{ amountDue()|number:'1.0-0' }}
 		</div>
 	      </div>
 	      @if (orderDetailsFormArray.length > 0) {
@@ -180,8 +185,12 @@
 		    </div>
 		</div>
 	      }
-	      <p-button type = "submit" [style] = "{'width':'100%','margin-top':'20px'}"
+
+	      <p-button [disabled] = "orderDetailsFormArray.length < 1" type = "submit"
+		      [style] = "{'width':'100%','margin-top':'20px'}"
 		      label = "Thanh toán"></p-button>
+
+
 	  </p-card>
         </div>
 

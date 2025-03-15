@@ -39,10 +39,10 @@ public class GenerateCodeUtil {
         return prefix.concat(sb.toString());
     }
 
-    public static String generateVoucherCode() {
+    public static String generateCouponCode() {
         int length = 10;
         StringBuilder sb = new StringBuilder(length);
-        String prefix = "VC";
+        String prefix = "CP";
         Random random = new Random();
 
         for (int i = 0 ; i < length ; i++) {

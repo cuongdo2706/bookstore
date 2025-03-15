@@ -4,14 +4,13 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.PositiveOrZero;
 import org.example.backend.dto.request.ProductCreatedRequest;
 import org.example.backend.dto.request.ProductUpdatedRequest;
-import org.example.backend.dto.response.ProductResponse;
 import org.example.backend.dto.response.PageResponse;
+import org.example.backend.dto.response.ProductResponse;
 import org.example.backend.dto.response.SuccessResponse;
 import org.example.backend.entity.Product;
 import org.example.backend.exception.DataNotFoundException;
 import org.example.backend.service.IProductService;
 import org.example.backend.utility.ExcelUtil;
-import org.example.backend.utility.ImageUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
@@ -20,6 +19,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -34,8 +34,7 @@ public class ProductController {
     private IProductService productService;
 
     @GetMapping
-    public SuccessResponse<PageResponse<ProductResponse>> getAllProducts(@Valid @RequestParam(defaultValue = "0", name = "page") @PositiveOrZero(message = "Page must be greater than or equal 0") Integer page,
-                                                                         @Valid @RequestParam(defaultValue = "10", name = "size") @PositiveOrZero(message = "Size must be greater than or equal 0") Integer size) {
+    public SuccessResponse<PageResponse<ProductResponse>> getAllProducts(@Valid @RequestParam(defaultValue = "0", name = "page") @PositiveOrZero(message = "Page must be greater than or equal 0") Integer page, @Valid @RequestParam(defaultValue = "10", name = "size") @PositiveOrZero(message = "Size must be greater than or equal 0") Integer size) {
 
         return new SuccessResponse<>(HttpStatus.OK.value(), "Getting data success", productService.findAllPage(page, size));
     }
@@ -46,11 +45,7 @@ public class ProductController {
     }
 
     @GetMapping("/search")
-    public SuccessResponse<PageResponse<ProductResponse>> findByCodeOrNameAndSort(@Valid @RequestParam(defaultValue = "0", name = "page") @PositiveOrZero(message = "Page must be greater than or equal 0") Integer page,
-                                                                                  @Valid @RequestParam(defaultValue = "10", name = "size") @PositiveOrZero(message = "Size must be greater than or equal 0") Integer size,
-                                                                                  @RequestParam(defaultValue = "", name = "keyword") String keyword,
-                                                                                  @RequestParam(defaultValue = "name-asc", name = "sort") String sort
-    ) {
+    public SuccessResponse<PageResponse<ProductResponse>> findByCodeOrNameAndSort(@Valid @RequestParam(defaultValue = "0", name = "page") @PositiveOrZero(message = "Page must be greater than or equal 0") Integer page, @Valid @RequestParam(defaultValue = "10", name = "size") @PositiveOrZero(message = "Size must be greater than or equal 0") Integer size, @RequestParam(defaultValue = "", name = "keyword") String keyword, @RequestParam(defaultValue = "name-asc", name = "sort") String sort) {
         return new SuccessResponse<>(HttpStatus.OK.value(), "Getting data success", productService.findByCodeOrNameAndSort(page, size, keyword, sort));
     }
 
@@ -60,7 +55,7 @@ public class ProductController {
     }
 
     @GetMapping("/by-ids")
-    public SuccessResponse<List<ProductResponse>> findAllByIds(@RequestParam(name = "ids") List<Long> ids){
+    public SuccessResponse<List<ProductResponse>> findAllByIds(@RequestParam(name = "ids") List<Long> ids) {
         return new SuccessResponse<>(HttpStatus.OK.value(), "Getting data success", productService.findAllById(ids));
 
     }
@@ -71,20 +66,20 @@ public class ProductController {
         ByteArrayInputStream bais = excelUtil.exportBookExcel(list);
         HttpHeaders headers = new HttpHeaders();
         headers.add("Content-Disposition", "attachment; filename=Danh-sach-san-pham.xlsx");
-        return ResponseEntity.ok()
-                .headers(headers)
-                .contentType(MediaType.parseMediaType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"))
-                .body(new InputStreamResource(bais));
+        return ResponseEntity.ok().headers(headers).contentType(MediaType.parseMediaType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")).body(new InputStreamResource(bais));
     }
 
-    @PostMapping
-    public SuccessResponse<Product> createBook(@Valid @RequestBody ProductCreatedRequest request) throws IOException, DataNotFoundException {
-        return new SuccessResponse<>(HttpStatus.CREATED.value(), "Adding data success", productService.save(request));
+    @PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    public SuccessResponse<Product> createBook(@Valid @RequestPart(value = "product") ProductCreatedRequest request,
+                                               @RequestPart(required = false) MultipartFile file) throws IOException, DataNotFoundException {
+        return new SuccessResponse<>(HttpStatus.CREATED.value(), "Adding data success", productService.save(request, file));
     }
 
-    @PutMapping("/{id}")
-    public SuccessResponse<Product> updateBook(@PathVariable(name = "id") Long id, @Valid @RequestBody ProductUpdatedRequest request) throws IOException, DataNotFoundException {
-        return new SuccessResponse<>(HttpStatus.ACCEPTED.value(), "Editing data success", productService.update(id, request));
+    @PutMapping(value = "/{id}", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    public SuccessResponse<Product> updateBook(@PathVariable(name = "id") Long id,
+                                               @Valid @RequestPart(value = "product") ProductUpdatedRequest request,
+                                               @RequestPart(required = false) MultipartFile file) throws IOException, DataNotFoundException {
+        return new SuccessResponse<>(HttpStatus.ACCEPTED.value(), "Editing data success", productService.update(id, request, file));
     }
 
     @DeleteMapping("/{id}")

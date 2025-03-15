@@ -18,7 +18,6 @@ import {MessageService} from "primeng/api";
 import {ImageResponse} from "../../../../model/response/image-response.model";
 import {Textarea} from "primeng/textarea";
 import {Select} from "primeng/select";
-import {ToggleSwitch} from "primeng/toggleswitch";
 import {InputNumber} from "primeng/inputnumber";
 
 @Component({
@@ -34,7 +33,6 @@ import {InputNumber} from "primeng/inputnumber";
         Toast,
         ReactiveFormsModule,
         InputText,
-        ToggleSwitch,
         InputNumber
     ],
     templateUrl: './save-form.component.html',
@@ -58,7 +56,6 @@ export class SaveFormComponent implements OnInit {
             price: [null, [Validators.required, Validators.min(1)]],
             numOfPages: [null, [Validators.min(1), Validators.pattern('^[1-9]\\d*$')]],
             publishedYear: null,
-            isActive: true,
             description: null,
         });
         this.categoryInput = this.fb.group({
@@ -69,9 +66,9 @@ export class SaveFormComponent implements OnInit {
         });
     }
 
-    saveForm!:FormGroup;
-    categoryInput!:FormGroup;
-    authorInput!:FormGroup;
+    saveForm!: FormGroup;
+    categoryInput!: FormGroup;
+    authorInput!: FormGroup;
     years: number[] = [];
     submitted = false;
     private messageService = inject(MessageService);
@@ -87,9 +84,6 @@ export class SaveFormComponent implements OnInit {
     categories: CategoryResponse[] = [];
     onSave = output<any>();
     message = output<{}>();
-
-
-
 
 
     fetchAuthors() {
@@ -132,28 +126,19 @@ export class SaveFormComponent implements OnInit {
         this.submitted = true;
         if (this.saveForm.valid) {
             let fileReq: File | null = this.saveForm.controls['imgFile'].value;
-            console.log(!fileReq);
             let bookReq: ProductCreatedRequest = {
                 name: this.saveForm.controls['name'].value!,
                 quantity: this.saveForm.controls['quantity'].value!,
                 price: this.saveForm.controls['price'].value!,
-                ...(this.saveForm.controls['publisher'].value != null ?
-                    {publisher: this.saveForm.controls['publisher'].value} : null),
-                ...(this.saveForm.controls['translator'].value != null ?
-                    {translator: this.saveForm.controls['translator'].value} : null),
-                ...(this.saveForm.controls['numOfPages'].value != null ?
-                    {numOfPages: this.saveForm.controls['numOfPages'].value} : null),
-                ...(this.saveForm.controls['publishedYear'].value != null ?
-                    {publishedYear: this.saveForm.controls['publishedYear'].value} : null),
-                isActive: true,
-                ...(this.saveForm.controls['description'].value != null ?
-                    {description: this.saveForm.controls['description'].value} : null),
+                publisher: this.saveForm.controls['publisher'].value,
+                translator: this.saveForm.controls['translator'].value,
+                numOfPages: this.saveForm.controls['numOfPages'].value,
+                publishedYear: this.saveForm.controls['publishedYear'].value,
+                description: this.saveForm.controls['description'].value,
                 authorId: this.saveForm.controls['author'].value!,
-                categoryId: this.saveForm.controls['category'].value!,
-                ...(fileReq !== null && await this.uploadImage(fileReq!))
+                categoryId: this.saveForm.controls['category'].value!
             };
-            console.log(bookReq);
-            await firstValueFrom(this.productService.saveProduct(bookReq));
+            await firstValueFrom(this.productService.saveProduct(bookReq, fileReq));
             await firstValueFrom(this.productService.fetchProducts(0, 10))
                 .then(res => {
                     this.onSave.emit(res.data);

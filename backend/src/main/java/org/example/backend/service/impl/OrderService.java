@@ -8,10 +8,10 @@ import org.example.backend.exception.DataConflictException;
 import org.example.backend.exception.DataNotFoundException;
 import org.example.backend.mapper.OrderMapper;
 import org.example.backend.repository.OrderRepository;
-import org.example.backend.service.IUserService;
+import org.example.backend.service.ICouponService;
 import org.example.backend.service.IOrderService;
 import org.example.backend.service.IProductService;
-import org.example.backend.service.IVoucherService;
+import org.example.backend.service.IUserService;
 import org.example.backend.utility.GenerateCodeUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -28,7 +28,7 @@ public class OrderService implements IOrderService {
     @Autowired
     private IUserService userService;
     @Autowired
-    private IVoucherService voucherService;
+    private ICouponService couponService;
     @Autowired
     private OrderRepository orderRepo;
     @Autowired
@@ -62,19 +62,17 @@ public class OrderService implements IOrderService {
         newOrder.setTotalAmount(totalAmountCount);
         BigDecimal discount = BigDecimal.ZERO;
         BigDecimal amountDue = BigDecimal.ZERO;
-        if (request.getVoucherId() != null) {
-            Voucher voucher = voucherService.useVoucher(request.getVoucherId(), totalAmountCount);
-            discount = voucherService.calculateDiscount(voucher, totalAmountCount);
+        if (request.getCouponId() != null) {
+            Coupon coupon = couponService.useCoupon(request.getCouponId(), totalAmountCount);
+            discount = couponService.calculateDiscount(coupon, totalAmountCount);
             amountDue = totalAmountCount.subtract(discount);
-            newOrder.setVoucher(voucher);
-            newOrder.setDiscount(discount);
-            newOrder.setAmountDue(amountDue);
+            newOrder.setCoupon(coupon);
         } else {
             amountDue = totalAmountCount;
-            newOrder.setVoucher(null);
-            newOrder.setDiscount(discount);
-            newOrder.setAmountDue(amountDue);
+            newOrder.setCoupon(null);
         }
+        newOrder.setDiscount(discount);
+        newOrder.setAmountDue(amountDue);
         BigDecimal amountPaid = request.getAmountPaid();
         if (amountPaid.compareTo(amountDue) < 0) {
             throw new DataConflictException("Amount paid must greater than or equal amount due");

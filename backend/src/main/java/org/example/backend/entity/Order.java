@@ -54,6 +54,6 @@ public class Order extends BaseEntity {
     String note;//online
     @ManyToOne
     @JoinColumn(name = "voucher_id")
-    Voucher voucher;
+    Coupon coupon;
     String status;// online
 }

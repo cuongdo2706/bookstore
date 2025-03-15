@@ -13,12 +13,13 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @Builder
 @Entity
-@Table(name = "tbl_voucher")
+@Table(name = "tbl_coupon")
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class Voucher extends BaseEntity {
+public class Coupon extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
+    @Column(nullable = false, unique = true)
     String code;
     String name;
     @Column(columnDefinition = "TEXT")
