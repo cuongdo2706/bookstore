@@ -22,7 +22,9 @@ export class AuthGuard implements CanActivate {
             return true;
         } else {
             localStorage.removeItem('token');
-            this.router.navigate(['/dang-nhap']).then(()=>{alert("Hết phiên đăng nhập")});
+            this.router.navigate(['/dang-nhap']).then(() => {
+                alert("Hết phiên đăng nhập");
+            });
             return false;
         }
     }

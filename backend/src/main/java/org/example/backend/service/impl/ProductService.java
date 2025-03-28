@@ -30,6 +30,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 @Service
 public class ProductService implements IProductService {
@@ -63,7 +64,7 @@ public class ProductService implements IProductService {
 
     @Override
     public Product findById(Long id) throws DataNotFoundException {
-        return productRepository.findById(id).orElseThrow(() -> new DataNotFoundException("Product not found"));
+        return productRepository.findByIdNotDeleted(id).orElseThrow(() -> new DataNotFoundException("Product Not Found"));
     }
 
 
@@ -175,7 +176,8 @@ public class ProductService implements IProductService {
 
     @Override
     @Transactional
-    public void softDelete(Long id) {
+    public void softDelete(Long id) throws DataNotFoundException {
+        if (!productRepository.existedByIdNotDeleted(id)) throw new DataNotFoundException("Product Not Found");
         productRepository.softDelete(id);
     }
 
@@ -185,9 +187,13 @@ public class ProductService implements IProductService {
     }
 
     @Override
-    public List<ProductResponse> findAllById(List<Long> ids) {
-        List<Product> products = productRepository.findAllById(ids);
-        return ProductMapper.toProductResponses(products);
+    public List<Product> findAllById(List<Long> ids) {
+        return productRepository.findAllById(ids);
+    }
+
+    @Override
+    public Boolean existedByIdNotDeleted(Long id) {
+        return productRepository.existedByIdNotDeleted(id);
     }
 
 

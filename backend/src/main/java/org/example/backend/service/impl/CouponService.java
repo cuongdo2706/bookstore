@@ -16,16 +16,16 @@ import java.time.LocalDate;
 @Service
 public class CouponService implements ICouponService {
     @Autowired
-    private CouponRepository repo;
+    private CouponRepository couponRepository;
 
     @Override
     public Coupon findById(Long id) throws DataNotFoundException {
-        return repo.findById(id).orElseThrow(() -> new DataNotFoundException("Voucher Not Found"));
+        return couponRepository.findById(id).orElseThrow(() -> new DataNotFoundException("Voucher Not Found"));
     }
 
     @Override
     public Coupon findValidCouponByCode(String code) {
-        return repo.findValidCouponByCode(code);
+        return couponRepository.findValidCouponByCode(code);
     }
 
     @Override
@@ -33,7 +33,7 @@ public class CouponService implements ICouponService {
         Coupon coupon = findById(id);
         validateCoupon(coupon, totalAmount);
         coupon.setUsedCount(coupon.getUsedCount() + 1);
-        return repo.save(coupon);
+        return couponRepository.save(coupon);
     }
 
     @Override

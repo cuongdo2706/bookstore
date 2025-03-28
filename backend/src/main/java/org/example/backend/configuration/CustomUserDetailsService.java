@@ -1,8 +1,10 @@
 package org.example.backend.configuration;
 
 import lombok.Data;
-import org.example.backend.entity.Account;
-import org.example.backend.repository.AccountRepository;
+import org.example.backend.entity.Staff;
+import org.example.backend.entity.User;
+import org.example.backend.repository.StaffRepository;
+import org.example.backend.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -17,15 +19,15 @@ import java.util.Collections;
 @Data
 public class CustomUserDetailsService implements UserDetailsService {
     @Autowired
-    private AccountRepository userRepository;
+    private UserRepository userRepository;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Account account = userRepository.findByUsername(username);
-        GrantedAuthority authority = new SimpleGrantedAuthority(account.getRole());
+        User user = userRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException(username));
+        GrantedAuthority authority = new SimpleGrantedAuthority(user.getRole());
         return new org.springframework.security.core.userdetails.User(
                 username,
-                account.getPassword(),
+                user.getPassword(),
                 Collections.singletonList(authority)
         );
     }

@@ -1,10 +1,10 @@
 package org.example.backend.service;
 
-import org.example.backend.dto.request.OrderOfflineRequest;
-import org.example.backend.dto.response.OrderOfflineResponse;
+import org.example.backend.dto.request.OrderRequest;
+import org.example.backend.dto.response.OrderResponse;
 import org.example.backend.exception.DataConflictException;
 import org.example.backend.exception.DataNotFoundException;
 
 public interface IOrderService {
-        OrderOfflineResponse placeOrderOffline(OrderOfflineRequest request) throws DataNotFoundException, DataConflictException;
+    OrderResponse placeOrder(OrderRequest request) throws DataNotFoundException, DataConflictException;
 }

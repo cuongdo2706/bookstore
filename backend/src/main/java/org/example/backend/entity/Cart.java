@@ -13,10 +13,15 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class Cart {
+public class Cart extends BaseEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
+
+    @OneToOne
+    @MapsId
+    @JoinColumn(name = "user_id")
+    User user;
+
     @Column(precision = 19, scale = 2)
     BigDecimal totalPrice;
 }

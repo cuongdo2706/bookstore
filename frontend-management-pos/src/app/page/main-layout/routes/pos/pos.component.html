@@ -80,7 +80,7 @@
 			      (click) = "decreaseItemQuantity(orderDetailsFormArray.controls[i])"></p-button>
 		        <p-input-number
 			      min = "1"
-			      (onBlur) = "checkEmptyItemQuantity(orderDetailsFormArray.controls[i])"
+			      (onInput) = "checkEmptyItemQuantity(orderDetailsFormArray.controls[i])"
 			      formControlName = "quantity"
 			      class = "quantity-input"/>
 		        <p-button
@@ -94,7 +94,7 @@
 			      (click) = "increaseItemQuantity(orderDetailsFormArray.controls[i])"></p-button>
 		    </div>
 		    <div class = "flex align-items-center gap-4">
-		        <button (click) = "setPrice()"
+		        <button
 			      class = "itemPrice"
 			      type = "button">
 			  {{ item.get('price')?.value|number:'1.0-0' }}

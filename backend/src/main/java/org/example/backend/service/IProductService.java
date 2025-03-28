@@ -10,6 +10,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 
 public interface IProductService {
     List<ProductResponse> findAll();
@@ -24,9 +25,11 @@ public interface IProductService {
 
     Product update(Long id, ProductUpdatedRequest request, MultipartFile file) throws IOException, DataNotFoundException;
 
-    void softDelete(Long id);
+    void softDelete(Long id) throws DataNotFoundException;
 
     Integer getStockQuantity(Long id);
 
-    List<ProductResponse> findAllById(List<Long> ids);
+    List<Product> findAllById(List<Long> ids);
+
+    Boolean existedByIdNotDeleted(Long id);
 }

@@ -1,6 +1,7 @@
 package org.example.backend.controller;
 
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PositiveOrZero;
 import org.example.backend.dto.request.ProductCreatedRequest;
 import org.example.backend.dto.request.ProductUpdatedRequest;
@@ -55,7 +56,7 @@ public class ProductController {
     }
 
     @GetMapping("/by-ids")
-    public SuccessResponse<List<ProductResponse>> findAllByIds(@RequestParam(name = "ids") List<Long> ids) {
+    public SuccessResponse<List<Product>> findAllByIds(@RequestParam(name = "ids") List<Long> ids) {
         return new SuccessResponse<>(HttpStatus.OK.value(), "Getting data success", productService.findAllById(ids));
 
     }
@@ -70,20 +71,17 @@ public class ProductController {
     }
 
     @PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
-    public SuccessResponse<Product> createBook(@Valid @RequestPart(value = "product") ProductCreatedRequest request,
-                                               @RequestPart(required = false) MultipartFile file) throws IOException, DataNotFoundException {
+    public SuccessResponse<Product> createBook(@Valid @RequestPart(value = "product") ProductCreatedRequest request, @RequestPart(required = false) MultipartFile file) throws IOException, DataNotFoundException {
         return new SuccessResponse<>(HttpStatus.CREATED.value(), "Adding data success", productService.save(request, file));
     }
 
     @PutMapping(value = "/{id}", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
-    public SuccessResponse<Product> updateBook(@PathVariable(name = "id") Long id,
-                                               @Valid @RequestPart(value = "product") ProductUpdatedRequest request,
-                                               @RequestPart(required = false) MultipartFile file) throws IOException, DataNotFoundException {
+    public SuccessResponse<Product> updateBook(@Valid @NotNull(message = "Id must not be null") @PathVariable(name = "id") Long id, @Valid @RequestPart(value = "product") ProductUpdatedRequest request, @RequestPart(required = false) MultipartFile file) throws IOException, DataNotFoundException {
         return new SuccessResponse<>(HttpStatus.ACCEPTED.value(), "Editing data success", productService.update(id, request, file));
     }
 
     @DeleteMapping("/{id}")
-    public SuccessResponse<?> deleteById(@PathVariable Long id) {
+    public SuccessResponse<?> deleteById(@Valid @NotNull(message = "Id must not be null") @PathVariable Long id) throws DataNotFoundException {
         productService.softDelete(id);
         return new SuccessResponse<>(HttpStatus.NO_CONTENT.value(), "Deleting data success", null);
     }

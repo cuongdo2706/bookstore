@@ -5,14 +5,11 @@ import org.example.backend.jwt.JwtAuthenticationEntryPoint;
 import org.example.backend.jwt.JwtAuthenticationFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -45,13 +42,13 @@ public class SecurityConfig {
         http.csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests((authorize) -> {
                     authorize.requestMatchers("/auth/**").permitAll();
-                    authorize.requestMatchers(HttpMethod.GET,"/book").authenticated();
+
                     authorize.anyRequest().permitAll();
 //                    authorize.requestMatchers(HttpMethod.GET, "/author/**").permitAll();
 //                    authorize.requestMatchers(HttpMethod.GET, "/category/**").permitAll();
 //                    authorize.anyRequest().authenticated();
                 })
-                .cors(c->c.configurationSource(customCorsConfig))
+                .cors(c -> c.configurationSource(customCorsConfig))
                 .httpBasic(Customizer.withDefaults());
 
         http.exceptionHandling(exception -> exception

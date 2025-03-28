@@ -41,17 +41,18 @@ public class Order extends BaseEntity {
     BigDecimal changeAmount;//offline
     @ManyToOne
     @JoinColumn(name = "customer_id")
-    User customer;
+    Customer customer;
     @ManyToOne
     @JoinColumn(name = "staff_id")
-    User staff;
+    Staff staff;
     String customerName;//online
     String email;//online
     String phoneNum;//online
     String address;// online
-    String orderType;
+    Boolean isOnline;
     @Column(columnDefinition = "TEXT")
     String note;//online
+    String orderType; //ONLINE - OFFLINE
     @ManyToOne
     @JoinColumn(name = "voucher_id")
     Coupon coupon;

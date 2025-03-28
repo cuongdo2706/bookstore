@@ -7,13 +7,13 @@ import lombok.experimental.FieldDefaults;
 import java.math.BigDecimal;
 
 @Entity
-@Table(name = "tbl_cart_detail")
+@Table(name = "tbl_cart_item")
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class CartDetail {
+public class CartItem extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
@@ -23,7 +23,7 @@ public class CartDetail {
     Cart cart;
 
     @ManyToOne
-    @JoinColumn(name = "book_id")
+    @JoinColumn(name = "product_id")
     Product product;
 
     Integer quantity;

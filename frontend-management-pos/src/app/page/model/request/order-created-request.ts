@@ -2,7 +2,7 @@ export interface OrderCreatedRequest {
     amountPaid: number;
     couponId: number | null;
     customerId: number | null;
-    staffId: number;
+    staffUsername: string;
     orderItems: {
         productId: number;
         quantity: number;

@@ -8,6 +8,7 @@ import {Login} from "../model/login.model";
 import {JwtHelperService} from "@auth0/angular-jwt";
 import {AppConstants} from "../../../app.constants";
 
+
 @Injectable({
     providedIn: 'root'
 })
@@ -30,7 +31,7 @@ export class AuthService {
         return localStorage.getItem('token');
     }
 
-    getPayload(): any {
+    getPayload() {
         const token = this.getToken();
         if (token) {
             return this.jwtHelper.decodeToken(token);

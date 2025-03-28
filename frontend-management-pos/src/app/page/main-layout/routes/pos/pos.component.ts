@@ -19,6 +19,7 @@ import {UserResponse} from "../../../model/response/user-response";
 import {Toast} from "primeng/toast";
 import {OrderCreatedRequest} from '../../../model/request/order-created-request';
 import {CouponResponse} from "../../../model/response/coupon-response.model";
+import {AuthService} from "../../../../core/auth/service/auth.service";
 
 interface Tab {
     tabId: string;
@@ -68,6 +69,7 @@ export class PosComponent implements OnInit {
     products = signal<ProductResponse[]>([]);
     customers = signal<UserResponse[]>([]);
     private orderService = inject(OrderService);
+    private authService = inject(AuthService);
     private productService = inject(ProductService);
     private couponService = inject(CouponService);
     private userService = inject(UserService);
@@ -260,9 +262,7 @@ export class PosComponent implements OnInit {
         }
         if (existedProductIndex !== -1) {
             let quantity = orderDetailsFormArray.controls[existedProductIndex].get('quantity')?.value;
-            console.log(quantity);
             orderDetailsFormArray.controls[existedProductIndex].get('quantity')?.patchValue(quantity + 1);
-            console.log(orderDetailsFormArray.controls[existedProductIndex].get('quantity')?.value);
             this.tabs.update(tabs => {
                 let newTabs = tabs;
                 newTabs!.find(tab => tab.tabId === this.activeTabId())!.formData.orderDetails[existedProductIndex].quantity += 1;
@@ -359,7 +359,7 @@ export class PosComponent implements OnInit {
         this.formMap.set(this.activeTabId(), this.posForm);
     }
 
-    async checkEmptyItemQuantity(item: FormGroup) {
+    checkEmptyItemQuantity(item: FormGroup) {
         let quantity = item.get('quantity')?.value;
         if (!quantity || quantity === "") {
             item.get('quantity')?.patchValue(1);
@@ -463,9 +463,9 @@ export class PosComponent implements OnInit {
         this.formMap.set(this.activeTabId(), this.posForm);
         this.tabs.update(tabs => {
             let newTabs = tabs;
-            let tab = newTabs.find(tab => tab.tabId === this.activeTabId());
-            tab!.formData.customerId = null;
-            tab!.formData.customer = null;
+            let tab = newTabs.find(tab => tab.tabId === this.activeTabId())!;
+            tab.formData.customerId = null;
+            tab.formData.customer = null;
             return newTabs;
         });
         this.saveTabsToLocalStorage(this.tabs());
@@ -521,17 +521,14 @@ export class PosComponent implements OnInit {
     };
 
     placeOrder = async (value: any) => {
+
         if (!await this.itemInfoIsChanged()) {
-            this.messageService.add({
-                severity: "success",
-                summary: "Ổn",
-                detail: "Ổn"
-            });
+
             let newOrder: OrderCreatedRequest = {
                 amountPaid: value.amountPaid,
                 couponId: value.couponId,
                 customerId: value.customerId,
-                staffId: value.staffId,
+                staffUsername: value.staffUsername,
                 orderItems: []
             };
             value.orderDetails.forEach((item: { bookId: number; quantity: number; price: number; }) => {
@@ -543,9 +540,26 @@ export class PosComponent implements OnInit {
                 newOrder.orderItems.push(newItem);
             });
             console.log(newOrder);
+            // this.orderService.placeOrderOffline(newOrder).subscribe({
+            //     next: res => {
+            //         this.deleteTab(this.activeTabId());
+            //         this.messageService.add({
+            //             severity: "success",
+            //             summary: "Ổn",
+            //             detail: res.message
+            //         });
+            //     },
+            //     error: err => {
+            //         this.messageService.add({
+            //             severity: "danger",
+            //             summary: "Lỗi",
+            //             detail: err
+            //         });
+            //     }
+            // });
         }
     };
 
-    setPrice = () => {
-    };
+    // setPrice = () => {
+    // };
 }

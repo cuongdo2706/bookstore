@@ -20,9 +20,8 @@ public class DeliveryAddress extends BaseEntity {
     String phoneNum;
     String address;
     String province;
-    String district;
     String commune;
     @ManyToOne
-    @JoinColumn(name = "delivery_address_id")
-    User user;
+    @JoinColumn(name = "customer_id")
+    Customer customer;
 }
