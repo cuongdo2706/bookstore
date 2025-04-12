@@ -8,18 +8,20 @@ import {OrderService} from "../../../service/order.service";
 import {ProductService} from "../../../service/product.service";
 import {AutoComplete, AutoCompleteCompleteEvent, AutoCompleteSelectEvent} from "primeng/autocomplete";
 import {ProductResponse} from "../../../model/response/product-response.model";
-import {DecimalPipe} from "@angular/common";
+import {DecimalPipe, NgOptimizedImage} from "@angular/common";
 import {v4 as uuidv4} from 'uuid';
 import {InputText} from "primeng/inputtext";
 import {firstValueFrom} from "rxjs";
 import {ApiResponse} from "../../../model/response/api-response";
 import {CouponService} from "../../../service/coupon.service";
-import {UserService} from "../../../service/user.service";
 import {UserResponse} from "../../../model/response/user-response";
 import {Toast} from "primeng/toast";
 import {OrderCreatedRequest} from '../../../model/request/order-created-request';
 import {CouponResponse} from "../../../model/response/coupon-response.model";
 import {AuthService} from "../../../../core/auth/service/auth.service";
+import {CustomerService} from "../../../service/customer.service";
+import {CustomerResponse} from "../../../model/response/customer-response";
+import {Paginator, PaginatorState} from "primeng/paginator";
 
 interface Tab {
     tabId: string;
@@ -53,6 +55,8 @@ interface OrderDetail {
         DecimalPipe,
         InputText,
         Toast,
+        NgOptimizedImage,
+        Paginator,
     ],
     templateUrl: './pos.component.html',
     styleUrl: './pos.component.css',
@@ -67,17 +71,21 @@ export class PosComponent implements OnInit {
     tabs = signal<Tab[]>([]);
     activeTabId = signal<string>("");
     products = signal<ProductResponse[]>([]);
-    customers = signal<UserResponse[]>([]);
+    customers = signal<CustomerResponse[]>([]);
     private orderService = inject(OrderService);
     private authService = inject(AuthService);
     private productService = inject(ProductService);
     private couponService = inject(CouponService);
-    private userService = inject(UserService);
+    private customerService = inject(CustomerService);
     private fb = inject(FormBuilder);
     private formMap = new Map<string, FormGroup>();
     coupon = signal<CouponResponse | null>(null);
     couponNotFoundError = signal<string | null>(null);
     orderDetailsValues = signal<any[]>([]);
+    page: number = 0;
+    size: number = 10;
+    totalElements: number = 0;
+    keyword = "";
 
     get orderDetailsFormArray(): FormArray<FormGroup> {
         return this.posForm.get("orderDetails") as FormArray<FormGroup>;
@@ -102,9 +110,11 @@ export class PosComponent implements OnInit {
     }
 
     searchProduct(event: AutoCompleteCompleteEvent) {
-        this.productService.searchProducts(0, 10, event.query, "").subscribe({
+        this.keyword = event.query;
+        this.productService.searchProducts(0, 10, this.keyword, "name").subscribe({
             next: res => {
                 this.products.set(res.data.content);
+                this.totalElements = res.data.totalElements;
             }
         });
     }
@@ -435,7 +445,7 @@ export class PosComponent implements OnInit {
     }
 
     searchCustomer(event: AutoCompleteCompleteEvent) {
-        this.userService.searchCustomer(0, 10, event.query, "created-at-desc").subscribe({
+        this.customerService.searchCustomer(0, 10, event.query, "created-at-desc").subscribe({
             next: res => {
                 this.customers.set(res.data.content);
             }
@@ -562,4 +572,18 @@ export class PosComponent implements OnInit {
 
     // setPrice = () => {
     // };
+
+
+    onPageChange(event: PaginatorState) {
+
+        this.productService.searchProducts(event.page!, event.rows!, this.keyword, "name").subscribe({
+                next: res => {
+                    this.products.set(res.data.content);
+                    this.totalElements = res.data.totalElements;
+                }
+            }
+        );
+    }
+
+
 }

@@ -1,6 +1,7 @@
 package org.example.backend.service.impl;
 
 import org.example.backend.dto.request.ProductCreatedRequest;
+import org.example.backend.dto.request.ProductFilter;
 import org.example.backend.dto.request.ProductUpdatedRequest;
 import org.example.backend.dto.response.ImageResponse;
 import org.example.backend.dto.response.PageResponse;
@@ -11,18 +12,12 @@ import org.example.backend.entity.Product;
 import org.example.backend.exception.DataNotFoundException;
 import org.example.backend.mapper.ProductMapper;
 import org.example.backend.repository.ProductRepository;
-import org.example.backend.service.IAuthorService;
-import org.example.backend.service.ICategoryService;
-import org.example.backend.service.IProductService;
-import org.example.backend.spec.BookSpec;
+import org.example.backend.service.AuthorService;
+import org.example.backend.service.CategoryService;
 import org.example.backend.utility.GenerateCodeUtil;
 import org.example.backend.utility.ImageUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -30,20 +25,19 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 
 @Service
-public class ProductService implements IProductService {
+public class ProductServiceImpl implements org.example.backend.service.ProductService {
 
 
     @Autowired
     private ProductRepository productRepository;
 
     @Autowired
-    private ICategoryService categoryService;
+    private CategoryService categoryService;
 
     @Autowired
-    private IAuthorService authorService;
+    private AuthorService authorService;
 
     @Autowired
     private ImageUtil imageUtil;
@@ -51,16 +45,9 @@ public class ProductService implements IProductService {
 
     @Override
     public List<ProductResponse> findAll() {
-        return ProductMapper.toProductResponses(productRepository.findAll());
+        return ProductMapper.toProductResponses(productRepository.findAllProduct());
     }
 
-    @Override
-    public PageResponse<ProductResponse> findAllPage(Integer page, Integer size) {
-        if (page < 0) page = 0;
-        Pageable pageable = PageRequest.of(page, size);
-        Page<Product> books = productRepository.findAllPage(pageable);
-        return new PageResponse<ProductResponse>(ProductMapper.toProductResponses(books.getContent()), books.getNumber(), books.getSize(), books.getTotalElements(), books.getTotalPages());
-    }
 
     @Override
     public Product findById(Long id) throws DataNotFoundException {
@@ -69,29 +56,15 @@ public class ProductService implements IProductService {
 
 
     @Override
-    public PageResponse<ProductResponse> findByCodeOrNameAndSort(Integer page, Integer size, String keyword, String sortInput) {
-        if (page < 0) page = 0;
-        if (keyword.isEmpty() && sortInput.equals("name-asc")) {
-            Pageable pageable = PageRequest.of(page, size);
-            Page<Product> books = productRepository.findAllPage(pageable);
-            return new PageResponse<>(ProductMapper.toProductResponses(books.getContent()), books.getNumber(), books.getSize(), books.getTotalElements(), books.getTotalPages());
-        }
-        Specification<Product> spec = BookSpec.findByNameOrCode(keyword);
-        Sort sort = null;
-        switch (sortInput) {
-            case "name-desc" -> sort = Sort.by(Sort.Direction.DESC, "name");
-            case "price-asc" -> sort = Sort.by(Sort.Direction.ASC, "price");
-            case "price-desc" -> sort = Sort.by(Sort.Direction.DESC, "price");
-            default -> sort = Sort.by(Sort.Direction.ASC, "name");
-        }
-        Pageable pageable = PageRequest.of(page, size, sort);
-        Page<Product> books = productRepository.findAll(spec, pageable);
+    public PageResponse<ProductResponse> searchProduct(ProductFilter productFilter) {
+        Page<Object[]> result = productRepository.searchProduct(productFilter);
         return new PageResponse<>(
-                ProductMapper.toProductResponses(books.getContent()),
-                books.getNumber(),
-                books.getSize(),
-                books.getTotalElements(),
-                books.getTotalPages());
+                ProductMapper.toProductResponses(result.getContent()),
+                result.getNumber(),
+                result.getSize(),
+                result.getTotalElements(),
+                result.getTotalPages()
+        );
     }
 
     @Override

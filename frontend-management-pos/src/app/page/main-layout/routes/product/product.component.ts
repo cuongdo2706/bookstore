@@ -49,18 +49,18 @@ export class ProductComponent implements OnInit {
     products!: ProductResponse[];
     selectedProductIds!: number[];
     keyword: string = "";
-    filterSelection: string = "name-asc";
+    filterSelection: string = "name";
     expandedRows: { [key: string]: boolean } = {};
     filterOption: {}[] = [
-        {name: "Tên: A -> Z", code: "name-asc"},
+        {name: "Tên: A -> Z", code: "name"},
         {name: "Tên: Z -> A", code: "name-desc"},
-        {name: "Giá: thấp -> cao", code: "price-asc"},
+        {name: "Giá: thấp -> cao", code: "price"},
         {name: "Giá: cao -> thấp", code: "price-desc"}
     ];
     page: number = 0;
     size: number = 10;
     totalElements: number = 0;
-    first: number = 0;
+    
     paginator = viewChild<Paginator>('paginator');
     saveFormVisible: boolean = false;
     updateFormVisible: boolean = false;
@@ -74,15 +74,16 @@ export class ProductComponent implements OnInit {
     }
 
     onFetchProducts() {
-        const paginator = this.paginator();
-
+        // this.isFilter.set(true);
+        // const paginator = this.paginator();
         this.productService.searchProducts(0, 10, "", this.filterSelection).subscribe({
                 next: res => {
                     this.products = res.data.content;
                     this.totalElements = res.data.totalElements;
-                    if (paginator) {
-                        paginator.changePage(0);
-                    }
+                    // if (paginator) {
+                    //     paginator.changePage(0);
+                    // }
+                    // this.isFilter.set(false);
                 }
             }
         );
@@ -90,22 +91,23 @@ export class ProductComponent implements OnInit {
     }
 
     searchKeyword() {
-        this.isFilter.set(true);
-        const paginator = this.paginator();
-        this.productService.searchProducts(0, this.size, this.keyword, this.filterSelection)
-            .pipe(delay(500))
-            .subscribe({
-                    next: res => {
-                        this.products = res.data.content;
-                        this.totalElements = res.data.totalElements;
-                        if (paginator) {
-                            paginator.changePage(0);
+        if (this.keyword !== null || this.keyword !== "") {
+            this.isFilter.set(true);
+            const paginator = this.paginator();
+            this.productService.searchProducts(0, this.size, this.keyword, this.filterSelection)
+                .pipe(delay(500))
+                .subscribe({
+                        next: res => {
+                            this.products = res.data.content;
+                            this.totalElements = res.data.totalElements;
+                            if (paginator) {
+                                paginator.changePage(0);
+                            }
+                            this.isFilter.set(false);
                         }
-                        this.isFilter.set(false);
                     }
-                }
-            );
-
+                );
+        }
     }
 
     exportExcel() {

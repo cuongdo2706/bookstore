@@ -3,6 +3,7 @@ package org.example.backend.entity;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+import org.example.backend.dto.response.ProductResponse;
 
 import java.math.BigDecimal;
 
@@ -14,6 +15,7 @@ import java.math.BigDecimal;
 @Entity
 @Table(name = "tbl_product")
 @FieldDefaults(level = AccessLevel.PRIVATE)
+
 public class Product extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

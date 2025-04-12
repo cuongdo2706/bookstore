@@ -2,7 +2,7 @@ package org.example.backend.controller;
 
 import org.example.backend.dto.response.SuccessResponse;
 import org.example.backend.entity.Coupon;
-import org.example.backend.service.ICouponService;
+import org.example.backend.service.CouponService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("coupon")
 public class CouponController {
     @Autowired
-    private ICouponService couponService;
+    private CouponService couponService;
 
     @GetMapping("/{code}")
     public SuccessResponse<Coupon> findValidVoucherByCode(@PathVariable String code) {

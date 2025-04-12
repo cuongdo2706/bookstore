@@ -4,9 +4,8 @@ import jakarta.validation.Valid;
 import org.example.backend.dto.request.PropertySearchRequest;
 import org.example.backend.dto.response.SuccessResponse;
 import org.example.backend.entity.Category;
-import org.example.backend.exception.DataExistedException;
 import org.example.backend.exception.DataNotFoundException;
-import org.example.backend.service.ICategoryService;
+import org.example.backend.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -18,7 +17,7 @@ import java.util.List;
 //@PreAuthorize("hasAnyRole('MANAGER','STAFF')")
 public class CategoryController {
     @Autowired
-    private ICategoryService categoryService;
+    private CategoryService categoryService;
 
     @GetMapping
     public SuccessResponse<List<Category>> findAll() {

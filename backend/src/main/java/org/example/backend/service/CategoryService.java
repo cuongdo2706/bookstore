@@ -7,14 +7,14 @@ import org.example.backend.exception.DataNotFoundException;
 
 import java.util.List;
 
-public interface ICategoryService {
-    List<Category>findAll();
+public interface CategoryService {
+    List<Category> findAll();
 
     List<Category> findAllPage(Integer page, Integer size);
 
     Category findById(Long id) throws DataNotFoundException;
 
-    List<Category>findByName(Integer page,Integer size, String name);
+    List<Category> findByName(Integer page, Integer size, String name);
 
     Category save(String name) throws DataExistedException;
 

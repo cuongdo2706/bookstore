@@ -6,20 +6,23 @@ import org.example.backend.exception.DataConflictException;
 import org.example.backend.exception.DataNotFoundException;
 import org.example.backend.mapper.OrderMapper;
 import org.example.backend.repository.OrderRepository;
-import org.example.backend.service.*;
+import org.example.backend.service.CouponService;
+import org.example.backend.service.CustomerService;
+import org.example.backend.service.ProductService;
+import org.example.backend.service.StaffService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class OrderService implements IOrderService {
+public class OrderServiceImpl implements org.example.backend.service.OrderService {
     @Autowired
-    private IProductService productService;
+    private ProductService productService;
     @Autowired
-    private ICustomerService customerService;
+    private CustomerService customerService;
     @Autowired
-    private IStaffService staffService;
+    private StaffService staffService;
     @Autowired
-    private ICouponService couponService;
+    private CouponService couponService;
     @Autowired
     private OrderRepository orderRepository;
     @Autowired

@@ -6,7 +6,7 @@ import org.example.backend.exception.DataNotFoundException;
 
 import java.util.List;
 
-public interface IAuthorService {
+public interface AuthorService {
     List<Author> findAll();
 
     List<Author> findAllPage(Integer page, Integer size);

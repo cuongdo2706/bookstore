@@ -19,24 +19,7 @@ public record ProductResponse(
         String description,
         AuthorResponse author,
         CategoryResponse category,
-        PromotionResponse promotion,
-        LocalDateTime createdAt,
-        LocalDateTime updatedAt) {
-    public record AuthorResponse(Long id, String name) {
-    }
+        PromotionResponse promotion) {
 
-    public record CategoryResponse(Long id, String name) {
-    }
-
-    public record PromotionResponse(Long id,
-                                    String code,
-                                    String name,
-                                    String description,
-                                    LocalDate startDate,
-                                    LocalDate endDate,
-                                    String promotionType,
-                                    BigDecimal promotionValue,
-                                    Boolean isActive
-    ) {
-    }
 }
+

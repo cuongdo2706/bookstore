@@ -1,10 +1,10 @@
-package org.example.backend.spec;
+package org.example.backend.specification;
 
 import jakarta.persistence.criteria.Predicate;
 import org.example.backend.entity.Customer;
 import org.springframework.data.jpa.domain.Specification;
 
-public class UserSpec {
+public class UserSpecification {
     public static Specification<Customer> isActiveTrue() {
         return (root, query, criteriaBuilder) -> criteriaBuilder.isTrue(root.get("isActive"));
     }

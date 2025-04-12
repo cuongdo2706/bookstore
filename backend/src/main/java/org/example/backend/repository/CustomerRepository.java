@@ -1,5 +1,6 @@
 package org.example.backend.repository;
 
+import jakarta.persistence.Tuple;
 import org.example.backend.entity.Customer;
 import org.example.backend.entity.Staff;
 import org.springframework.data.domain.Page;
@@ -14,14 +15,15 @@ import java.util.Optional;
 public interface CustomerRepository extends JpaRepository<Customer, Long>, JpaSpecificationExecutor<Customer> {
 
     @Query(nativeQuery = true, value = """
-            SELECT * FROM tbl_customer
-            WHERE unaccent(name) ILIKE unaccent(concat('%',:keyword,'%'))
-            OR phone_num LIKE concat('%',:keyword,'%')
+            SELECT * FROM tbl_customer 
+            WHERE (unaccent(name) ILIKE unaccent(concat('%',:keyword,'%'))
+            OR phone_num LIKE concat('%',:keyword,'%'))
             AND is_active = TRUE
             AND is_deleted = FALSE
+            ORDER BY name
             """
     )
-    Optional<Customer> findByNameOrPhoneNum(@Param("keyword") String keyword);
+    Optional<Customer> findAllByNameOrPhoneNum(@Param("keyword") String keyword);
 
     @Query(nativeQuery = true, value = """
             SELECT * FROM tbl_customer
@@ -30,6 +32,4 @@ public interface CustomerRepository extends JpaRepository<Customer, Long>, JpaSp
             ORDER BY created_at DESC 
             """)
     Page<Customer> findAllPage(Pageable pageable);
-
-
 }

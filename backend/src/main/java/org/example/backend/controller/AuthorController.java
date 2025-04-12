@@ -5,7 +5,7 @@ import org.example.backend.dto.request.PropertySearchRequest;
 import org.example.backend.dto.response.SuccessResponse;
 import org.example.backend.entity.Author;
 import org.example.backend.exception.DataNotFoundException;
-import org.example.backend.service.IAuthorService;
+import org.example.backend.service.AuthorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -16,7 +16,7 @@ import java.util.List;
 @RequestMapping("author")
 public class AuthorController {
     @Autowired
-    private IAuthorService authorService;
+    private AuthorService authorService;
 
 
     @GetMapping

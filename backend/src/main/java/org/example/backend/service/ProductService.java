@@ -1,6 +1,7 @@
 package org.example.backend.service;
 
 import org.example.backend.dto.request.ProductCreatedRequest;
+import org.example.backend.dto.request.ProductFilter;
 import org.example.backend.dto.request.ProductUpdatedRequest;
 import org.example.backend.dto.response.PageResponse;
 import org.example.backend.dto.response.ProductResponse;
@@ -10,16 +11,13 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Optional;
 
-public interface IProductService {
+public interface ProductService {
     List<ProductResponse> findAll();
-
-    PageResponse<ProductResponse> findAllPage(Integer page, Integer size);
 
     Product findById(Long id) throws DataNotFoundException;
 
-    PageResponse<ProductResponse> findByCodeOrNameAndSort(Integer page, Integer size, String keyword, String sort);
+    PageResponse<ProductResponse> searchProduct(ProductFilter productFilter);
 
     Product save(ProductCreatedRequest request, MultipartFile file) throws IOException, DataNotFoundException;
 

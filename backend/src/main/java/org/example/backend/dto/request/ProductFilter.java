@@ -1,19 +1,19 @@
 package org.example.backend.dto.request;
 
 import jakarta.validation.constraints.PositiveOrZero;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 @Getter
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class ProductSearchRequest {
-    @PositiveOrZero(message = "Size must be greater than or equal 0")
-    Integer size;
+public class ProductFilter {
     @PositiveOrZero(message = "Page must be greater than or equal 0")
-    Integer page;
-    String keyword;
-    String sort;
+    Integer page = 1;
+    @PositiveOrZero(message = "Size must be greater than or equal 0")
+    Integer size = 10;
+    String nameOrCodeKeyword = null;
+    String sortBy = "name";
 }

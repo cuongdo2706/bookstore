@@ -5,7 +5,7 @@ import org.example.backend.exception.DataNotFoundException;
 
 import java.math.BigDecimal;
 
-public interface ICouponService {
+public interface CouponService {
     Coupon findById(Long id) throws DataNotFoundException;
 
     Coupon findValidCouponByCode(String code);

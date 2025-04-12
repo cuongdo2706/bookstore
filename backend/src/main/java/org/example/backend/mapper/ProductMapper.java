@@ -1,7 +1,10 @@
 package org.example.backend.mapper;
 
 import org.example.backend.dto.request.ProductUpdatedRequest;
+import org.example.backend.dto.response.AuthorResponse;
+import org.example.backend.dto.response.CategoryResponse;
 import org.example.backend.dto.response.ProductResponse;
+import org.example.backend.dto.response.PromotionResponse;
 import org.example.backend.entity.Author;
 import org.example.backend.entity.Category;
 import org.example.backend.entity.Product;
@@ -9,7 +12,12 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 public class ProductMapper {
 //    public static Product toCreatedProduct(ProductCreatedRequest request, Category existedCategory, Author existedAuthor) {
@@ -75,55 +83,61 @@ public class ProductMapper {
         return existedProduct;
     }
 
-    public static ProductResponse toProductResponse(Product product) {
-        ProductResponse.PromotionResponse promotionResponse = null;
-        if (product.getPromotion() != null) {
-            promotionResponse = new ProductResponse.PromotionResponse(
-                    product.getPromotion().getId(),
-                    product.getPromotion().getCode(),
-                    product.getPromotion().getName(),
-                    product.getPromotion().getDescription(),
-                    product.getPromotion().getStartDate(),
-                    product.getPromotion().getEndDate(),
-                    product.getPromotion().getPromotionType(),
-                    product.getPromotion().getPromotionValue(),
-                    product.getPromotion().getIsActive()
+    public static ProductResponse toProductResponse(Object[] product) {
+        PromotionResponse promotionResponse = null;
+        AuthorResponse authorResponse = null;
+        CategoryResponse categoryResponse = null;
+        if (!Objects.equals(product[12], null)) {
+            authorResponse = new AuthorResponse(
+                    (Long) product[12],
+                    (String) product[13]
+            );
+        }
+        if (!Objects.equals(product[14], null)) {
+            categoryResponse = new CategoryResponse(
+                    (Long) product[14],
+                    (String) product[15]
+            );
+        }
+        if (!Objects.equals(product[16], null)) {
+            promotionResponse = new PromotionResponse(
+                    (Long) product[16],
+                    (String) product[17],
+                    (String) product[18],
+                    (String) product[19],
+                    (LocalDate) product[20],
+                    (LocalDate) product[21],
+                    (String) product[22],
+                    (BigDecimal) product[23],
+                    (Boolean) product[24]
             );
         }
         return new ProductResponse(
-                product.getId(),
-                product.getCode(),
-                product.getName(),
-                product.getImgUrl(),
-                product.getQuantity(),
-                product.getPrice(),
-                product.getPublisher(),
-                product.getTranslator(),
-                product.getNumOfPages(),
-                product.getPublishedYear(),
-                product.getIsActive(),
-                product.getDescription(),
-                new ProductResponse.AuthorResponse(
-                        product.getAuthor().getId(),
-                        product.getAuthor().getName()
-                ),
-                new ProductResponse.CategoryResponse(
-                        product.getCategory().getId(),
-                        product.getCategory().getName()
-                ),
-                promotionResponse,
-                product.getCreatedAt(),
-                product.getUpdatedAt()
+                (Long) product[0],
+                (String) product[1],
+                (String) product[2],
+                (String) product[3],
+                (Integer) product[4],
+                (BigDecimal) product[5],
+                (String) product[6],
+                (String) product[7],
+                (Integer) product[8],
+                (Integer) product[9],
+                (Boolean) product[10],
+                (String) product[11],
+                authorResponse,
+                categoryResponse,
+                promotionResponse
         );
     }
 
-    public static List<ProductResponse> toProductResponses(List<Product> products) {
+    public static List<ProductResponse> toProductResponses(List<Object[]> products) {
         return products.stream()
                 .map(ProductMapper::toProductResponse)
                 .toList();
     }
 
-    public static Page<ProductResponse> toProductPageResponse(Page<Product> products) {
+    public static Page<ProductResponse> toProductPageResponse(Page<Object[]> products) {
         List<ProductResponse> productResponse = products.stream()
                 .map(ProductMapper::toProductResponse)
                 .toList();

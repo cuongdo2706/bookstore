@@ -2,15 +2,15 @@ package org.example.backend.controller;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.PositiveOrZero;
 import org.example.backend.dto.request.ProductCreatedRequest;
+import org.example.backend.dto.request.ProductFilter;
 import org.example.backend.dto.request.ProductUpdatedRequest;
 import org.example.backend.dto.response.PageResponse;
 import org.example.backend.dto.response.ProductResponse;
 import org.example.backend.dto.response.SuccessResponse;
 import org.example.backend.entity.Product;
 import org.example.backend.exception.DataNotFoundException;
-import org.example.backend.service.IProductService;
+import org.example.backend.service.ProductService;
 import org.example.backend.utility.ExcelUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
@@ -32,12 +32,12 @@ public class ProductController {
     @Autowired
     private ExcelUtil excelUtil;
     @Autowired
-    private IProductService productService;
+    private ProductService productService;
 
     @GetMapping
-    public SuccessResponse<PageResponse<ProductResponse>> getAllProducts(@Valid @RequestParam(defaultValue = "0", name = "page") @PositiveOrZero(message = "Page must be greater than or equal 0") Integer page, @Valid @RequestParam(defaultValue = "10", name = "size") @PositiveOrZero(message = "Size must be greater than or equal 0") Integer size) {
+    public SuccessResponse<List<ProductResponse>> getAllProducts() {
 
-        return new SuccessResponse<>(HttpStatus.OK.value(), "Getting data success", productService.findAllPage(page, size));
+        return new SuccessResponse<>(HttpStatus.OK.value(), "Getting data success", productService.findAll());
     }
 
     @GetMapping("/stock/{id}")
@@ -46,12 +46,13 @@ public class ProductController {
     }
 
     @GetMapping("/search")
-    public SuccessResponse<PageResponse<ProductResponse>> findByCodeOrNameAndSort(@Valid @RequestParam(defaultValue = "0", name = "page") @PositiveOrZero(message = "Page must be greater than or equal 0") Integer page, @Valid @RequestParam(defaultValue = "10", name = "size") @PositiveOrZero(message = "Size must be greater than or equal 0") Integer size, @RequestParam(defaultValue = "", name = "keyword") String keyword, @RequestParam(defaultValue = "name-asc", name = "sort") String sort) {
-        return new SuccessResponse<>(HttpStatus.OK.value(), "Getting data success", productService.findByCodeOrNameAndSort(page, size, keyword, sort));
+    public SuccessResponse<PageResponse<ProductResponse>> findByCodeOrNameAndSort(@Valid @ModelAttribute ProductFilter request) {
+        return new SuccessResponse<>(HttpStatus.OK.value(), "Getting data success", productService.searchProduct(request));
     }
 
+
     @GetMapping("/{id}")
-    public SuccessResponse<Product> findProductById(@PathVariable(name = "id") Long id) throws DataNotFoundException {
+    public SuccessResponse<Product> findProductById(@Valid @NotNull(message = "Id must not be null") @PathVariable(name = "id") Long id) throws DataNotFoundException {
         return new SuccessResponse<>(HttpStatus.OK.value(), "Getting data success", productService.findById(id));
     }
 

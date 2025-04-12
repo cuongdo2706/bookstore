@@ -6,8 +6,8 @@ import org.example.backend.entity.Customer;
 import org.example.backend.exception.DataNotFoundException;
 import org.example.backend.mapper.CustomerMapper;
 import org.example.backend.repository.CustomerRepository;
-import org.example.backend.service.ICustomerService;
-import org.example.backend.spec.UserSpec;
+import org.example.backend.service.CustomerService;
+import org.example.backend.specification.UserSpecification;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -17,7 +17,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 @Service
-public class CustomerService implements ICustomerService {
+public class CustomerServiceImpl implements CustomerService {
     @Autowired
     private CustomerRepository customerRepository;
 
@@ -27,16 +27,16 @@ public class CustomerService implements ICustomerService {
     }
 
     @Override
-    public PageResponse<CustomerResponse> findByNameOrPhoneNum(Integer page, Integer size, String keyword, String sortInput) {
+    public PageResponse<CustomerResponse> findAllByNameOrPhoneNum(Integer page, Integer size, String keyword, String sortBy) {
         if (page < 0) page = 0;
         Page<Customer> customers;
-        if (keyword.isEmpty() && sortInput.equals("name-asc")) {
+        if (keyword.isEmpty() && sortBy.equals("name-asc")) {
             Pageable pageable = PageRequest.of(page, size);
             customers = customerRepository.findAllPage(pageable);
         } else {
-            Specification<Customer> spec = UserSpec.findByNameOrPhoneNum(keyword);
+            Specification<Customer> spec = UserSpecification.findByNameOrPhoneNum(keyword);
             Sort sort = null;
-            switch (sortInput) {
+            switch (sortBy) {
                 case "created-at-desc" -> sort = Sort.by(Sort.Direction.DESC, "createdAt");
                 case "name-asc" -> sort = Sort.by(Sort.Direction.ASC, "name");
                 case "name-desc" -> sort = Sort.by(Sort.Direction.DESC, "name");

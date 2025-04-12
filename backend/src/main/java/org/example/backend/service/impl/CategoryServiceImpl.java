@@ -1,11 +1,9 @@
 package org.example.backend.service.impl;
 
-import jakarta.validation.Valid;
 import org.example.backend.entity.Category;
 import org.example.backend.exception.DataExistedException;
 import org.example.backend.exception.DataNotFoundException;
 import org.example.backend.repository.CategoryRepository;
-import org.example.backend.service.ICategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -14,7 +12,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class CategoryService implements ICategoryService {
+public class CategoryServiceImpl implements org.example.backend.service.CategoryService {
     @Autowired
     private CategoryRepository categoryRepository;
 
@@ -47,7 +45,7 @@ public class CategoryService implements ICategoryService {
 
     @Override
     public Category save(String name) {
-        if (categoryRepository.existsByName(name)){
+        if (categoryRepository.existsByName(name)) {
             throw new DataExistedException("Category is already existed");
         }
         Category newCategory = Category.builder()

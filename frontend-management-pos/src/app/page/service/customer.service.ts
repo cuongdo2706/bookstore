@@ -3,7 +3,7 @@ import {AppConstants} from "../../app.constants";
 import {HttpClient, HttpParams} from "@angular/common/http";
 import {ApiResponse} from "../model/response/api-response";
 import {PageResponse} from "../model/response/page-response.model";
-import {UserResponse} from "../model/response/user-response";
+import {CustomerResponse} from "../model/response/customer-response";
 
 @Injectable({
     providedIn: 'root'
@@ -18,6 +18,6 @@ export class CustomerService {
             .set("sort", sort)
             .set("page", page)
             .set("size", size);
-        return this.http.get<ApiResponse<PageResponse<UserResponse>>>(`${this.url}/search`, {params});
+        return this.http.get<ApiResponse<PageResponse<CustomerResponse>>>(`${this.url}/search`, {params});
     }
 }

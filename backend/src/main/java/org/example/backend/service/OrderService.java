@@ -5,6 +5,6 @@ import org.example.backend.dto.response.OrderResponse;
 import org.example.backend.exception.DataConflictException;
 import org.example.backend.exception.DataNotFoundException;
 
-public interface IOrderService {
+public interface OrderService {
     OrderResponse placeOrder(OrderRequest request) throws DataNotFoundException, DataConflictException;
 }

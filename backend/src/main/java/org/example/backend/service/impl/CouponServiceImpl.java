@@ -5,7 +5,6 @@ import org.example.backend.entity.Coupon;
 import org.example.backend.exception.DataNotFoundException;
 import org.example.backend.exception.VoucherException;
 import org.example.backend.repository.CouponRepository;
-import org.example.backend.service.ICouponService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,7 +13,7 @@ import java.math.RoundingMode;
 import java.time.LocalDate;
 
 @Service
-public class CouponService implements ICouponService {
+public class CouponServiceImpl implements org.example.backend.service.CouponService {
     @Autowired
     private CouponRepository couponRepository;
 

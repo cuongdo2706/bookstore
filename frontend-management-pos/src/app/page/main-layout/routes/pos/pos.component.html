@@ -4,7 +4,10 @@
 	  (completeMethod) = "searchProduct($event)"
 	  (onSelect) = "selectProduct($event)"
 	  [suggestions] = "products()"
+	  [lazy] = "true"
 	  delay = "500"
+	  [inputStyle] = "{'width':'400px'}"
+	  [panelStyle] = "{'width':'500px'}"
 	  optionLabel = "code"
 	  placeholder = "Tìm sản phẩm theo tên hoặc mã"
 	  showClear = "true"
@@ -12,9 +15,24 @@
     >
         <ng-template #item let-product>
 	  <div class = "flex align-items-center gap-2">
-	      <img src = "{{product.imgUrl}}" style = "width: 30px">
+	      <img ngSrc = "{{product.imgUrl}}" width = "30" height = "44">
 	      <span>{{ product.name }}</span>
 	  </div>
+        </ng-template>
+        <ng-template #footer>
+	  @if (products().length > 0) {
+	      <p-paginator #paginator
+		         (onPageChange) = "onPageChange($event)"
+		         [rows] = "size"
+		         [totalRecords] = "totalElements"
+		         [rowsPerPageOptions] = "[10, 20, 30]"/>
+	  }
+	  <div class = "p-3">
+	      <p-button fluid icon = "pi pi-plus" label = "Thêm khách hàng" size = "small"/>
+	  </div>
+        </ng-template>
+        <ng-template #empty>
+	  <span class = "flex justify-content-center">Không có bản ghi nào</span>
         </ng-template>
     </p-auto-complete>
 
@@ -114,12 +132,14 @@
 		        (onSelect) = "selectCustomer($event)"
 		        [suggestions] = "customers()"
 		        delay = "500"
+		        [lazy] = "true"
 		        [showClear] = "true"
 		        [style] = "{'height':'35px','align-items': 'center','width':'300px'}"
 		        styleClass = "customerInput"
 		        optionLabel = "name"
 		        formControlName = "customer"
-		        placeholder = "Tìm khách hàng">
+		        placeholder = "Tìm khách hàng"
+		        [virtualScroll] = "true">
 		    <ng-template #item let-user>
 		        <div class = "flex align-items-center gap-2">
 			  <span>{{ user.name }}</span>

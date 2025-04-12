@@ -4,10 +4,9 @@ import lombok.AllArgsConstructor;
 import org.example.backend.dto.request.LoginRequest;
 import org.example.backend.dto.response.AuthResponse;
 import org.example.backend.dto.response.SuccessResponse;
-import org.example.backend.service.impl.AuthService;
+import org.example.backend.service.impl.AuthServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -15,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("auth")
 public class AuthController {
     @Autowired
-    private AuthService authService;
+    private AuthServiceImpl authService;
 
     @PostMapping
     public SuccessResponse<AuthResponse> login(@RequestBody LoginRequest loginRequest) {

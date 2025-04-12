@@ -4,7 +4,6 @@ import org.example.backend.entity.Author;
 import org.example.backend.exception.DataNotFoundException;
 import org.example.backend.exception.DataExistedException;
 import org.example.backend.repository.AuthorRepository;
-import org.example.backend.service.IAuthorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -13,7 +12,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class AuthorService implements IAuthorService {
+public class AuthorServiceImpl implements org.example.backend.service.AuthorService {
     @Autowired
     private AuthorRepository authorRepository;
 

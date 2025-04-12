@@ -18,10 +18,7 @@ public class ExcelUtil {
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
 
     public ByteArrayInputStream exportBookExcel(List<ProductResponse> list) {
-        try (
-                Workbook workbook = new XSSFWorkbook() ;
-                ByteArrayOutputStream out = new ByteArrayOutputStream()
-        ) {
+        try (Workbook workbook = new XSSFWorkbook() ; ByteArrayOutputStream out = new ByteArrayOutputStream()) {
             Sheet sheet = workbook.createSheet("Danh sách sản phẩm");
             Row headerRow = sheet.createRow(0);
             headerRow.createCell(0).setCellValue("STT");
@@ -36,8 +33,6 @@ public class ExcelUtil {
             headerRow.createCell(9).setCellValue("Năm xuất bản");
             headerRow.createCell(10).setCellValue("Tác giả");
             headerRow.createCell(11).setCellValue("Danh mục");
-            headerRow.createCell(12).setCellValue("Ngày tạo");
-            headerRow.createCell(13).setCellValue("Ngày sửa");
 
             int rowNum = 1;
             for (ProductResponse p : list) {
@@ -54,8 +49,6 @@ public class ExcelUtil {
                 row.createCell(9).setCellValue(p.publishedYear() == null ? null : p.publishedYear().toString());
                 row.createCell(10).setCellValue(p.author().name());
                 row.createCell(11).setCellValue(p.category().name());
-                row.createCell(12).setCellValue(p.createdAt().format(formatter));
-                row.createCell(13).setCellValue(p.updatedAt().format(formatter));
             }
             workbook.write(out);
             return new ByteArrayInputStream(out.toByteArray());
