@@ -7,6 +7,6 @@ export interface ProductCreatedRequest {
     numOfPages?: number;
     publishedYear?: number;
     description?: string;
-    authorId: number;
-    categoryId: number;
+    authorIds: number[];
+    categoryIds: number[];
 }

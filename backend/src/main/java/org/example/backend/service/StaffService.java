@@ -5,5 +5,7 @@ import org.example.backend.exception.DataNotFoundException;
 import org.springframework.data.repository.query.Param;
 
 public interface StaffService {
-    Staff findById(@Param("id") Long id) throws DataNotFoundException;
+    Staff findById(Long id) throws DataNotFoundException;
+
+    Staff findByUsername(String username) throws DataNotFoundException;
 }

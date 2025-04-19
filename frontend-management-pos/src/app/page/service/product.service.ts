@@ -6,6 +6,7 @@ import {ApiResponse} from "../model/response/api-response";
 import {ProductUpdatedRequest} from "../model/request/product-updated-request.model";
 import {ProductCreatedRequest} from "../model/request/product-created-request.model";
 import {AppConstants} from "../../app.constants";
+import {ProductFilterRequest} from "../model/request/product-filter-request";
 
 @Injectable({
     providedIn: 'root'
@@ -14,19 +15,13 @@ export class ProductService {
     private http = inject(HttpClient);
     private readonly url: string = AppConstants.API_BASE_URL + "product";
 
-    fetchProducts(page: number, size: number) {
+    searchProducts(filter: ProductFilterRequest) {
         let params = new HttpParams()
-            .set("page", page)
-            .set("size", size);
-        return this.http.get<ApiResponse<PageResponse<ProductResponse>>>(this.url, {params});
-    };
-
-    searchProducts(page: number, size: number, keyword: string, sort: string) {
-        let params = new HttpParams()
-            .set("keyword", keyword)
-            .set("sort", sort)
-            .set("page", page)
-            .set("size", size);
+            .set("nameOrCodeKeyword", filter.nameOrCodeKeyword)
+            .set("sortBy", filter.sortBy)
+            .set("page", filter.page)
+            .set("size", filter.size)
+            .set("isActive", filter.isActive);
         return this.http.get<ApiResponse<PageResponse<ProductResponse>>>(`${this.url}/search`, {params});
     }
 

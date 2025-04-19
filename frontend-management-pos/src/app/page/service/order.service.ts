@@ -12,8 +12,10 @@ export class OrderService {
 
     private http = inject(HttpClient);
     private readonly url: string = AppConstants.API_BASE_URL + "order";
+    private readonly offline: string = this.url + "/offline";
+    private readonly online: string = this.url + "/online";
 
     placeOrderOffline(request: OrderCreatedRequest) {
-        return this.http.post<ApiResponse<OrderOfflineResponse>>(`${this.url}/offline`, request);
+        return this.http.post<ApiResponse<OrderOfflineResponse>>(`${this.offline}/place-order`, request);
     }
 }

@@ -1,27 +1,23 @@
 export interface ProductResponse {
-  id: number;
-  code: string;
-  name: string;
-  publicId: string|null;
-  imgUrl: string|null;
-  quantity: number;
-  price: number;
-  specialPrice: number;
-  publisher: string|null;
-  translator: string|null;
-  numOfPages: number|null;
-  publishedYear: number|null;
-  isActive:boolean;
-  isDeleted: boolean;
-  description: string;
-  author: {
     id: number;
+    code: string;
     name: string;
-  };
-  category: {
-    id: number;
-    name: string;
-  };
-  createdAt: Date;
-  updatedAt: Date;
+    publicId: string | null;
+    imgUrl: string | null;
+    quantity: number;
+    price: number;
+    publisher: string | null;
+    translator: string | null;
+    numOfPages: number | null;
+    publishedYear: number | null;
+    isActive: boolean;
+    description: string;
+    authors: {
+        id: number;
+        name: string;
+    }[];
+    categories: {
+        id: number;
+        name: string;
+    }[];
 }

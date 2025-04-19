@@ -3,7 +3,7 @@ package org.example.backend.controller;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import org.example.backend.dto.request.ProductCreatedRequest;
-import org.example.backend.dto.request.ProductFilter;
+import org.example.backend.dto.request.ProductFilterRequest;
 import org.example.backend.dto.request.ProductUpdatedRequest;
 import org.example.backend.dto.response.PageResponse;
 import org.example.backend.dto.response.ProductResponse;
@@ -25,6 +25,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.List;
+import java.util.Set;
 
 @RestController
 @RequestMapping("product")
@@ -46,19 +47,19 @@ public class ProductController {
     }
 
     @GetMapping("/search")
-    public SuccessResponse<PageResponse<ProductResponse>> findByCodeOrNameAndSort(@Valid @ModelAttribute ProductFilter request) {
+    public SuccessResponse<PageResponse<ProductResponse>> findByCodeOrNameAndSort(@Valid @ModelAttribute ProductFilterRequest request) {
         return new SuccessResponse<>(HttpStatus.OK.value(), "Getting data success", productService.searchProduct(request));
     }
 
 
     @GetMapping("/{id}")
-    public SuccessResponse<Product> findProductById(@Valid @NotNull(message = "Id must not be null") @PathVariable(name = "id") Long id) throws DataNotFoundException {
-        return new SuccessResponse<>(HttpStatus.OK.value(), "Getting data success", productService.findById(id));
+    public SuccessResponse<ProductResponse> findProductById(@Valid @NotNull(message = "Id must not be null") @PathVariable(name = "id") Long id) throws DataNotFoundException {
+        return new SuccessResponse<>(HttpStatus.OK.value(), "Getting data success", productService.findProductResponseById(id));
     }
 
     @GetMapping("/by-ids")
-    public SuccessResponse<List<Product>> findAllByIds(@RequestParam(name = "ids") List<Long> ids) {
-        return new SuccessResponse<>(HttpStatus.OK.value(), "Getting data success", productService.findAllById(ids));
+    public SuccessResponse<List<ProductResponse>> findAllByIds(@RequestParam(name = "ids") Set<Long> ids) {
+        return new SuccessResponse<>(HttpStatus.OK.value(), "Getting data success", productService.findAllProductResponseByIds(ids));
 
     }
 
@@ -72,12 +73,12 @@ public class ProductController {
     }
 
     @PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
-    public SuccessResponse<Product> createBook(@Valid @RequestPart(value = "product") ProductCreatedRequest request, @RequestPart(required = false) MultipartFile file) throws IOException, DataNotFoundException {
+    public SuccessResponse<ProductResponse> createBook(@Valid @RequestPart(value = "product") ProductCreatedRequest request, @RequestPart(required = false) MultipartFile file) throws IOException, DataNotFoundException {
         return new SuccessResponse<>(HttpStatus.CREATED.value(), "Adding data success", productService.save(request, file));
     }
 
     @PutMapping(value = "/{id}", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
-    public SuccessResponse<Product> updateBook(@Valid @NotNull(message = "Id must not be null") @PathVariable(name = "id") Long id, @Valid @RequestPart(value = "product") ProductUpdatedRequest request, @RequestPart(required = false) MultipartFile file) throws IOException, DataNotFoundException {
+    public SuccessResponse<ProductResponse> updateBook(@Valid @NotNull(message = "Id must not be null") @PathVariable(name = "id") Long id, @Valid @RequestPart(value = "product") ProductUpdatedRequest request, @RequestPart(required = false) MultipartFile file) throws IOException, DataNotFoundException {
         return new SuccessResponse<>(HttpStatus.ACCEPTED.value(), "Editing data success", productService.update(id, request, file));
     }
 

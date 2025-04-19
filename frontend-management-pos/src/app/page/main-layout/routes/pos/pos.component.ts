@@ -11,7 +11,7 @@ import {ProductResponse} from "../../../model/response/product-response.model";
 import {DecimalPipe, NgOptimizedImage} from "@angular/common";
 import {v4 as uuidv4} from 'uuid';
 import {InputText} from "primeng/inputtext";
-import {firstValueFrom} from "rxjs";
+import {firstValueFrom, lastValueFrom} from "rxjs";
 import {ApiResponse} from "../../../model/response/api-response";
 import {CouponService} from "../../../service/coupon.service";
 import {UserResponse} from "../../../model/response/user-response";
@@ -29,8 +29,7 @@ interface Tab {
         amountPaid: number;
         couponId: number | null
         customerId: number | null;
-        customer: UserResponse | null
-        staffId: number | null;
+        customer: UserResponse | null;
         orderDetails: OrderDetail[];
     };
 }
@@ -82,10 +81,11 @@ export class PosComponent implements OnInit {
     coupon = signal<CouponResponse | null>(null);
     couponNotFoundError = signal<string | null>(null);
     orderDetailsValues = signal<any[]>([]);
-    page: number = 0;
+    page: number = 1;
     size: number = 10;
     totalElements: number = 0;
     keyword = "";
+    staffUsername: string = this.authService.getPayload().sub;
 
     get orderDetailsFormArray(): FormArray<FormGroup> {
         return this.posForm.get("orderDetails") as FormArray<FormGroup>;
@@ -111,12 +111,19 @@ export class PosComponent implements OnInit {
 
     searchProduct(event: AutoCompleteCompleteEvent) {
         this.keyword = event.query;
-        this.productService.searchProducts(0, 10, this.keyword, "name").subscribe({
-            next: res => {
-                this.products.set(res.data.content);
-                this.totalElements = res.data.totalElements;
-            }
-        });
+        this.productService.searchProducts({
+            page: 1,
+            size: 10,
+            nameOrCodeKeyword: this.keyword,
+            sortBy: "name",
+            isActive: true
+        })
+            .subscribe({
+                next: res => {
+                    this.products.set(res.data.content);
+                    this.totalElements = res.data.totalElements;
+                }
+            });
     }
 
 
@@ -199,7 +206,6 @@ export class PosComponent implements OnInit {
                 couponId: null,
                 customerId: null,
                 customer: null,
-                staffId: null,
                 orderDetails: [],
             }
         };
@@ -238,7 +244,6 @@ export class PosComponent implements OnInit {
                 couponId: null,
                 customerId: null,
                 customer: null,
-                staffId: null,
                 orderDetails: this.fb.array([])
             });
             this.formMap.set(this.activeTabId(), this.posForm);
@@ -249,7 +254,6 @@ export class PosComponent implements OnInit {
                     couponId: null,
                     customerId: null,
                     customer: null,
-                    staffId: null,
                     orderDetails: [],
                 }
             };
@@ -312,7 +316,6 @@ export class PosComponent implements OnInit {
             couponId: null,
             customerId: null,
             customer: null,
-            staffId: null,
             orderDetails: this.fb.array([])
         });
     }
@@ -369,15 +372,14 @@ export class PosComponent implements OnInit {
         this.formMap.set(this.activeTabId(), this.posForm);
     }
 
-    checkEmptyItemQuantity(item: FormGroup) {
-        let quantity = item.get('quantity')?.value;
-        if (!quantity || quantity === "") {
+    checkEmptyItemQuantity(event: Event, item: FormGroup) {
+        let value = (event.target as HTMLInputElement).value;
+        if (!value || value === "") {
             item.get('quantity')?.patchValue(1);
         }
         this.formMap.set(this.activeTabId(), this.posForm);
         this.updateTabs(item);
     }
-
 
     calculateItemTotalPrice(item: FormGroup): number {
 
@@ -486,10 +488,12 @@ export class PosComponent implements OnInit {
         let tab = this.tabs().find(tabs => tabs.tabId === this.activeTabId());
         let ids = tab!.formData.orderDetails.map(orderDetail => orderDetail.bookId);
         let products: ProductResponse[] = [];
+        console.log(ids);
         if (ids.length < 1) {
             return isChanged;
         }
-        products = (await firstValueFrom(this.productService.findAllProductById(ids))).data;
+        products = (await lastValueFrom(this.productService.findAllProductById(ids))).data;
+        console.log(products);
 
         this.tabs.update(tabs => {
             let newTabs = [...tabs];
@@ -499,7 +503,7 @@ export class PosComponent implements OnInit {
                 let product = products.find(product =>
                     product.id === orderDetail.bookId
                     && product.isActive
-                    && !product.isDeleted);
+                    && product.quantity > 0);
                 if (product === undefined) isChanged = true;
                 return product !== undefined;
             });
@@ -509,6 +513,7 @@ export class PosComponent implements OnInit {
                 if (orderDetail.price !== product.price) {
                     orderDetail.price = product.price;
                     isChanged = true;
+
                 }
                 if (orderDetail.quantity > product.quantity) {
                     orderDetail.quantity = product.quantity;
@@ -538,7 +543,7 @@ export class PosComponent implements OnInit {
                 amountPaid: value.amountPaid,
                 couponId: value.couponId,
                 customerId: value.customerId,
-                staffUsername: value.staffUsername,
+                staffUsername: this.staffUsername,
                 orderItems: []
             };
             value.orderDetails.forEach((item: { bookId: number; quantity: number; price: number; }) => {
@@ -549,34 +554,35 @@ export class PosComponent implements OnInit {
                 };
                 newOrder.orderItems.push(newItem);
             });
-            console.log(newOrder);
-            // this.orderService.placeOrderOffline(newOrder).subscribe({
-            //     next: res => {
-            //         this.deleteTab(this.activeTabId());
-            //         this.messageService.add({
-            //             severity: "success",
-            //             summary: "Ổn",
-            //             detail: res.message
-            //         });
-            //     },
-            //     error: err => {
-            //         this.messageService.add({
-            //             severity: "danger",
-            //             summary: "Lỗi",
-            //             detail: err
-            //         });
-            //     }
-            // });
+            this.orderService.placeOrderOffline(newOrder).subscribe({
+                next: res => {
+                    this.deleteTab(this.activeTabId());
+                    this.messageService.add({
+                        severity: "success",
+                        summary: "Ổn",
+                        detail: res.message
+                    });
+                },
+                error: err => {
+                    this.messageService.add({
+                        severity: "danger",
+                        summary: "Lỗi",
+                        detail: err
+                    });
+                }
+            });
         }
     };
 
-    // setPrice = () => {
-    // };
 
-
-    onPageChange(event: PaginatorState) {
-
-        this.productService.searchProducts(event.page!, event.rows!, this.keyword, "name").subscribe({
+    onProductPageChange(event: PaginatorState) {
+        this.productService.searchProducts({
+            page: event.page!,
+            size: event.rows!,
+            nameOrCodeKeyword: this.keyword,
+            sortBy: "name",
+            isActive: true
+        }).subscribe({
                 next: res => {
                     this.products.set(res.data.content);
                     this.totalElements = res.data.totalElements;

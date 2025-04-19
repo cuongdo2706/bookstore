@@ -7,6 +7,7 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.math.BigDecimal;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -25,6 +26,6 @@ public class ProductUpdatedRequest {
     Integer numOfPages;
     Integer publishedYear;
     String description;
-    Long authorId;
-    Long categoryId;
+    Set<@Positive(message = "Each Author Id must be greater than 0") Long> authorIds;
+    Set<@Positive(message = "Each Author Id must be greater than 0") Long> categoryIds;
 }

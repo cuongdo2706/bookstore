@@ -14,7 +14,7 @@ import {SaveFormComponent} from "./save-form/save-form.component";
 import {ProductResponse} from "../../../model/response/product-response.model";
 import {ConfirmDialog} from "primeng/confirmdialog";
 import {ConfirmationService, MessageService} from "primeng/api";
-import {delay, firstValueFrom} from "rxjs";
+import {firstValueFrom} from "rxjs";
 import {UpdateFormComponent} from "./update-form/update-form.component";
 import {AppConstants} from "../../../../app.constants";
 import {PageResponse} from "../../../model/response/page-response.model";
@@ -48,19 +48,24 @@ export class ProductComponent implements OnInit {
     private productService = inject(ProductService);
     products!: ProductResponse[];
     selectedProductIds!: number[];
-    keyword: string = "";
+    nameOrCodeKeyword: string = "";
     filterSelection: string = "name";
     expandedRows: { [key: string]: boolean } = {};
     filterOption: {}[] = [
-        {name: "Tên: A -> Z", code: "name"},
-        {name: "Tên: Z -> A", code: "name-desc"},
-        {name: "Giá: thấp -> cao", code: "price"},
-        {name: "Giá: cao -> thấp", code: "price-desc"}
+        {name: "Tên: A -> Z", value: "name"},
+        {name: "Tên: Z -> A", value: "name-desc"},
+        {name: "Giá: thấp -> cao", value: "price"},
+        {name: "Giá: cao -> thấp", value: "price-desc"}
     ];
+    statusOption: {}[] = [
+        {name: "Đang bán", value: true},
+        {name: "Ngừng bán", value: false}
+    ];
+    statusSelection: boolean = true;
     page: number = 0;
     size: number = 10;
     totalElements: number = 0;
-    
+
     paginator = viewChild<Paginator>('paginator');
     saveFormVisible: boolean = false;
     updateFormVisible: boolean = false;
@@ -74,29 +79,32 @@ export class ProductComponent implements OnInit {
     }
 
     onFetchProducts() {
-        // this.isFilter.set(true);
-        // const paginator = this.paginator();
-        this.productService.searchProducts(0, 10, "", this.filterSelection).subscribe({
+        this.productService.searchProducts({page: 1, size: 10, sortBy: this.filterSelection, nameOrCodeKeyword: "", isActive: this.statusSelection}).subscribe({
                 next: res => {
                     this.products = res.data.content;
                     this.totalElements = res.data.totalElements;
-                    // if (paginator) {
-                    //     paginator.changePage(0);
-                    // }
-                    // this.isFilter.set(false);
                 }
             }
         );
 
     }
 
+    timeout: any;
+
     searchKeyword() {
-        if (this.keyword !== null || this.keyword !== "") {
-            this.isFilter.set(true);
-            const paginator = this.paginator();
-            this.productService.searchProducts(0, this.size, this.keyword, this.filterSelection)
-                .pipe(delay(500))
-                .subscribe({
+        clearTimeout(this.timeout);
+        this.timeout = setTimeout(() => {
+            if (this.nameOrCodeKeyword !== null || this.nameOrCodeKeyword !== "") {
+                this.isFilter.set(true);
+                const paginator = this.paginator();
+                this.productService.searchProducts({
+                    page: 1,
+                    size: this.size,
+                    sortBy: this.filterSelection,
+                    nameOrCodeKeyword: this.nameOrCodeKeyword,
+                    isActive: this.statusSelection
+                })
+                    .subscribe({
                         next: res => {
                             this.products = res.data.content;
                             this.totalElements = res.data.totalElements;
@@ -105,9 +113,10 @@ export class ProductComponent implements OnInit {
                             }
                             this.isFilter.set(false);
                         }
-                    }
-                );
-        }
+                    });
+            }
+        }, 500);
+
     }
 
     exportExcel() {
@@ -142,7 +151,13 @@ export class ProductComponent implements OnInit {
 
     onPageChange(event: PaginatorState) {
         if (this.isFilter()) return;
-        this.productService.searchProducts(event.page!, event.rows!, this.keyword, this.filterSelection).subscribe({
+        this.productService.searchProducts({
+            page: event.page! + 1,
+            size: event.rows!,
+            sortBy: this.filterSelection,
+            nameOrCodeKeyword: this.nameOrCodeKeyword,
+            isActive: this.statusSelection
+        }).subscribe({
                 next: res => {
                     this.products = res.data.content;
                     this.totalElements = res.data.totalElements;

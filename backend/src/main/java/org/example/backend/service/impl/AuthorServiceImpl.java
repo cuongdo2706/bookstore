@@ -1,8 +1,10 @@
 package org.example.backend.service.impl;
 
+import org.example.backend.dto.response.AuthorResponse;
 import org.example.backend.entity.Author;
 import org.example.backend.exception.DataNotFoundException;
 import org.example.backend.exception.DataExistedException;
+import org.example.backend.mapper.AuthorMapper;
 import org.example.backend.repository.AuthorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -10,6 +12,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class AuthorServiceImpl implements org.example.backend.service.AuthorService {
@@ -18,8 +21,8 @@ public class AuthorServiceImpl implements org.example.backend.service.AuthorServ
 
 
     @Override
-    public List<Author> findAll() {
-        return authorRepository.findAllList();
+    public List<AuthorResponse> findAll() {
+        return AuthorMapper.toAuthorResponses(authorRepository.findAllList());
     }
 
     @Override
@@ -36,6 +39,11 @@ public class AuthorServiceImpl implements org.example.backend.service.AuthorServ
     }
 
     @Override
+    public AuthorResponse findAuthorResponseById(Long id) throws DataNotFoundException {
+        return AuthorMapper.toAuthorResponse(findById(id));
+    }
+
+    @Override
     public List<Author> findByName(Integer page, Integer size, String name) {
         if (page == null || page < 1) page = 1;
         if (size == null) size = 10;
@@ -44,7 +52,7 @@ public class AuthorServiceImpl implements org.example.backend.service.AuthorServ
     }
 
     @Override
-    public Author save(String name) {
+    public AuthorResponse save(String name) {
         if (authorRepository.existsByName(name)) {
             throw new DataExistedException("Author is already existed");
         }
@@ -52,7 +60,7 @@ public class AuthorServiceImpl implements org.example.backend.service.AuthorServ
                 .name(name)
                 .isDeleted(Boolean.FALSE)
                 .build();
-        return authorRepository.save(author);
+        return AuthorMapper.toAuthorResponse(authorRepository.save(author));
     }
 
     @Override
@@ -66,5 +74,10 @@ public class AuthorServiceImpl implements org.example.backend.service.AuthorServ
     public void delete(Long id) throws DataNotFoundException {
         Author existedAuthor = findById(id);
         existedAuthor.setIsDeleted(true);
+    }
+
+    @Override
+    public Set<Author> findAllByIds(Set<Long> ids) {
+        return authorRepository.findAllByIds(ids);
     }
 }

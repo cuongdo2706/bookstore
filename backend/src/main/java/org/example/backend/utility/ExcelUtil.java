@@ -47,8 +47,8 @@ public class ExcelUtil {
                 row.createCell(7).setCellValue(p.translator());
                 row.createCell(8).setCellValue(p.numOfPages() == null ? null : p.numOfPages().toString());
                 row.createCell(9).setCellValue(p.publishedYear() == null ? null : p.publishedYear().toString());
-                row.createCell(10).setCellValue(p.author().name());
-                row.createCell(11).setCellValue(p.category().name());
+                row.createCell(10).setCellValue(String.join(" - ", (CharSequence) p.authors()));
+                row.createCell(11).setCellValue(String.join(" - ", (CharSequence) p.categories()));
             }
             workbook.write(out);
             return new ByteArrayInputStream(out.toByteArray());

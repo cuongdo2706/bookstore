@@ -7,6 +7,6 @@ export interface ProductUpdatedRequest {
     numOfPages?: number | null;
     publishedYear?: number | null;
     description?: string | null;
-    authorId?: number;
-    categoryId?: number;
+    authorIds?: number[];
+    categoryIds?: number[];
 }

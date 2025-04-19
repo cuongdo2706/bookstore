@@ -6,6 +6,7 @@ import lombok.experimental.FieldDefaults;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -36,11 +37,11 @@ public class ProductCreatedRequest implements Serializable {
 
     String description;
 
-    @NotNull(message = "Author Id is required")
-    @Positive(message = "Author Id must be greater than 0")
-    Long authorId;
+    @NotNull(message = "Author Ids is required")
+    @NotEmpty(message = "Must be at least 1 id provided")
+    Set<@Positive(message = "Each Author Id must be greater than 0") Long> authorIds;
 
-    @NotNull(message = "Category Id is required")
-    @Positive(message = "Category Id must be greater than 0")
-    Long categoryId;
+    @NotNull(message = "Category Ids is required")
+    @NotEmpty(message = "Must be at least 1 id provided")
+    Set<@Positive(message = "Each Category Id must be greater than 0") Long> categoryIds;
 }

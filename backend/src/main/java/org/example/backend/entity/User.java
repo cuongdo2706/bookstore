@@ -39,7 +39,7 @@ public class User extends BaseEntity {
     @JoinColumn(name = "staff_id", unique = true)
     Staff staff;
 
-    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "user", cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH})
     Cart cart;
 
 

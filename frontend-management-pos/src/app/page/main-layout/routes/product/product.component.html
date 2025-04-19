@@ -5,6 +5,7 @@
 	      [(visible)] = "saveFormVisible"
 	      (onSave) = "onSaveForm($event)"
 	      (message) = "saveMessage($event)"
+	      [productStatus] = "statusSelection"
         ></app-save-form>
     }
     <p-table [value] = "products"
@@ -25,17 +26,24 @@
 			  (input) = "searchKeyword()"
 			  pInputText
 			  type = "text"
-			  [(ngModel)] = "keyword"
+			  [(ngModel)] = "nameOrCodeKeyword"
 			  placeholder = "Tìm theo mã hoặc tên"/>
 		</p-iconfield>
 		<p-select
 		        [style.margin-left.px] = "10"
 		        [options] = "filterOption"
 		        (onChange) = "searchKeyword()"
-		        [virtualScroll] = "true"
 		        optionLabel = "name"
-		        optionValue = "code"
+		        optionValue = "value"
 		        [(ngModel)] = "filterSelection"
+		        placeholder = "Bộ lọc"/>
+		<p-select
+		        [style.margin-left.px] = "10"
+		        [options] = "statusOption"
+		        (onChange) = "searchKeyword()"
+		        optionLabel = "name"
+		        optionValue = "value"
+		        [(ngModel)] = "statusSelection"
 		        placeholder = "Bộ lọc"/>
 
 	      </div>
@@ -114,11 +122,19 @@
 			  </div>
 			  <div class = "grid mt-1">
 			      <div style = "font-weight: bold" class = "col-4">Tác giả:</div>
-			      <div class = "col-8">{{ product.author.name }}</div>
+			      <div class = "col-8">
+				@for (a of product.authors; track a.id; let last = $last) {
+				    {{ a.name }}{{ !last ? " - " : "" }}
+				}
+			      </div>
 			  </div>
 			  <div class = "grid mt-1">
 			      <div style = "font-weight: bold" class = "col-4">Thể loại:</div>
-			      <div class = "col-8">{{ product.category.name }}</div>
+			      <div class = "col-8">
+				@for (c of product.categories; track c.id; let last = $last) {
+				    {{ c.name }}{{ !last ? " - " : "" }}
+				}
+			      </div>
 			  </div>
 			  <div class = "grid mt-1">
 			      <div style = "font-weight: bold" class = "col-4">Số lượng:</div>
@@ -160,6 +176,7 @@
 			      [updateId] = "updateId"
 			      (onUpdate) = "onUpdateForm($event)"
 			      (message) = "updateMessage($event)"
+			      [productStatus] = "this.statusSelection"
 		        ></app-update-form>
 		    }
 		    <div class = "flex pt-2 justify-content-end">

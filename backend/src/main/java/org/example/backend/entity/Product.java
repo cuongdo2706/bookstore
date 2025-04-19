@@ -6,6 +6,7 @@ import lombok.experimental.FieldDefaults;
 import org.example.backend.dto.response.ProductResponse;
 
 import java.math.BigDecimal;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -34,12 +35,23 @@ public class Product extends BaseEntity {
     Integer publishedYear;
     @Column(columnDefinition = "TEXT")
     String description;
-    @ManyToOne
-    @JoinColumn(name = "author_id")
-    Author author;
-    @ManyToOne
-    @JoinColumn(name = "category_id")
-    Category category;
+
+    @ManyToMany(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH})
+    @JoinTable(
+            name = "tbl_product_author",
+            joinColumns = @JoinColumn(name = "product_id"),
+            inverseJoinColumns = @JoinColumn(name = "author_id")
+    )
+    Set<Author> authors;
+
+    @ManyToMany(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH})
+    @JoinTable(
+            name = "tbl_product_category",
+            joinColumns = @JoinColumn(name = "product_id"),
+            inverseJoinColumns = @JoinColumn(name = "category_id")
+    )
+    Set<Category> categories;
+
     @ManyToOne
     @JoinColumn(name = "promotion_id")
     Promotion promotion;

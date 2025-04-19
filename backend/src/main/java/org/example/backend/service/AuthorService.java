@@ -1,23 +1,29 @@
 package org.example.backend.service;
 
+import org.example.backend.dto.response.AuthorResponse;
 import org.example.backend.entity.Author;
 import org.example.backend.exception.DataExistedException;
 import org.example.backend.exception.DataNotFoundException;
 
 import java.util.List;
+import java.util.Set;
 
 public interface AuthorService {
-    List<Author> findAll();
+    List<AuthorResponse> findAll();
 
     List<Author> findAllPage(Integer page, Integer size);
 
     Author findById(Long id) throws DataNotFoundException;
 
+    AuthorResponse findAuthorResponseById(Long id) throws DataNotFoundException;
+
     List<Author> findByName(Integer page, Integer size, String name);
 
-    Author save(String name) throws DataExistedException;
+    AuthorResponse save(String name) throws DataExistedException;
 
     Author update(Long id, String name) throws DataNotFoundException;
 
     void delete(Long id) throws DataNotFoundException;
+
+    Set<Author> findAllByIds(Set<Long> ids);
 }

@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import java.util.Set;
+
 @Getter
 @Setter
 @AllArgsConstructor
@@ -18,4 +20,6 @@ public class Category extends BaseEntity {
     Long id;
     String name;
     Boolean isDeleted;
+    @ManyToMany(mappedBy = "categories")
+    Set<Product> products;
 }

@@ -14,14 +14,14 @@ import {AuthorResponse} from "../../../../model/response/author-response.model";
 import {CategoryResponse} from "../../../../model/response/category-response.model";
 import {FileUpload} from "primeng/fileupload";
 import {Image} from "primeng/image";
-import {firstValueFrom, lastValueFrom} from "rxjs";
-import {AppConstants} from "../../../../../app.constants";
+import {firstValueFrom} from "rxjs";
 import {ProductUpdatedRequest} from "../../../../model/request/product-updated-request.model";
-import {ImageResponse} from "../../../../model/response/image-response.model";
 import {PageResponse} from "../../../../model/response/page-response.model";
 import {Select} from "primeng/select";
 import {Toast} from "primeng/toast";
 import {InputNumber} from "primeng/inputnumber";
+import {MultiSelect} from "primeng/multiselect";
+import {AppConstants} from "../../../../../app.constants";
 
 @Component({
     selector: 'app-update-form',
@@ -35,7 +35,8 @@ import {InputNumber} from "primeng/inputnumber";
         Image,
         InputText,
         Toast,
-        InputNumber
+        InputNumber,
+        MultiSelect
     ],
     templateUrl: './update-form.component.html',
     styleUrl: './update-form.component.css',
@@ -56,8 +57,8 @@ export class UpdateFormComponent implements OnInit {
             imgFile: null,
             publisher: this.fb.control<string | null>(null),
             translator: this.fb.control<string | null>(null),
-            author: this.fb.control<number | null>(null, [Validators.required]),
-            category: this.fb.control<number | null>(null, [Validators.required]),
+            authors: this.fb.control<number | null>(null, [Validators.required]),
+            categories: this.fb.control<number | null>(null, [Validators.required]),
             quantity: [0, [Validators.required, Validators.min(0), Validators.pattern('^[1-9]\\d*$')]],
             price: this.fb.control<number | null>(null, [Validators.required, Validators.min(1)]),
             numOfPages: this.fb.control<number | null>(null, [Validators.min(1), Validators.pattern('^[1-9]\\d*$')]),
@@ -92,17 +93,9 @@ export class UpdateFormComponent implements OnInit {
     authorVisible = false;
     visible = model(false);
     message = output<{}>();
+    productStatus = input.required<boolean>();
     onUpdate = output<PageResponse<ProductResponse>>();
     updateId = input<number>();
-
-
-    async uploadImage(file: File): Promise<ImageResponse> {
-        return await lastValueFrom(this.uploadImageService.uploadImage(file));
-    }
-
-    async updateImage(file: File, publicId: string): Promise<ImageResponse> {
-        return await lastValueFrom(this.uploadImageService.updateImage(file, publicId));
-    }
 
     async updateBook() {
         this.submitted = true;
@@ -117,11 +110,17 @@ export class UpdateFormComponent implements OnInit {
                 numOfPages: this.updateForm.controls['numOfPages'].value,
                 publishedYear: this.updateForm.controls['publishedYear'].value,
                 description: this.updateForm.controls['description'].value,
-                authorId: this.updateForm.controls['author'].value!,
-                categoryId: this.updateForm.controls['category'].value!
+                authorIds: this.updateForm.controls['authors'].value!,
+                categoryIds: this.updateForm.controls['categories'].value!
             };
             await firstValueFrom(this.productService.updateProduct(this.updateId()!, bookReq, fileReq));
-            await firstValueFrom(this.productService.fetchProducts(0, 10))
+            await firstValueFrom(this.productService.searchProducts({
+                page: 1,
+                size: 10,
+                sortBy: "name",
+                nameOrCodeKeyword: "",
+                isActive: this.productStatus()
+            }))
                 .then(res => {
                     this.onUpdate.emit(res.data);
                     this.message.emit(
@@ -159,13 +158,15 @@ export class UpdateFormComponent implements OnInit {
         const id: number = this.updateId()!;
         this.productService.findProductById(id).subscribe({
             next: res => {
+                let authorIds: number[] = res.data.authors.map(author => author.id);
+                let categoryIds: number[] = res.data.categories.map(category => category.id);
                 this.updateForm.patchValue({
                     name: res.data.name,
                     imgFile: null,
                     publisher: res.data.publisher,
                     translator: res.data.translator,
-                    author: res.data.author.id,
-                    category: res.data.category.id,
+                    authors: authorIds,
+                    categories: categoryIds,
                     quantity: res.data.quantity,
                     price: res.data.price,
                     numOfPages: res.data.numOfPages,
@@ -177,7 +178,8 @@ export class UpdateFormComponent implements OnInit {
                 this.defaultData = res.data;
             }
         });
-    };
+
+    }
 
     fetchAuthors() {
         this.authorService.fetchAuthors().subscribe({

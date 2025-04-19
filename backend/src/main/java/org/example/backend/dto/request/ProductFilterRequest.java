@@ -1,6 +1,6 @@
 package org.example.backend.dto.request;
 
-import jakarta.validation.constraints.PositiveOrZero;
+import jakarta.validation.constraints.Positive;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -9,11 +9,13 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class ProductFilter {
-    @PositiveOrZero(message = "Page must be greater than or equal 0")
+public class ProductFilterRequest {
+    @Positive(message = "Page must be greater than 0")
     Integer page = 1;
-    @PositiveOrZero(message = "Size must be greater than or equal 0")
+    @Positive(message = "Size must be greater than 0")
     Integer size = 10;
-    String nameOrCodeKeyword = null;
     String sortBy = "name";
+    Boolean isActive = true;
+    String nameOrCodeKeyword = null;
+
 }

@@ -2,6 +2,7 @@ package org.example.backend.controller;
 
 import jakarta.validation.Valid;
 import org.example.backend.dto.request.PropertySearchRequest;
+import org.example.backend.dto.response.CategoryResponse;
 import org.example.backend.dto.response.SuccessResponse;
 import org.example.backend.entity.Category;
 import org.example.backend.exception.DataNotFoundException;
@@ -20,7 +21,7 @@ public class CategoryController {
     private CategoryService categoryService;
 
     @GetMapping
-    public SuccessResponse<List<Category>> findAll() {
+    public SuccessResponse<List<CategoryResponse>> findAll() {
         return new SuccessResponse<>(HttpStatus.OK.value(), "Getting data success", categoryService.findAll());
     }
 //    public List<Category> findPage(@ModelAttribute PageRequest pageRequest) {
@@ -38,7 +39,7 @@ public class CategoryController {
     }
 
     @PostMapping
-    public SuccessResponse<Category> save(@RequestParam(name = "name") String name) {
+    public SuccessResponse<CategoryResponse> save(@RequestParam(name = "name") String name) {
         return new SuccessResponse<>(HttpStatus.CREATED.value(), "Adding data success", categoryService.save(name));
     }
 

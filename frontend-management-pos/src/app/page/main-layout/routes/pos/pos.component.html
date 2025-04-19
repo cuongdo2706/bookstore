@@ -22,13 +22,13 @@
         <ng-template #footer>
 	  @if (products().length > 0) {
 	      <p-paginator #paginator
-		         (onPageChange) = "onPageChange($event)"
+		         (onPageChange) = "onProductPageChange($event)"
 		         [rows] = "size"
 		         [totalRecords] = "totalElements"
 		         [rowsPerPageOptions] = "[10, 20, 30]"/>
 	  }
 	  <div class = "p-3">
-	      <p-button fluid icon = "pi pi-plus" label = "Thêm khách hàng" size = "small"/>
+	      <p-button fluid icon = "pi pi-plus" label = "Thêm sản phẩm" size = "small"/>
 	  </div>
         </ng-template>
         <ng-template #empty>
@@ -98,7 +98,7 @@
 			      (click) = "decreaseItemQuantity(orderDetailsFormArray.controls[i])"></p-button>
 		        <p-input-number
 			      min = "1"
-			      (onInput) = "checkEmptyItemQuantity(orderDetailsFormArray.controls[i])"
+			      (onBlur) = "checkEmptyItemQuantity($event,orderDetailsFormArray.controls[i])"
 			      formControlName = "quantity"
 			      class = "quantity-input"/>
 		        <p-button
@@ -145,8 +145,14 @@
 			  <span>{{ user.name }}</span>
 		        </div>
 		    </ng-template>
-
 		    <ng-template #footer>
+		        @if (customers().length > 0) {
+			  <p-paginator #paginator
+				     (onPageChange) = "onProductPageChange($event)"
+				     [rows] = "size"
+				     [totalRecords] = "totalElements"
+				     [rowsPerPageOptions] = "[10, 20, 30]"/>
+		        }
 		        <div class = "p-3">
 			  <p-button fluid icon = "pi pi-plus" label = "Thêm khách hàng" size = "small"/>
 		        </div>

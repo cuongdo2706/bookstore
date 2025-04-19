@@ -49,7 +49,6 @@ public class Order extends BaseEntity {
     String email;//online
     String phoneNum;//online
     String address;// online
-    Boolean isOnline;
     @Column(columnDefinition = "TEXT")
     String note;//online
     String orderType; //ONLINE - OFFLINE

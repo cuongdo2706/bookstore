@@ -1,4 +1,4 @@
-import {Component, inject, model, OnInit, output, ViewEncapsulation} from '@angular/core';
+import {Component, inject, input, model, OnInit, output, ViewEncapsulation} from '@angular/core';
 import {Dialog} from "primeng/dialog";
 import {Button} from "primeng/button";
 import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} from "@angular/forms";
@@ -11,7 +11,6 @@ import {AuthorResponse} from "../../../../model/response/author-response.model";
 import {CategoryResponse} from "../../../../model/response/category-response.model";
 import {UploadImageService} from "../../../../service/upload-image.service";
 import {firstValueFrom, lastValueFrom} from "rxjs";
-import {ProductCreatedRequest} from "../../../../model/request/product-created-request.model";
 import {ProductService} from "../../../../service/product.service";
 import {Toast} from "primeng/toast";
 import {MessageService} from "primeng/api";
@@ -19,6 +18,8 @@ import {ImageResponse} from "../../../../model/response/image-response.model";
 import {Textarea} from "primeng/textarea";
 import {Select} from "primeng/select";
 import {InputNumber} from "primeng/inputnumber";
+import {MultiSelect} from "primeng/multiselect";
+import {ProductCreatedRequest} from "../../../../model/request/product-created-request.model";
 
 @Component({
     selector: 'app-save-form',
@@ -33,7 +34,8 @@ import {InputNumber} from "primeng/inputnumber";
         Toast,
         ReactiveFormsModule,
         InputText,
-        InputNumber
+        InputNumber,
+        MultiSelect
     ],
     templateUrl: './save-form.component.html',
     styleUrl: './save-form.component.css',
@@ -50,8 +52,8 @@ export class SaveFormComponent implements OnInit {
             imgFile: null,
             publisher: null,
             translator: null,
-            author: [null, [Validators.required]],
-            category: [null, [Validators.required]],
+            authors: [null, [Validators.required]],
+            categories: [null, [Validators.required]],
             quantity: [null, [Validators.required, Validators.min(0), Validators.pattern('^[1-9]\\d*$')]],
             price: [null, [Validators.required, Validators.min(1)]],
             numOfPages: [null, [Validators.min(1), Validators.pattern('^[1-9]\\d*$')]],
@@ -84,6 +86,7 @@ export class SaveFormComponent implements OnInit {
     categories: CategoryResponse[] = [];
     onSave = output<any>();
     message = output<{}>();
+    productStatus = input.required<boolean>();
 
 
     fetchAuthors() {
@@ -135,11 +138,11 @@ export class SaveFormComponent implements OnInit {
                 numOfPages: this.saveForm.controls['numOfPages'].value,
                 publishedYear: this.saveForm.controls['publishedYear'].value,
                 description: this.saveForm.controls['description'].value,
-                authorId: this.saveForm.controls['author'].value!,
-                categoryId: this.saveForm.controls['category'].value!
+                authorIds: this.saveForm.controls['authors'].value!,
+                categoryIds: this.saveForm.controls['categories'].value!
             };
             await firstValueFrom(this.productService.saveProduct(bookReq, fileReq));
-            await firstValueFrom(this.productService.fetchProducts(0, 10))
+            await firstValueFrom(this.productService.searchProducts({page: 1, size: 10, sortBy: "name", nameOrCodeKeyword: "", isActive: this.productStatus()}))
                 .then(res => {
                     this.onSave.emit(res.data);
                     this.message.emit(

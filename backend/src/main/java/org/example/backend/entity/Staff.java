@@ -36,4 +36,6 @@ public class Staff extends BaseEntity {
     Boolean isActive;
     @Column(columnDefinition = "boolean default false")
     Boolean isDeleted;
+    @OneToOne(mappedBy = "staff", cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH})
+    User user;
 }
