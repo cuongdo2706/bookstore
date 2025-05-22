@@ -14,9 +14,6 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class Cart extends BaseEntity {
-    @Id
-    Long id;
-
     @OneToOne
     @MapsId
     @JoinColumn(name = "user_id")

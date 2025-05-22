@@ -1,9 +1,9 @@
 import {inject, Injectable} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {AppConstants} from "../../app.constants";
-import {OrderCreatedRequest} from "../model/request/order-created-request";
+import {OrderOfflineRequest} from "../model/request/order-offline-request";
 import {ApiResponse} from "../model/response/api-response";
-import {OrderOfflineResponse} from "../model/response/order-offline-response.model";
+import {OrderResponse} from "../model/response/order-response.model";
 
 @Injectable({
     providedIn: 'root'
@@ -15,7 +15,7 @@ export class OrderService {
     private readonly offline: string = this.url + "/offline";
     private readonly online: string = this.url + "/online";
 
-    placeOrderOffline(request: OrderCreatedRequest) {
-        return this.http.post<ApiResponse<OrderOfflineResponse>>(`${this.offline}/place-order`, request);
+    placeOrderOffline(request: OrderOfflineRequest) {
+        return this.http.post<ApiResponse<OrderResponse>>(`${this.offline}/place-order`, request);
     }
 }

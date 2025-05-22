@@ -16,9 +16,6 @@ import java.util.Set;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @NoArgsConstructor
 public class Author extends BaseEntity {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long id;
     String name;
     @Column(columnDefinition = "BOOLEAN DEFAULT FALSE")
     Boolean isDeleted;

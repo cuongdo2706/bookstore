@@ -11,6 +11,8 @@ public record CustomerResponse(
         String phoneNum,
         String address,
         String email,
+        String publicId,
+        String imgUrl,
         Boolean isActive
 ) {
 

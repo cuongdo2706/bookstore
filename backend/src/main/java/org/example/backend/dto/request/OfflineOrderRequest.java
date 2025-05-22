@@ -28,6 +28,8 @@ public class OfflineOrderRequest {
 
     Long couponId;
 
+    Short paymentMethod;
+
     @NotNull(message = "Cart must not be null")
     @Size(min = 1, message = "Cart must have at least 1 product")
 

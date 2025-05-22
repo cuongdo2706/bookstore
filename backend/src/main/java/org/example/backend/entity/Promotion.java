@@ -16,9 +16,6 @@ import java.time.LocalDate;
 @Table(name = "tbl_promotion")
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class Promotion extends BaseEntity {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long id;
     @Column(nullable = false, unique = true)
     String code;
     String name;

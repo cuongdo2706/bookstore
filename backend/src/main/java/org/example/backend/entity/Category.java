@@ -15,9 +15,6 @@ import java.util.Set;
 @Table(name = "tbl_category")
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class Category extends BaseEntity {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long id;
     String name;
     Boolean isDeleted;
     @ManyToMany(mappedBy = "categories")

@@ -1,17 +1,19 @@
 package org.example.backend.mapper;
 
-import org.example.backend.dto.response.OfflineOrderResponse;
+import org.example.backend.dto.response.OrderResponse;
 import org.example.backend.dto.response.OrderDetailResponse;
+import org.example.backend.entity.Customer;
 import org.example.backend.entity.Order;
+import org.example.backend.entity.Staff;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 @Component
 public class OrderMapper {
-    public OfflineOrderResponse toOfflineOrderResponse(Order order) {
+    public OrderResponse toOrderResponse(Order order) {
+        Customer customer = order.getCustomer();
         List<OrderDetailResponse> orderDetailResponses = order
                 .getOrderDetails()
                 .stream()
@@ -25,16 +27,27 @@ public class OrderMapper {
                         item.getTotalPrice()
                 ))
                 .toList();
-        return new OfflineOrderResponse(
+        return new OrderResponse(
                 order.getCode(),
                 order.getOrderAt(),
+                order.getDeliveryFee(),
                 order.getTotalAmount(),
+                order.getDiscount(),
+                order.getAmountDue(),
                 order.getAmountPaid(),
-                Objects.equals(order.getCustomer(), null) ? "Khách lẻ" : order.getCustomer().getName(),
-                order.getStaff().getName(),
+                order.getChangeAmount(),
+                Objects.equals(customer, null) ? null : CustomerMapper.toCustomerResponse(customer),
+                order.getCustomerName(),
+                order.getEmail(),
+                order.getPhoneNum(),
+                order.getAddress(),
+                StaffMapper.toStaffResponse(order.getStaff()),
                 orderDetailResponses,
-                order.getOrderType(),
-                order.getNote()
+                order.getNote(),
+                order.getPaymentStatus(),
+                order.getOrderStatus(),
+                order.getSaleChannel(),
+                order.getOrderType()
         );
     }
 }

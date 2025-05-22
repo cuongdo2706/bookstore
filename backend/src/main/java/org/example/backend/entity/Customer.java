@@ -16,9 +16,6 @@ import java.util.List;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class Customer extends BaseEntity {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long id;
     @Column(nullable = false, unique = true)
     String code;
     String name;
@@ -33,4 +30,6 @@ public class Customer extends BaseEntity {
     Boolean isActive;
     @Column(columnDefinition = "boolean default false")
     Boolean isDeleted;
+    @OneToOne(mappedBy = "customer", cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH})
+    User user;
 }

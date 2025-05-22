@@ -67,7 +67,7 @@ export class ProductComponent implements OnInit {
     totalElements: number = 0;
 
     paginator = viewChild<Paginator>('paginator');
-    saveFormVisible: boolean = false;
+    saveFormVisible = signal(false);
     updateFormVisible: boolean = false;
     updateId!: number;
     baseImg = AppConstants.BASE_IMAGE;
@@ -79,7 +79,13 @@ export class ProductComponent implements OnInit {
     }
 
     onFetchProducts() {
-        this.productService.searchProducts({page: 1, size: 10, sortBy: this.filterSelection, nameOrCodeKeyword: "", isActive: this.statusSelection}).subscribe({
+        this.productService.searchProducts({
+            page: 1,
+            size: 10,
+            sortBy: this.filterSelection,
+            nameOrCodeKeyword: "",
+            isActive: this.statusSelection
+        }).subscribe({
                 next: res => {
                     this.products = res.data.content;
                     this.totalElements = res.data.totalElements;
@@ -166,9 +172,6 @@ export class ProductComponent implements OnInit {
         );
     }
 
-    showSaveDialog() {
-        this.saveFormVisible = true;
-    }
 
     onSaveForm(event: PageResponse<ProductResponse>) {
         this.products = event.content;

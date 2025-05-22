@@ -41,8 +41,11 @@
 	  [style] = "{'height':'2rem','width':'2rem','margin-left':'10px'}"
 	  icon = "pi pi-barcode"
 	  raised = "true"
-	  text = "true"></p-button>
-
+	  text = "true"
+	  (click) = "onOpenScanner()"></p-button>
+    @if (scannerVisible()) {
+        <app-scanner #scanner [(visible)] = "scannerVisible"></app-scanner>
+    }
 
     @for (t of tabs(); let i = $index; track t.tabId) {
 

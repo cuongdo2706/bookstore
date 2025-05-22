@@ -1,4 +1,4 @@
-import {Component, computed, inject, linkedSignal, OnInit, signal, ViewEncapsulation} from '@angular/core';
+import {Component, computed, inject, linkedSignal, OnInit, signal, ViewChild, ViewEncapsulation} from '@angular/core';
 import {MessageService} from "primeng/api";
 import {Button} from "primeng/button";
 import {FormArray, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule} from "@angular/forms";
@@ -16,12 +16,13 @@ import {ApiResponse} from "../../../model/response/api-response";
 import {CouponService} from "../../../service/coupon.service";
 import {UserResponse} from "../../../model/response/user-response";
 import {Toast} from "primeng/toast";
-import {OrderCreatedRequest} from '../../../model/request/order-created-request';
+import {OrderOfflineRequest} from '../../../model/request/order-offline-request';
 import {CouponResponse} from "../../../model/response/coupon-response.model";
 import {AuthService} from "../../../../core/auth/service/auth.service";
 import {CustomerService} from "../../../service/customer.service";
 import {CustomerResponse} from "../../../model/response/customer-response";
 import {Paginator, PaginatorState} from "primeng/paginator";
+import {ScannerComponent} from "./scanner/scanner.component";
 
 interface Tab {
     tabId: string;
@@ -56,6 +57,7 @@ interface OrderDetail {
         Toast,
         NgOptimizedImage,
         Paginator,
+        ScannerComponent
     ],
     templateUrl: './pos.component.html',
     styleUrl: './pos.component.css',
@@ -81,11 +83,13 @@ export class PosComponent implements OnInit {
     coupon = signal<CouponResponse | null>(null);
     couponNotFoundError = signal<string | null>(null);
     orderDetailsValues = signal<any[]>([]);
+    scannerVisible = signal(false);
     page: number = 1;
     size: number = 10;
     totalElements: number = 0;
     keyword = "";
     staffUsername: string = this.authService.getPayload().sub;
+    @ViewChild('scanner') scanner!: ScannerComponent;
 
     get orderDetailsFormArray(): FormArray<FormGroup> {
         return this.posForm.get("orderDetails") as FormArray<FormGroup>;
@@ -96,6 +100,14 @@ export class PosComponent implements OnInit {
         this.orderDetailsFormArray.valueChanges.subscribe(values => {
             this.orderDetailsValues.set(values);
         });
+    }
+
+    onOpenScanner() {
+        this.scannerVisible.set(true);
+        // setTimeout(() => {
+        //     this.scanner.startScan();
+        // }, 100);
+
     }
 
     async findCouponById(value: string) {
@@ -539,11 +551,13 @@ export class PosComponent implements OnInit {
 
         if (!await this.itemInfoIsChanged()) {
 
-            let newOrder: OrderCreatedRequest = {
+            let newOrder: OrderOfflineRequest = {
                 amountPaid: value.amountPaid,
                 couponId: value.couponId,
                 customerId: value.customerId,
                 staffUsername: this.staffUsername,
+                paymentMethod: 1,
+                orderType: 0,
                 orderItems: []
             };
             value.orderDetails.forEach((item: { bookId: number; quantity: number; price: number; }) => {
@@ -590,6 +604,5 @@ export class PosComponent implements OnInit {
             }
         );
     }
-
 
 }

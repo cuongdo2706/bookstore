@@ -1,7 +1,7 @@
 package org.example.backend.controller;
 
 import org.example.backend.dto.request.OfflineOrderRequest;
-import org.example.backend.dto.response.OfflineOrderResponse;
+import org.example.backend.dto.response.OrderResponse;
 import org.example.backend.dto.response.SuccessResponse;
 import org.example.backend.exception.DataNotFoundException;
 import org.example.backend.service.impl.OrderServiceImpl;
@@ -19,7 +19,7 @@ public class OrderController {
     private OrderServiceImpl orderService;
 
     @PostMapping("/offline/place-order")
-    public SuccessResponse<OfflineOrderResponse> placeOrderOffline(@RequestBody OfflineOrderRequest request) throws DataNotFoundException {
+    public SuccessResponse<OrderResponse> placeOrderOffline(@RequestBody OfflineOrderRequest request) throws DataNotFoundException {
         return new SuccessResponse<>(HttpStatus.CREATED.value(),
                 "Place order success",
                 orderService.placeOrderOffline(request)

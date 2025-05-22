@@ -1,8 +1,7 @@
 package org.example.backend.service.impl;
 
-import org.example.backend.constant.OrderConstant;
 import org.example.backend.dto.request.OfflineOrderRequest;
-import org.example.backend.dto.response.OfflineOrderResponse;
+import org.example.backend.dto.response.OrderResponse;
 import org.example.backend.entity.*;
 import org.example.backend.exception.DataConflictException;
 import org.example.backend.exception.DataNotFoundException;
@@ -37,7 +36,7 @@ public class OrderServiceImpl implements OrderService {
     private OrderMapper orderMapper;
 
     @Override
-    public OfflineOrderResponse placeOrderOffline(OfflineOrderRequest request) throws DataNotFoundException, DataConflictException {
+    public OrderResponse placeOrderOffline(OfflineOrderRequest request) throws DataNotFoundException, DataConflictException {
         Customer existedCustomer = request.getCustomerId() != null ? customerService.findById(request.getCustomerId()) : null;
         Staff existedStaff = staffService.findByUsername(request.getStaffUsername());
         List<OrderDetail> newOrderDetails = new ArrayList<>();
@@ -86,12 +85,27 @@ public class OrderServiceImpl implements OrderService {
             throw new DataConflictException("Amount paid must greater than or equal amount due");
         }
         BigDecimal changeAmount = amountPaid.subtract(amountDue);
-        Order newOrder = Order.builder().totalAmount(totalAmountCount).discount(discount).amountDue(amountDue).code(GenerateCodeUtil.generateOrderCode()).orderAt(LocalDateTime.now()).amountPaid(amountPaid).changeAmount(changeAmount).customer(existedCustomer).staff(existedStaff).orderType(OrderConstant.OrderType.OFFLINE).build();
+        Order newOrder = Order
+                .builder()
+                .totalAmount(totalAmountCount)
+                .discount(discount)
+                .amountDue(amountDue)
+                .code(GenerateCodeUtil.generateOrderCode())
+                .orderAt(LocalDateTime.now())
+                .amountPaid(amountPaid)
+                .changeAmount(changeAmount)
+                .customer(existedCustomer)
+                .staff(existedStaff)
+                .paymentMethod(request.getPaymentMethod())
+                .saleChannel((short) 0)
+                .orderType((short) 0)
+                .paymentStatus((short) 1)
+                .orderStatus((short) 6)
+                .build();
         for (OrderDetail orderDetail : newOrderDetails) {
             orderDetail.setOrder(newOrder);
         }
         newOrder.setOrderDetails(newOrderDetails);
-        return orderMapper.toOfflineOrderResponse(orderRepository.save(newOrder));
-
+        return orderMapper.toOrderResponse(orderRepository.save(newOrder));
     }
 }

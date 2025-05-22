@@ -5,8 +5,6 @@ import java.time.LocalDate;
 public record StaffResponse(
         Long id,
         String code,
-        String username,
-        String role,
         String name,
         LocalDate dob,
         Boolean gender,
@@ -14,6 +12,8 @@ public record StaffResponse(
         String address,
         String email,
         String identityNum,
-        String isActive
+        String publicId,
+        String imgUrl,
+        Boolean isActive
 ) {
 }
