@@ -109,11 +109,15 @@ public class Order extends BaseEntity {
     1 - PROCESSING (Đang xử lý bởi nhân viên)
     2 - SHIPPED (Đơn đã giao cho bên vận chuyển và đang được gửi đi)
     3 - DELIVERED (Khách đã nhận được đơn)
-    4 - RETURN_REQUESTED (Yêu cầu hoàn bởi người mua)
-    5 - RETURNED (Đã hoàn hàng)
-    6 - CANCELLED (Huỷ đơn bởi người bán hoặc người mua) -- DỪNG LUỒNG
-    7 - COMPLETED (Hoàn thành đơn) -- DỪNG LUỒNG
+    4 - CANCELLED (Huỷ đơn bởi người bán hoặc người mua) -- DỪNG LUỒNG
+    5 - COMPLETED (Hoàn thành đơn) -- DỪNG LUỒNG
     */
-    @ColumnDefault("0")
     Short orderStatus;
+    /*
+    0 - NONE
+    1 - PENDING
+    2 - COMPLETE
+     */
+    @ColumnDefault("0")
+    Short returnStatus;
 }

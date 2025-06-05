@@ -19,21 +19,28 @@ export class OrderComponent {
             {label: "Online", value: true},
             {label: "Tại quầy", value: false}
         ];
-        this.orderStatusOptions=[
-            {label:"Chờ xác nhận",value:0},
-            {label:"Đang xử lý",value:1},
-            {label:"Chờ giao hàng",value:2},
-            {label:"Đã giao hàng",value:3},
-            {label:"Đã huỷ",value:4},
-            {label:"Chờ xác nhận",value:5}
+        this.orderStatusOptions = [
+            {label: "Chờ xác nhận", value: 0},
+            {label: "Đang xử lý", value: 1},
+            {label: "Chờ giao hàng", value: 2},
+            {label: "Đã giao", value: 3},
+            {label: "Đã huỷ", value: 4},
+            {label: "Chờ xác nhận", value: 5}
+        ];
+        this.sortByOption=[
+            {label:"Mới nhất",value:"ord-d"},
+            {label:"Cũ nhất",value:"ord"},
         ]
     }
 
     readonly orderTypeOptions!: {}[];
     readonly orderStatusOptions!: {}[];
+    readonly sortByOption!: {}[];
     private orderService = inject(OrderService);
     orders!: OrderResponse[];
     orderTypeSelection = signal(false);
+    orderStatusSelection = signal([0]);
+    sortBySelection = signal("ord-d");
 
     isFilter = signal(false);
 
@@ -41,7 +48,8 @@ export class OrderComponent {
         this.orderService.searchOrder({
             page: 1,
             size: 10,
-
+            sortBy:this.sortBySelection(),
+            orderType:this.or
         });
     }
 
