@@ -48,7 +48,9 @@ public class OrderServiceImpl implements OrderService {
     private Environment env;
     RestTemplate restTemplate = new RestTemplate();
 
+    public void createDeliveryOrder() {
 
+    }
 
     @Transactional
     @Override
