@@ -16,13 +16,14 @@ import {ApiResponse} from "../../../model/response/api-response";
 import {CouponService} from "../../../service/coupon.service";
 import {UserResponse} from "../../../model/response/user-response";
 import {Toast} from "primeng/toast";
-import {OrderOfflineRequest} from '../../../model/request/order-offline-request';
+import {OrderCreatedRequest} from '../../../model/request/order-created-request';
 import {CouponResponse} from "../../../model/response/coupon-response.model";
 import {AuthService} from "../../../../core/auth/service/auth.service";
 import {CustomerService} from "../../../service/customer.service";
 import {CustomerResponse} from "../../../model/response/customer-response";
 import {Paginator, PaginatorState} from "primeng/paginator";
 import {ScannerComponent} from "./scanner/scanner.component";
+import {ToggleSwitch} from "primeng/toggleswitch";
 
 interface Tab {
     tabId: string;
@@ -31,6 +32,7 @@ interface Tab {
         couponId: number | null
         customerId: number | null;
         customer: UserResponse | null;
+        orderType: boolean;
         orderDetails: OrderDetail[];
     };
 }
@@ -57,7 +59,8 @@ interface OrderDetail {
         Toast,
         NgOptimizedImage,
         Paginator,
-        ScannerComponent
+        ScannerComponent,
+        ToggleSwitch
     ],
     templateUrl: './pos.component.html',
     styleUrl: './pos.component.css',
@@ -89,6 +92,7 @@ export class PosComponent implements OnInit {
     totalElements: number = 0;
     keyword = "";
     staffUsername: string = this.authService.getPayload().sub;
+    
     @ViewChild('scanner') scanner!: ScannerComponent;
 
     get orderDetailsFormArray(): FormArray<FormGroup> {
@@ -218,6 +222,7 @@ export class PosComponent implements OnInit {
                 couponId: null,
                 customerId: null,
                 customer: null,
+                orderType: false,
                 orderDetails: [],
             }
         };
@@ -256,6 +261,7 @@ export class PosComponent implements OnInit {
                 couponId: null,
                 customerId: null,
                 customer: null,
+                orderType:false,
                 orderDetails: this.fb.array([])
             });
             this.formMap.set(this.activeTabId(), this.posForm);
@@ -266,6 +272,7 @@ export class PosComponent implements OnInit {
                     couponId: null,
                     customerId: null,
                     customer: null,
+                    orderType: false,
                     orderDetails: [],
                 }
             };
@@ -328,6 +335,7 @@ export class PosComponent implements OnInit {
             couponId: null,
             customerId: null,
             customer: null,
+            orderType:false,
             orderDetails: this.fb.array([])
         });
     }
@@ -412,8 +420,8 @@ export class PosComponent implements OnInit {
         if (this.coupon() === null) {
             return 0;
         }
-        if (this.coupon()?.promotionType === "FIXED") {
-            return this.coupon()?.promotionValue!;
+        if (this.coupon()?.couponType === "FIXED") {
+            return this.coupon()?.couponValue!;
         }
         return 0;
     });
@@ -500,13 +508,10 @@ export class PosComponent implements OnInit {
         let tab = this.tabs().find(tabs => tabs.tabId === this.activeTabId());
         let ids = tab!.formData.orderDetails.map(orderDetail => orderDetail.bookId);
         let products: ProductResponse[] = [];
-        console.log(ids);
         if (ids.length < 1) {
             return isChanged;
         }
         products = (await lastValueFrom(this.productService.findAllProductById(ids))).data;
-        console.log(products);
-
         this.tabs.update(tabs => {
             let newTabs = [...tabs];
             let tab = newTabs.find(tab => tab.tabId === this.activeTabId());
@@ -551,13 +556,13 @@ export class PosComponent implements OnInit {
 
         if (!await this.itemInfoIsChanged()) {
 
-            let newOrder: OrderOfflineRequest = {
+            let newOrder: OrderCreatedRequest = {
                 amountPaid: value.amountPaid,
                 couponId: value.couponId,
                 customerId: value.customerId,
                 staffUsername: this.staffUsername,
                 paymentMethod: 1,
-                orderType: 0,
+                orderType: value.orderType,
                 orderItems: []
             };
             value.orderDetails.forEach((item: { bookId: number; quantity: number; price: number; }) => {
@@ -568,7 +573,8 @@ export class PosComponent implements OnInit {
                 };
                 newOrder.orderItems.push(newItem);
             });
-            this.orderService.placeOrderOffline(newOrder).subscribe({
+
+            this.orderService.placeOrder(newOrder).subscribe({
                 next: res => {
                     this.deleteTab(this.activeTabId());
                     this.messageService.add({

@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import org.example.backend.dto.response.ProductResponse;
+import org.hibernate.annotations.SQLRestriction;
 
 import java.math.BigDecimal;
 import java.util.Set;
@@ -15,6 +16,7 @@ import java.util.Set;
 @Builder
 @Entity
 @Table(name = "tbl_product")
+@SQLRestriction("is_deleted = FALSE")
 @FieldDefaults(level = AccessLevel.PRIVATE)
 
 public class Product extends BaseEntity {

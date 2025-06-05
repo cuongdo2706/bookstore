@@ -29,5 +29,7 @@ public class OrderDetail extends BaseEntity {
     BigDecimal price;
     Integer quantity;
     @Column(precision = 19, scale = 2)
+    BigDecimal discount;
+    @Column(precision = 19, scale = 2)
     BigDecimal totalPrice;
 }

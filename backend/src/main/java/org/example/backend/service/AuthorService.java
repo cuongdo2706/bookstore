@@ -25,5 +25,5 @@ public interface AuthorService {
 
     void delete(Long id) throws DataNotFoundException;
 
-    Set<Author> findAllByIds(Set<Long> ids);
+    List<Author> findAllByIds(Set<Long> ids);
 }

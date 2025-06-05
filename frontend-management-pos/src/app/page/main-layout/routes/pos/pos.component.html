@@ -52,7 +52,7 @@
         <div [style.background-color] = "t.tabId===activeTabId()?'#10F6B6':'#10B981'"
 	   (click) = "chooseTab(t.tabId)"
 	   class = "select-tab-button ml-3">
-	  <span>Hoá đơn {{ i + 1 }}</span>
+	  <span>Đơn hàng {{ i + 1 }}</span>
 	  <i class = "pi pi-times ml-2"
 	     (click) = "deleteTab(t.tabId);$event.stopPropagation()">
 	  </i>
@@ -72,9 +72,15 @@
 </div>
 <form (ngSubmit) = "placeOrder(posForm.value)" [formGroup] = "posForm" style = "margin-top: 20px">
     <div style = "display: flex; column-gap: 10px">
-
         <div formArrayName = "orderDetails"
-	   style = "width: 70%;flex-shrink: 0;row-gap: 3px;display: flex; flex-direction: column">
+	   style = "
+	   height: calc(100vh - 190px);
+	   width: 70%;
+	   flex-shrink: 0;
+	   row-gap: 3px;
+	   display: flex;
+	   flex-direction: column;
+	overflow: auto">
 	  @for (item of orderDetailsFormArray.controls; let i = $index; track item.get('bookId')!.value) {
 
 	      <p-card styleClass = "item" [formGroupName] = "i">
@@ -129,6 +135,11 @@
         <div style = "width: 30%;flex-shrink: 0">
 	  <p-card styleClass = "order-info">
 	      <div class = "flex">
+		<b class = "mr-3">Giao hàng</b>
+		<p-toggleswitch
+		        formControlName = "orderType"></p-toggleswitch>
+	      </div>
+	      <div class = "flex mt-3">
 		<p-auto-complete
 		        (completeMethod) = "searchCustomer($event)"
 		        (onClear) = "clearCustomer()"
@@ -214,7 +225,10 @@
 		    </div>
 		</div>
 	      }
+	      <div>
 
+		<hr>
+	      </div>
 	      <p-button [disabled] = "orderDetailsFormArray.length < 1" type = "submit"
 		      [style] = "{'width':'100%','margin-top':'20px'}"
 		      label = "Thanh toán"></p-button>

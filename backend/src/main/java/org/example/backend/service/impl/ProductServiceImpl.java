@@ -29,6 +29,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
@@ -59,14 +60,13 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Product findById(Long id) throws DataNotFoundException {
-        return productRepository.findByIdNotDeleted(id).orElseThrow(() -> new DataNotFoundException("Product Not Found"));
+        return productRepository.findById(id).orElseThrow(() -> new DataNotFoundException("Product Not Found"));
     }
 
     @Override
     public ProductResponse findProductResponseById(Long id) throws DataNotFoundException {
         return ProductMapper.toProductResponse(findById(id));
     }
-
 
     @Override
     public PageResponse<ProductResponse> searchProduct(ProductFilterRequest filter) {
@@ -76,9 +76,9 @@ public class ProductServiceImpl implements ProductService {
         }
         Sort sort = switch (filter.getSortBy()) {
             case "name" -> Sort.by(Sort.Direction.ASC, "name");
-            case "name-desc" -> Sort.by(Sort.Direction.DESC, "name");
+            case "name-d" -> Sort.by(Sort.Direction.DESC, "name");
             case "price" -> Sort.by(Sort.Direction.ASC, "price");
-            case "price-desc" -> Sort.by(Sort.Direction.DESC, "price");
+            case "price-d" -> Sort.by(Sort.Direction.DESC, "price");
             default -> throw new RuntimeException("Sort pattern not valid: " + filter.getSortBy());
         };
         Pageable pageable = PageRequest.of(filter.getPage() - 1, filter.getSize(), sort);
@@ -92,8 +92,8 @@ public class ProductServiceImpl implements ProductService {
         if (file != null && !file.isEmpty()) {
             imageResponse = imageUtil.upload(file);
         }
-        Set<Author> existedAuthors = authorService.findAllByIds(request.getAuthorIds());
-        Set<Category> existedCategories = categoryService.findAllByIds(request.getCategoryIds());
+        Set<Author> existedAuthors = new HashSet<>(authorService.findAllByIds(request.getAuthorIds()));
+        Set<Category> existedCategories = new HashSet<>(categoryService.findAllByIds(request.getCategoryIds()));
         String productCode = GenerateCodeUtil.generateProductCode();
         while (productRepository.existsByCode(productCode)) {
             productCode = GenerateCodeUtil.generateProductCode();
@@ -104,38 +104,35 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    public List<Product> saveAll(List<Product> products) {
+        return productRepository.saveAll(products);
+    }
+
+    @Override
     public ProductResponse update(Long id, ProductUpdatedRequest request, MultipartFile file) throws IOException, DataNotFoundException {
         Product existedProduct = findById(id);
-        if (request.getName() != null && !Objects.equals(request.getName(), existedProduct.getName())) {
+        if (request.getName() != null && !Objects.equals(request.getName(), existedProduct.getName()))
             existedProduct.setName(request.getName());
-        }
-        if (request.getQuantity() != null && !Objects.equals(request.getQuantity(), existedProduct.getQuantity())) {
+        if (request.getQuantity() != null && !Objects.equals(request.getQuantity(), existedProduct.getQuantity()))
             existedProduct.setQuantity(request.getQuantity());
-        }
-        if (request.getPrice() != null && request.getPrice().compareTo(existedProduct.getPrice()) != 0) {
+        if (request.getPrice() != null && request.getPrice().compareTo(existedProduct.getPrice()) != 0)
             existedProduct.setPrice(request.getPrice());
-        }
-        if (!Objects.equals(request.getPublisher(), existedProduct.getPublisher())) {
+        if (!Objects.equals(request.getPublisher(), existedProduct.getPublisher()))
             existedProduct.setPublisher(request.getPublisher());
-        }
-        if (!Objects.equals(request.getTranslator(), existedProduct.getTranslator())) {
+        if (!Objects.equals(request.getTranslator(), existedProduct.getTranslator()))
             existedProduct.setTranslator(request.getTranslator());
-        }
-        if (!Objects.equals(request.getNumOfPages(), existedProduct.getNumOfPages())) {
+        if (!Objects.equals(request.getNumOfPages(), existedProduct.getNumOfPages()))
             existedProduct.setNumOfPages(request.getNumOfPages());
-        }
-        if (!Objects.equals(request.getPublisher(), existedProduct.getPublisher())) {
+        if (!Objects.equals(request.getPublisher(), existedProduct.getPublisher()))
             existedProduct.setPublishedYear(request.getPublishedYear());
-        }
-        if (!Objects.equals(request.getDescription(), existedProduct.getDescription())) {
+        if (!Objects.equals(request.getDescription(), existedProduct.getDescription()))
             existedProduct.setDescription(request.getDescription());
-        }
         if (!request.getCategoryIds().equals(existedProduct.getCategories().stream().map(Category::getId).collect(Collectors.toSet()))) {
-            Set<Category> existedCategories = categoryService.findAllByIds(request.getCategoryIds());
+            Set<Category> existedCategories = new HashSet<>(categoryService.findAllByIds(request.getCategoryIds()));
             existedProduct.setCategories(existedCategories);
         }
         if (!request.getAuthorIds().equals(existedProduct.getAuthors().stream().map(Author::getId).collect(Collectors.toSet()))) {
-            Set<Author> existedAuthors = authorService.findAllByIds(request.getAuthorIds());
+            Set<Author> existedAuthors = new HashSet<>(authorService.findAllByIds(request.getAuthorIds()));
             existedProduct.setAuthors(existedAuthors);
         }
         if (file != null && !file.isEmpty()) {
@@ -154,7 +151,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     @Transactional
     public void softDelete(Long id) throws DataNotFoundException {
-        if (!productRepository.existedByIdNotDeleted(id)) throw new DataNotFoundException("Product Not Found");
+        if (!productRepository.existsById(id)) throw new DataNotFoundException("Product Not Found");
         productRepository.softDelete(id);
     }
 
@@ -165,17 +162,17 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public List<ProductResponse> findAllProductResponseByIds(Set<Long> ids) {
-        return ProductMapper.toProductResponses(productRepository.findAllByIds(ids));
+        return ProductMapper.toProductResponses(productRepository.findAllById(ids));
     }
 
     @Override
     public List<Product> findAllByIds(Set<Long> ids) {
-        return productRepository.findAllByIds(ids);
+        return productRepository.findAllById(ids);
     }
 
     @Override
     public Boolean existedByIdNotDeleted(Long id) {
-        return productRepository.existedByIdNotDeleted(id);
+        return productRepository.existsById(id);
     }
 
 

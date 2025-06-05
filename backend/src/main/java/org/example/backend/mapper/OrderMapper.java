@@ -4,36 +4,27 @@ import org.example.backend.dto.response.OrderResponse;
 import org.example.backend.dto.response.OrderDetailResponse;
 import org.example.backend.entity.Customer;
 import org.example.backend.entity.Order;
-import org.example.backend.entity.Staff;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Objects;
 
-@Component
 public class OrderMapper {
-    public OrderResponse toOrderResponse(Order order) {
+    public static OrderResponse toOrderResponse(Order order) {
         Customer customer = order.getCustomer();
-        List<OrderDetailResponse> orderDetailResponses = order
-                .getOrderDetails()
-                .stream()
-                .map(item -> new OrderDetailResponse(
-                        item.getId(),
-                        item.getProduct().getId(),
-                        item.getProductCode(),
-                        item.getProductName(),
-                        item.getPrice(),
-                        item.getQuantity(),
-                        item.getTotalPrice()
-                ))
-                .toList();
         return new OrderResponse(
                 order.getCode(),
-                order.getOrderAt(),
+                order.getExpiredAt(),
+                order.getOrderedAt(),
+                order.getProcessedAt(),
+                order.getShippedAt(),
+                order.getDeliveredAt(),
+                order.getCancelledAt(),
+                order.getCompletedAt(),
                 order.getDeliveryFee(),
-                order.getTotalAmount(),
+                order.getSubTotal(),
                 order.getDiscount(),
-                order.getAmountDue(),
+                order.getGrandTotal(),
                 order.getAmountPaid(),
                 order.getChangeAmount(),
                 Objects.equals(customer, null) ? null : CustomerMapper.toCustomerResponse(customer),
@@ -42,12 +33,19 @@ public class OrderMapper {
                 order.getPhoneNum(),
                 order.getAddress(),
                 StaffMapper.toStaffResponse(order.getStaff()),
-                orderDetailResponses,
+                null,
                 order.getNote(),
                 order.getPaymentStatus(),
                 order.getOrderStatus(),
                 order.getSaleChannel(),
                 order.getOrderType()
         );
+    }
+
+    public static List<OrderResponse> toOrderResponses(List<Order> orders) {
+        return orders
+                .stream()
+                .map(OrderMapper::toOrderResponse)
+                .toList();
     }
 }

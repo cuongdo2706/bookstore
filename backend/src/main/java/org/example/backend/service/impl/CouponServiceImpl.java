@@ -1,6 +1,5 @@
 package org.example.backend.service.impl;
 
-import org.example.backend.constant.PromotionConstant;
 import org.example.backend.entity.Coupon;
 import org.example.backend.exception.DataNotFoundException;
 import org.example.backend.exception.VoucherException;
@@ -58,14 +57,14 @@ public class CouponServiceImpl implements org.example.backend.service.CouponServ
             return BigDecimal.ZERO;
         }
         BigDecimal discount = BigDecimal.ZERO;
-        if (coupon.getPromotionType().equals(PromotionConstant.PromotionType.FIXED)) {
-            discount = coupon.getPromotionValue();
+        if (coupon.getCouponType().equals((short) 0)) {
+            discount = coupon.getCouponValue();
             if (discount.compareTo(totalAmount) > 0) {
                 discount = totalAmount;
             }
         }
-        if (coupon.getPromotionType().equals(PromotionConstant.PromotionType.PERCENT)) {
-            discount = totalAmount.multiply(coupon.getPromotionValue()).divide(BigDecimal.valueOf(100), 2, RoundingMode.HALF_UP);
+        if (coupon.getCouponType().equals((short) 1)) {
+            discount = totalAmount.multiply(coupon.getCouponValue()).divide(BigDecimal.valueOf(100), 2, RoundingMode.HALF_UP);
             if (coupon.getMaxDiscount() != null && discount.compareTo(coupon.getMaxDiscount()) > 0) {
                 discount = coupon.getMaxDiscount();
             }

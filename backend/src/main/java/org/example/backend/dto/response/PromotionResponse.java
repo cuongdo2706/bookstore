@@ -9,7 +9,7 @@ public record PromotionResponse(Long id,
                                 String description,
                                 LocalDate startDate,
                                 LocalDate endDate,
-                                String promotionType,
+                                Short promotionType,
                                 BigDecimal promotionValue,
                                 Boolean isActive
 ) {

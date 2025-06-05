@@ -26,5 +26,5 @@ public interface CategoryService {
 
     void delete(Long id) throws DataNotFoundException;
 
-    Set<Category> findAllByIds(Set<Long> ids);
+    List<Category> findAllByIds(Set<Long> ids);
 }

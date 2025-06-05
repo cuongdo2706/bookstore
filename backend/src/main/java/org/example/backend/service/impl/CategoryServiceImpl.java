@@ -21,7 +21,7 @@ public class CategoryServiceImpl implements org.example.backend.service.Category
 
     @Override
     public List<CategoryResponse> findAll() {
-        return CategoryMapper.toCategoryResponses(categoryRepository.findAllList());
+        return CategoryMapper.toCategoryResponses(categoryRepository.findAllByOrderByNameAsc());
     }
 
     @Override
@@ -77,7 +77,7 @@ public class CategoryServiceImpl implements org.example.backend.service.Category
     }
 
     @Override
-    public Set<Category> findAllByIds(Set<Long> ids) {
-        return categoryRepository.findAllByIds(ids);
+    public List<Category> findAllByIds(Set<Long> ids) {
+        return categoryRepository.findAllById(ids);
     }
 }

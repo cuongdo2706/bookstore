@@ -1,5 +1,5 @@
 import {Component, inject, OnInit, signal, viewChild} from '@angular/core';
-import {TableModule} from "primeng/table";
+import {TableModule, TableRowExpandEvent} from "primeng/table";
 import {ProductService} from "../../../service/product.service";
 import {Toast} from "primeng/toast";
 import {Button} from "primeng/button";
@@ -53,9 +53,9 @@ export class ProductComponent implements OnInit {
     expandedRows: { [key: string]: boolean } = {};
     filterOption: {}[] = [
         {name: "Tên: A -> Z", value: "name"},
-        {name: "Tên: Z -> A", value: "name-desc"},
+        {name: "Tên: Z -> A", value: "name-d"},
         {name: "Giá: thấp -> cao", value: "price"},
-        {name: "Giá: cao -> thấp", value: "price-desc"}
+        {name: "Giá: cao -> thấp", value: "price-d"}
     ];
     statusOption: {}[] = [
         {name: "Đang bán", value: true},
@@ -97,7 +97,7 @@ export class ProductComponent implements OnInit {
 
     timeout: any;
 
-    searchKeyword() {
+    onSearchProduct() {
         clearTimeout(this.timeout);
         this.timeout = setTimeout(() => {
             if (this.nameOrCodeKeyword !== null || this.nameOrCodeKeyword !== "") {
@@ -143,8 +143,9 @@ export class ProductComponent implements OnInit {
         });
     }
 
-    onRowExpand(event: any) {
+    onRowExpand(event: TableRowExpandEvent) {
         const productId = event.data.id;
+        console.log(event.data);
         // Đóng tất cả các hàng khác
         Object.keys(this.expandedRows).forEach(key => {
             if (key !== productId.toString()) {

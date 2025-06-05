@@ -1,6 +1,5 @@
 package org.example.backend.repository;
 
-import jakarta.persistence.Tuple;
 import org.example.backend.entity.Product;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -10,7 +9,6 @@ import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 
 public interface ProductRepository extends
@@ -24,30 +22,12 @@ public interface ProductRepository extends
     Page<Product> findAll(Specification<Product> spec, Pageable pageable);
 
     @EntityGraph(attributePaths = {"authors", "categories", "promotion"})
-    @Query(value = """
-                        SELECT p FROM Product p
-                        WHERE p.id = :id
-                        AND p.isDeleted = FALSE
-            """)
-    Optional<Product> findByIdNotDeleted(@Param("id") Long id);
+    Optional<Product> findById(Long id);
 
     @EntityGraph(attributePaths = {"authors", "categories", "promotion"})
-    @Query(value = """
-                    SELECT p FROM Product p
-                    WHERE p.id IN :ids AND p.isDeleted = FALSE 
-            """)
-    List<Product> findAllByIds(@Param("ids") Set<Long> ids);
+    List<Product> findAllById(Iterable<Long> ids);
 
-    @Query(nativeQuery = true, value = """
-                    SELECT EXISTS(
-                        SELECT * FROM tbl_product
-                        WHERE id = :id
-                        AND is_deleted = FALSE
-                                    )
-            """)
-    Boolean existedByIdNotDeleted(@Param("id") Long id);
-
-
+    boolean existsById(Long id);
 
     @Modifying
     @Query(nativeQuery = true, value = "UPDATE tbl_product SET is_deleted = true WHERE id = :id")
@@ -55,7 +35,7 @@ public interface ProductRepository extends
 
     boolean existsByCode(String code);
 
-    @Query(nativeQuery = true, value = "SELECT quantity FROM tbl_product WHERE id = :id")
+    @Query(nativeQuery = true, value = "SELECT quantity FROM tbl_product WHERE id = :id AND is_deleted = FALSE")
     Integer getStockQuantity(@Param("id") Long id);
 
 }

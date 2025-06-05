@@ -5,11 +5,17 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public record OrderResponse(String code,
-                            LocalDateTime orderAt,//BOTH
+                            LocalDateTime expiredAt,
+                            LocalDateTime orderedAt,
+                            LocalDateTime processedAt,
+                            LocalDateTime shippedAt,
+                            LocalDateTime deliveredAt,
+                            LocalDateTime cancelledAt,
+                            LocalDateTime completedAt,
                             BigDecimal deliveryFee,//online
-                            BigDecimal totalAmount,//BOTH - tổng giá trị đơn hàng trước giảm
+                            BigDecimal subTotal,//BOTH - tổng giá trị đơn hàng trước giảm
                             BigDecimal discount,//BOTH
-                            BigDecimal amountDue,//BOTH - giá sau giảm
+                            BigDecimal grandTotal,//BOTH - giá sau giảm
                             BigDecimal amountPaid,//offline
                             BigDecimal changeAmount,//offline
                             CustomerResponse customer,
@@ -23,6 +29,5 @@ public record OrderResponse(String code,
                             Short paymentStatus,
                             Short orderStatus,//online
                             Short saleChannel,
-                            Short orderType
-) {
+                            Boolean orderType) {
 }

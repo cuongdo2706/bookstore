@@ -23,13 +23,17 @@ public class Coupon extends BaseEntity {
     String description;
     LocalDate startDate;
     LocalDate endDate;
-    String promotionType;
+    /*
+    0 - FIXED
+    1 - PERCENT
+     */
+    Short couponType;
     @Column(precision = 19, scale = 2)
-    BigDecimal promotionValue;
+    BigDecimal couponValue;
     @Column(precision = 19, scale = 2)
     BigDecimal minAmount; //giá trị đơn hàng tối thiểu
     @Column(precision = 19, scale = 2)
-    BigDecimal maxDiscount; //số tiền được giảm tối đa
+    BigDecimal maxDiscount; //số tiền được giảm tối đa (nếu couponType là percent)
     Integer quantity;
     @Column(columnDefinition = "INTEGER DEFAULT 0")
     Integer usedCount;

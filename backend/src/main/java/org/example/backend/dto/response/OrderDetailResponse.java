@@ -8,5 +8,6 @@ public record OrderDetailResponse(Long id,
                                   String productName,
                                   BigDecimal price,
                                   Integer quantity,
+                                  BigDecimal discount,
                                   BigDecimal totalPrice) {
 }

@@ -15,13 +15,12 @@ import java.util.List;
 @Getter
 @Setter
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class OfflineOrderRequest {
+public class OrderCreatedRequest {
     @Min(value = 0, message = "Amount paid must be greater than or equal 0")
     @NotNull(message = "Amount paid must not be null")
     BigDecimal amountPaid;
 
     Long customerId;
-
 
     @NotNull(message = "Staff ID paid must not be null")
     String staffUsername;
@@ -29,6 +28,16 @@ public class OfflineOrderRequest {
     Long couponId;
 
     Short paymentMethod;
+
+    Boolean orderType;
+
+    String customerName;//online
+
+    String email;//online
+
+    String phoneNum;//online
+
+    String address;// online
 
     @NotNull(message = "Cart must not be null")
     @Size(min = 1, message = "Cart must have at least 1 product")

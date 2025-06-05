@@ -8,14 +8,12 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
-import java.util.Set;
 
 public interface AuthorRepository extends JpaRepository<Author, Long> {
-    @Query(value = "SELECT a FROM Author a WHERE a.isDeleted = FALSE ORDER BY a.name DESC")
-    List<Author> findAllList();
 
-    @Query(value = "SELECT a FROM Author a WHERE a.id IN :ids AND a.isDeleted=FALSE ")
-    Set<Author> findAllByIds(@Param("ids") Set<Long> ids);
+    List<Author> findAllByOrderByNameAsc();
+
+    List<Author> findAllById(Iterable<Long> ids);
 
     @Query(value = "SELECT * FROM tbl_author WHERE is_deleted = FALSE ORDER BY name DESC ", nativeQuery = true)
     Page<Author> findAllPage(Pageable pageable);

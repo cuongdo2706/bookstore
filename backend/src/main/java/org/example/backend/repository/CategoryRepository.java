@@ -11,11 +11,9 @@ import java.util.List;
 import java.util.Set;
 
 public interface CategoryRepository extends JpaRepository<Category, Long> {
-    @Query(value = "SELECT c from Category c WHERE c.isDeleted = FALSE ORDER BY c.name")
-    List<Category> findAllList();
+    List<Category> findAllByOrderByNameAsc();
 
-    @Query(value = "SELECT c FROM Category c where c.id IN :ids AND c.isDeleted = FALSE ")
-    Set<Category> findAllByIds(@Param("ids") Set<Long> ids);
+    List<Category> findAllById(Iterable<Long> ids);
 
     @Query(value = "SELECT * FROM tbl_category WHERE is_deleted = FALSE ORDER BY name DESC ", nativeQuery = true)
     Page<Category> findAllPage(Pageable pageable);

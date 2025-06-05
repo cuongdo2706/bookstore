@@ -9,7 +9,6 @@
         ></app-save-form>
     }
     <p-table [value] = "products"
-	   [lazy] = "true"
 	   [(selection)] = "selectedProductIds"
 	   [tableStyle] = "{ 'min-width': '30rem' }"
 	   [expandedRowKeys] = "expandedRows"
@@ -23,7 +22,7 @@
 		        <i class = "pi pi-search"></i>
 		    </p-inputicon>
 		    <input
-			  (input) = "searchKeyword()"
+			  (input) = "onSearchProduct()"
 			  pInputText
 			  type = "text"
 			  [(ngModel)] = "nameOrCodeKeyword"
@@ -32,7 +31,7 @@
 		<p-select
 		        [style.margin-left.px] = "10"
 		        [options] = "filterOption"
-		        (onChange) = "searchKeyword()"
+		        (onChange) = "onSearchProduct()"
 		        optionLabel = "name"
 		        optionValue = "value"
 		        [(ngModel)] = "filterSelection"
@@ -40,7 +39,7 @@
 		<p-select
 		        [style.margin-left.px] = "10"
 		        [options] = "statusOption"
-		        (onChange) = "searchKeyword()"
+		        (onChange) = "onSearchProduct()"
 		        optionLabel = "name"
 		        optionValue = "value"
 		        [(ngModel)] = "statusSelection"

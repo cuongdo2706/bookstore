@@ -47,7 +47,7 @@ public class ProductController {
     }
 
     @GetMapping("/search")
-    public SuccessResponse<PageResponse<ProductResponse>> findByCodeOrNameAndSort(@Valid @ModelAttribute ProductFilterRequest request) {
+    public SuccessResponse<PageResponse<ProductResponse>> searchProduct(@Valid @ModelAttribute ProductFilterRequest request) {
         return new SuccessResponse<>(HttpStatus.OK.value(), "Getting data success", productService.searchProduct(request));
     }
 

@@ -23,9 +23,17 @@ public class Promotion extends BaseEntity {
     String description;
     LocalDate startDate;
     LocalDate endDate;
-    String promotionType;
+    /*
+    0 - FIXED
+    1 - PERCENT
+     */
+    Short promotionType;
     @Column(precision = 19, scale = 2)
     BigDecimal promotionValue;
+    @Column(precision = 19, scale = 2)
+    BigDecimal minAmount;
+    @Column(precision = 19, scale = 2)
+    BigDecimal maxDiscount; //số tiền được giảm tối đa
     @Column(columnDefinition = "BOOLEAN DEFAULT TRUE")
     Boolean isActive;
 }

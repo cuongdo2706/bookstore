@@ -4,9 +4,9 @@ export interface OrderResponse {
     code: string;
     orderAt: Date;
     deliveryFee: number;
-    totalAmount: number;
+    subTotal: number;
     discount: number;
-    amountDue: number;
+    grandTotal: number;
     amountPaid: number;
     changeAmount: number;
     customerId: number;

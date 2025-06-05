@@ -24,6 +24,8 @@ public interface ProductService {
 
     ProductResponse save(ProductCreatedRequest request, MultipartFile file) throws IOException, DataNotFoundException;
 
+    List<Product> saveAll(List<Product> products) throws DataNotFoundException;
+
     ProductResponse update(Long id, ProductUpdatedRequest request, MultipartFile file) throws IOException, DataNotFoundException;
 
     void softDelete(Long id) throws DataNotFoundException;

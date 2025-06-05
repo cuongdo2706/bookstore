@@ -23,16 +23,12 @@ public class JwtTokenProvider {
     @Autowired
     private Environment env;
 
-    @Autowired
-    private UserRepository userRepository;
-
     private Key key() {
         return Keys.hmacShaKeyFor(Decoders.BASE64.decode(env.getProperty("jwt.secret-key")));
     }
 
-    public String getImgUrl(String username) {
-        User user = userRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException(username));
-        return user.getRole().equals("ROLE_CUSTOMER") ? user.getCustomer().getImgUrl() : user.getStaff().getImgUrl();
+    public String getRole(String token) {
+        return Jwts.parser().verifyWith((SecretKey) key()).build().parseSignedClaims(token).getPayload().get("role", String.class);
     }
 
     public String generateToken(Authentication authentication) {
@@ -42,20 +38,17 @@ public class JwtTokenProvider {
         Date expireDate = new Date(currentDate.getTime() + jwtExpirationDate);
         return Jwts.builder()
                 .subject(username)
-                .claim("role", authentication
-                        .getAuthorities()
-                        .stream().
-                        findFirst().
-                        map(GrantedAuthority::getAuthority).
-                        orElse("")
-                )
-                .claim("imgUrl", getImgUrl(username))
-                .issuedAt(new Date()).expiration(expireDate)
+                .claim("role", authentication.getAuthorities()
+                        .stream()
+                        .findFirst()
+                        .map(GrantedAuthority::getAuthority)
+                        .orElse(""))
+                .issuedAt(new Date())
+                .expiration(expireDate)
                 .signWith(key()).compact();
     }
 
     public String getUsername(String token) {
-
         return Jwts.parser().verifyWith((SecretKey) key()).build().parseSignedClaims(token).getPayload().getSubject();
     }
 

@@ -6,23 +6,25 @@ import org.example.backend.exception.DataNotFoundException;
 import org.example.backend.exception.DataExistedException;
 import org.example.backend.mapper.AuthorMapper;
 import org.example.backend.repository.AuthorRepository;
+import org.example.backend.service.AuthorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 @Service
-public class AuthorServiceImpl implements org.example.backend.service.AuthorService {
+public class AuthorServiceImpl implements AuthorService {
     @Autowired
     private AuthorRepository authorRepository;
 
 
     @Override
     public List<AuthorResponse> findAll() {
-        return AuthorMapper.toAuthorResponses(authorRepository.findAllList());
+        return AuthorMapper.toAuthorResponses(authorRepository.findAllByOrderByNameAsc());
     }
 
     @Override
@@ -77,7 +79,7 @@ public class AuthorServiceImpl implements org.example.backend.service.AuthorServ
     }
 
     @Override
-    public Set<Author> findAllByIds(Set<Long> ids) {
-        return authorRepository.findAllByIds(ids);
+    public List<Author> findAllByIds(Set<Long> ids) {
+        return authorRepository.findAllById(ids);
     }
 }

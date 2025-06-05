@@ -8,6 +8,7 @@ import org.hibernate.annotations.ColumnDefault;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -21,7 +22,16 @@ public class Order extends BaseEntity {
     @Column(nullable = false, unique = true)
     String code;
 
-    LocalDateTime orderAt;
+    LocalDateTime expiredAt; //chỉ set khi payment type = 0
+    LocalDateTime orderedAt; //ALL
+    LocalDateTime processedAt;
+    LocalDateTime shippedAt;
+    LocalDateTime deliveredAt;
+    LocalDateTime cancelledAt;
+    LocalDateTime completedAt;
+
+//    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
+//    List<OrderStatusHistory> orderStatusHistories;
 
     @Column(precision = 19, scale = 2)
     BigDecimal deliveryFee; //online
@@ -30,13 +40,13 @@ public class Order extends BaseEntity {
     List<OrderDetail> orderDetails;
 
     @Column(precision = 19, scale = 2)
-    BigDecimal totalAmount;//Tổng tiền hàng
+    BigDecimal subTotal;//Tổng tiền hàng
 
     @Column(precision = 19, scale = 2)
     BigDecimal discount;
 
     @Column(precision = 19, scale = 2)
-    BigDecimal amountDue;//Tiền khách phải trả
+    BigDecimal grandTotal;//Tiền khách phải trả
 
     @Column(precision = 19, scale = 2) //Tiền khách trả
     BigDecimal amountPaid;//offline
@@ -81,10 +91,10 @@ public class Order extends BaseEntity {
     Short saleChannel;
 
     /*
-    0 - POS
-    1- ONLINE
+    false - POS
+    true - ONLINE
     */
-    Short orderType;
+    Boolean orderType;
 
     /*
     0 - UNPAID
@@ -99,8 +109,10 @@ public class Order extends BaseEntity {
     1 - PROCESSING (Đang xử lý bởi nhân viên)
     2 - SHIPPED (Đơn đã giao cho bên vận chuyển và đang được gửi đi)
     3 - DELIVERED (Khách đã nhận được đơn)
-    4 - CANCELLED (Huỷ đơn bởi người bán hoặc người mua)
-    6 - COMPLETED (Hoàn thành đơn)
+    4 - RETURN_REQUESTED (Yêu cầu hoàn bởi người mua)
+    5 - RETURNED (Đã hoàn hàng)
+    6 - CANCELLED (Huỷ đơn bởi người bán hoặc người mua) -- DỪNG LUỒNG
+    7 - COMPLETED (Hoàn thành đơn) -- DỪNG LUỒNG
     */
     @ColumnDefault("0")
     Short orderStatus;
