@@ -15,7 +15,6 @@ public class StaffMapper {
                 staff.getAddress(),
                 staff.getEmail(),
                 staff.getIdentityNum(),
-                staff.getPublicId(),
                 staff.getImgUrl(),
                 staff.getIsActive()
         );

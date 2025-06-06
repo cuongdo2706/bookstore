@@ -5,5 +5,6 @@ export interface OrderDetailResponse {
     productName: string;
     price: number;
     quantity: number;
+    discount:number;
     totalPrice: number;
 }

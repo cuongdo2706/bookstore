@@ -47,7 +47,6 @@ export class ProductComponent implements OnInit {
     private messageService = inject(MessageService);
     private productService = inject(ProductService);
     products!: ProductResponse[];
-    selectedProductIds!: number[];
     nameOrCodeKeyword: string = "";
     filterSelection: string = "name";
     expandedRows: { [key: string]: boolean } = {};
@@ -100,7 +99,7 @@ export class ProductComponent implements OnInit {
     onSearchProduct() {
         clearTimeout(this.timeout);
         this.timeout = setTimeout(() => {
-            if (this.nameOrCodeKeyword !== null || this.nameOrCodeKeyword !== "") {
+            if (this.nameOrCodeKeyword !== null) {
                 this.isFilter.set(true);
                 const paginator = this.paginator();
                 this.productService.searchProducts({
@@ -143,9 +142,8 @@ export class ProductComponent implements OnInit {
         });
     }
 
-    onRowExpand(event: TableRowExpandEvent) {
+    onRowExpand(event: TableRowExpandEvent<ProductResponse>) {
         const productId = event.data.id;
-        console.log(event.data);
         // Đóng tất cả các hàng khác
         Object.keys(this.expandedRows).forEach(key => {
             if (key !== productId.toString()) {

@@ -13,6 +13,7 @@ public class OrderMapper {
     public static OrderResponse toOrderResponse(Order order) {
         Customer customer = order.getCustomer();
         return new OrderResponse(
+                order.getId(),
                 order.getCode(),
                 order.getExpiredAt(),
                 order.getOrderedAt(),
@@ -38,7 +39,8 @@ public class OrderMapper {
                 order.getPaymentStatus(),
                 order.getOrderStatus(),
                 order.getSaleChannel(),
-                order.getOrderType()
+                order.getOrderType(),
+                order.getReturnStatus()
         );
     }
 

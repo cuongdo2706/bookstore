@@ -88,7 +88,7 @@ public class OrderServiceImpl implements OrderService {
         String role = jwtTokenProvider.getRole(token);
         Short saleChannel = (role.equals("ROLE_ADMIN") || role.equals("ROLE_CASHIER")) && (request.getOrderType() != null) ? (short) 0 : 1;
         Order newOrder = Order.builder().subTotal(subTotalCount).discount(discount).grandTotal(grandTotal).code(GenerateCodeUtil.generateOrderCode()).customer(existedCustomer).staff(existedStaff).paymentMethod(request.getPaymentMethod()).saleChannel(saleChannel).orderType(request.getOrderType()).paymentStatus((short) 1).orderStatus((short) 6).build();
-        if (saleChannel == 0 && !request.getOrderType()) {
+        if (saleChannel == 0 && request.getOrderType().equals((short) 0)) {
             BigDecimal amountPaid = request.getAmountPaid();
             if (amountPaid.compareTo(grandTotal) < 0) {
                 throw new DataConflictException("Amount paid must greater than or equal amount due");
@@ -121,12 +121,12 @@ public class OrderServiceImpl implements OrderService {
         if (!filter.getOrderStatus().isEmpty()) {
             spec = spec.and(OrderSpecification.hasOrderStatus(filter.getOrderStatus()));
         }
-        if (!Objects.equals(filter.getOrderCodeOrPhoneNumKeyword(), null) && !filter.getOrderCodeOrPhoneNumKeyword().isBlank()) {
-            spec = spec.and(OrderSpecification.orderCodeOrPhoneNumContains(filter.getOrderCodeOrPhoneNumKeyword()));
+        if (!Objects.equals(filter.getOrderCodeKeyword(), null) && !filter.getOrderCodeKeyword().isBlank()) {
+            spec = spec.and(OrderSpecification.orderCodeContains(filter.getOrderCodeKeyword()));
         }
         Sort sort = switch (filter.getSortBy()) {
-            case "ord" -> Sort.by(Sort.Direction.ASC, "orderAt");
-            case "ord-d" -> Sort.by(Sort.Direction.DESC, "orderAt");
+            case "ord" -> Sort.by(Sort.Direction.ASC, "orderedAt");
+            case "ord-d" -> Sort.by(Sort.Direction.DESC, "orderedAt");
             default -> throw new RuntimeException("Sort pattern not valid: " + filter.getSortBy());
         };
         Pageable pageable = PageRequest.of(filter.getPage() - 1, filter.getSize(), sort);

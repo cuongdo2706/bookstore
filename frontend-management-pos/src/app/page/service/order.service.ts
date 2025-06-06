@@ -11,7 +11,6 @@ import {PageResponse} from "../model/response/page-response.model";
     providedIn: 'root'
 })
 export class OrderService {
-
     private http = inject(HttpClient);
     private readonly url: string = AppConstants.API_BASE_URL + "order";
 
@@ -20,13 +19,6 @@ export class OrderService {
     }
 
     searchOrder(request: OrderFilterRequest) {
-        let params = new HttpParams()
-            .set("page", request.page)
-            .set("size", request.size)
-            .set("sortBy", request.sortBy)
-            .set("orderType", request.orderType)
-            .set("orderStatus", request.orderStatus.toString())
-            .set("orderCodeOrPhoneNumKeyword", request.orderCodeOrPhoneNumKeyword);
-        return this.http.get<ApiResponse<PageResponse<OrderResponse>>>(this.url, {params});
+        return this.http.post<ApiResponse<PageResponse<OrderResponse>>>(`${this.url}/search`, request);
     }
 }

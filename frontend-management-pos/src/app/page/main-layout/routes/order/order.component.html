@@ -1,4 +1,124 @@
 <div style = "overflow-y: auto;height: calc(100vh - 140px)">
     <span style = "font-size: 25px"> <b>Hoá đơn</b> </span>
-    <p-table></p-table>
+    <p-table
+	  [value] = "orders()"
+	  [tableStyle] = "{ 'min-width': '30rem' }"
+	  [expandedRowKeys] = "expandedRows"
+	  dataKey = "id"
+	  (onRowExpand) = "onRowExpand($event)">
+        <ng-template #caption>
+	  <div class = "flex">
+	      <div class = "col-9 flex">
+		<p-iconfield iconPosition = "left" class = "mr-3">
+		    <p-inputicon>
+		        <i class = "pi pi-search"></i>
+		    </p-inputicon>
+		    <input
+			  (input) = "onSearchOrder()"
+			  pInputText
+			  type = "text"
+			  [(ngModel)] = "orderCodeKeyword"
+			  placeholder = "Tìm theo mã hoá đơn"
+		    >
+		</p-iconfield>
+		<p-multi-select
+		        class = "mr-3"
+		        [options] = "orderStatusOptions()!"
+		        [(ngModel)] = "orderStatusSelection"
+		        (onChange) = "onSearchOrder()"></p-multi-select>
+
+		<p-multi-select
+		        class = "mr-3"
+		        [options] = "orderTypeOptions()!"
+		        [(ngModel)] = "orderTypeSelection"
+		        (onChange) = "onSearchOrder()"></p-multi-select>
+		<p-select
+		        [options] = "sortByOption()!"
+		        [(ngModel)] = "sortBySelection"
+		        placeholder = "Bộ lọc"
+		        (onChange) = "onSearchOrder()"></p-select>
+	      </div>
+	      <div class = "col-3 flex justify-content-end"></div>
+	  </div>
+        </ng-template>
+        <ng-template #header>
+	  <tr>
+	      <th>Mã hoá đơn</th>
+	      <th>Ngày tạo</th>
+	      <th>Khách hàng</th>
+	      <th>Tổng tiền</th>
+	      <th>Giảm giá</th>
+	      <th>Phải trả</th>
+	  </tr>
+        </ng-template>
+
+        <ng-template
+            #body let-order>
+	  <tr [ngClass]="{'row-border':true}" [pRowToggler] = "order">
+	      <td>{{ order.code }}</td>
+	      <td>{{ order.orderedAt|date:'dd/MM/yyyy HH:mm:ss' }}</td>
+	      <td>{{ order.customer === null ? "Khách lẻ" : order.customer.name }}</td>
+	      <td>{{ order.subTotal }}</td>
+	      <td>{{ order.discount }}</td>
+	      <td>{{ order.grandTotal }}</td>
+	  </tr>
+        </ng-template>
+        <ng-template  #expandedrow let-order>
+	  <tr [ngClass]="{'row-border':true}" class = "bg-primary-50">
+	      <td colspan = "7">
+		<div class="p-3">
+		    <div class="mb-4">
+		        <span class="mr-3" style="font-size: 20px"><b>{{ order.customer === null ? "Khách lẻ" : order.customer.name }}</b></span>
+		        <span class="mr-3">{{order.code}}</span>
+		        <span class="">{{getOrderStatusLabel(order.orderStatus)}}</span>
+		    </div>
+<!--		    <div>-->
+<!--		        <span>Người bán</span>-->
+<!--		    </div>-->
+		    <div>
+		        <p-table [value]="order.orderDetails" dataKey="id">
+			  <ng-template #header>
+			      <tr>
+				<th>Mã sản phẩm</th>
+				<th>Tên sản phẩm</th>
+				<th>Số lượng</th>
+				<th>Đơn giá</th>
+				<th>Giảm giá</th>
+				<th>Thành tiền</th>
+			      </tr>
+			  </ng-template>
+			  <ng-template #body let-od>
+			      <tr>
+				<td>{{od.productCode}}</td>
+				<td>{{od.productName}}</td>
+				<td>{{od.quantity}}</td>
+				<td>{{od.price}}</td>
+				<td>{{od.discount}}</td>
+				<td>{{od.totalPrice}}</td>
+
+			      </tr>
+			  </ng-template>
+		        </p-table>
+		    </div>
+		</div>
+	      </td>
+	  </tr>
+        </ng-template>
+        <ng-template #emptymessage>
+	  <tr>
+	      <td colspan = "7" style = "text-align: center">Không tìm thấy bản ghi nào</td>
+	  </tr>
+        </ng-template>
+        <ng-template #footer class = "flex justify-content-center">
+	  <tr>
+	      <td colspan = "100%" style = "background-color: #ffffff">
+		<p-paginator #paginator
+			   (onPageChange) = "onPageChange($event)"
+			   [rows] = "size()"
+			   [totalRecords] = "totalElements()"
+			   [rowsPerPageOptions] = "[10, 20, 30]"/>
+	      </td>
+	  </tr>
+        </ng-template>
+    </p-table>
 </div>

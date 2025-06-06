@@ -91,10 +91,10 @@ public class Order extends BaseEntity {
     Short saleChannel;
 
     /*
-    false - POS
-    true - ONLINE
+    0 - POS
+    1 - ONLINE
     */
-    Boolean orderType;
+    Short orderType;
 
     /*
     0 - UNPAID

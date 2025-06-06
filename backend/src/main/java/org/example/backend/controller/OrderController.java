@@ -19,6 +19,13 @@ public class OrderController {
     @Autowired
     private OrderServiceImpl orderService;
 
+    @PostMapping("/search")
+    public SuccessResponse<PageResponse<OrderResponse>> searchOrder(@Valid @RequestBody OrderFilterRequest request) {
+        return new SuccessResponse<>(HttpStatus.OK.value(),
+                "Getting data success",
+                orderService.searchOrder(request));
+    }
+
     @PostMapping()
     public SuccessResponse<OrderResponse> create(@RequestBody OrderCreatedRequest request, HttpServletRequest http) throws DataNotFoundException {
         String header = http.getHeader("Authorization");
@@ -30,12 +37,5 @@ public class OrderController {
                 "Place order success",
                 orderService.create(request, token)
         );
-    }
-
-    @GetMapping("/search")
-    public SuccessResponse<PageResponse<OrderResponse>> searchOrder(@Valid @ModelAttribute OrderFilterRequest request) {
-        return new SuccessResponse<>(HttpStatus.OK.value(),
-                "Getting data success",
-                orderService.searchOrder(request));
     }
 }

@@ -12,7 +12,6 @@ public record StaffResponse(
         String address,
         String email,
         String identityNum,
-        String publicId,
         String imgUrl,
         Boolean isActive
 ) {

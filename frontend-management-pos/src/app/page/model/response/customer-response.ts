@@ -7,7 +7,6 @@ export interface CustomerResponse {
     phoneNum: string;
     address: string;
     email: string;
-    publicId: string;
     imgUrl: string;
     isActive: boolean;
 }

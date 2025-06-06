@@ -9,7 +9,6 @@
         ></app-save-form>
     }
     <p-table [value] = "products"
-	   [(selection)] = "selectedProductIds"
 	   [tableStyle] = "{ 'min-width': '30rem' }"
 	   [expandedRowKeys] = "expandedRows"
 	   dataKey = "id"
@@ -66,9 +65,8 @@
 	      <th>Số lượng</th>
 	  </tr>
         </ng-template>
-        <ng-template #body let-product let-expanded = "expanded">
+        <ng-template #body let-product>
 	  <tr [pRowToggler] = "product">
-
 	      <td style = "width: 100px">{{ product.code }}</td>
 	      <td>{{ product.name }}</td>
 	      <td style = "width: 60px">

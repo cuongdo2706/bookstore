@@ -1,0 +1,5 @@
+.row-border{
+    border-collapse: collapse !important;
+    border-width: 5px 5px 0 5px !important;
+    border: blue solid !important;
+}

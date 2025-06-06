@@ -4,7 +4,8 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
-public record OrderResponse(String code,
+public record OrderResponse(Long id,
+                            String code,
                             LocalDateTime expiredAt,
                             LocalDateTime orderedAt,
                             LocalDateTime processedAt,
@@ -29,5 +30,6 @@ public record OrderResponse(String code,
                             Short paymentStatus,
                             Short orderStatus,//online
                             Short saleChannel,
-                            Boolean orderType) {
+                            Short orderType,
+                            Short returnStatus) {
 }
