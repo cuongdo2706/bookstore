@@ -96,8 +96,7 @@ public class OrderServiceImpl implements OrderService {
             BigDecimal changeAmount = amountPaid.subtract(grandTotal);
             newOrder.setAmountPaid(amountPaid);
             newOrder.setChangeAmount(changeAmount);
-            newOrder.setOrderedAt(LocalDateTime.now());
-            newOrder.setCompletedAt(LocalDateTime.now());
+            
         }
         for (OrderDetail orderDetail : newOrderDetails) {
             orderDetail.setOrder(newOrder);

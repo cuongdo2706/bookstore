@@ -106,7 +106,7 @@
 			      icon = "pi pi-minus"
 			      (click) = "decreaseItemQuantity(orderDetailsFormArray.controls[i])"></p-button>
 		        <p-input-number
-			      min = "1"
+			      [min]="1"
 			      (onBlur) = "checkEmptyItemQuantity($event,orderDetailsFormArray.controls[i])"
 			      formControlName = "quantity"
 			      class = "quantity-input"/>

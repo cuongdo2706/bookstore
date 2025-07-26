@@ -1,6 +1,7 @@
 import {OrderDetailResponse} from "./order-detail-response.model";
-import {CustomerResponse} from "./customer-response";
-import {StaffResponse} from "./staff-response";
+import {CustomerResponse} from "./customer-response.model";
+import {StaffResponse} from "./staff-response.model";
+import {OrderStatusLogResponse} from "./order-status-log-response.model";
 
 export interface OrderResponse {
     id:number;
@@ -25,6 +26,7 @@ export interface OrderResponse {
     address: string|null;
     staff: StaffResponse;
     orderDetails: OrderDetailResponse[];
+    orderStatusLogs:OrderStatusLogResponse[];
     note: string;
     paymentStatus: number;
     orderStatus: number;

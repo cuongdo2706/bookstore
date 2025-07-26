@@ -1,9 +1,9 @@
 import {inject, Injectable} from '@angular/core';
 import {AppConstants} from "../../app.constants";
 import {HttpClient, HttpParams} from "@angular/common/http";
-import {ApiResponse} from "../model/response/api-response";
+import {ApiResponse} from "../model/response/api-response.model";
 import {PageResponse} from "../model/response/page-response.model";
-import {CustomerResponse} from "../model/response/customer-response";
+import {CustomerResponse} from "../model/response/customer-response.model";
 
 @Injectable({
     providedIn: 'root'

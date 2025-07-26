@@ -1,7 +1,7 @@
 import {inject, Injectable} from '@angular/core';
 import {HttpClient, HttpParams} from "@angular/common/http";
 import {AuthorResponse} from "../model/response/author-response.model";
-import {ApiResponse} from "../model/response/api-response";
+import {ApiResponse} from "../model/response/api-response.model";
 import {AppConstants} from "../../app.constants";
 
 @Injectable({

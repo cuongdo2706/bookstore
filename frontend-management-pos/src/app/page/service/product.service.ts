@@ -2,7 +2,7 @@ import {inject, Injectable} from '@angular/core';
 import {HttpClient, HttpParams} from "@angular/common/http";
 import {PageResponse} from "../model/response/page-response.model";
 import {ProductResponse} from "../model/response/product-response.model";
-import {ApiResponse} from "../model/response/api-response";
+import {ApiResponse} from "../model/response/api-response.model";
 import {ProductUpdatedRequest} from "../model/request/product-updated-request.model";
 import {ProductCreatedRequest} from "../model/request/product-created-request.model";
 import {AppConstants} from "../../app.constants";

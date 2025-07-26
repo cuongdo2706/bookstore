@@ -23,21 +23,16 @@ public class Order extends BaseEntity {
     String code;
 
     LocalDateTime expiredAt; //chỉ set khi payment type = 0
-    LocalDateTime orderedAt; //ALL
-    LocalDateTime processedAt;
-    LocalDateTime shippedAt;
-    LocalDateTime deliveredAt;
-    LocalDateTime cancelledAt;
-    LocalDateTime completedAt;
-
-//    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
-//    List<OrderStatusHistory> orderStatusHistories;
+    LocalDateTime orderedAt;
 
     @Column(precision = 19, scale = 2)
     BigDecimal deliveryFee; //online
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "order")
     List<OrderDetail> orderDetails;
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "order")
+    List<OrderStatusLog> orderStatusLogs;
 
     @Column(precision = 19, scale = 2)
     BigDecimal subTotal;//Tổng tiền hàng

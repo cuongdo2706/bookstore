@@ -10,8 +10,9 @@ import {InputText} from "primeng/inputtext";
 import {FormsModule} from "@angular/forms";
 import {Select} from "primeng/select";
 import {MultiSelect} from "primeng/multiselect";
-import {DatePipe, NgClass} from "@angular/common";
+import {DatePipe, DecimalPipe, NgClass} from "@angular/common";
 import {OrderDetailService} from "../../../service/order-detail.service";
+import {IftaLabel} from "primeng/iftalabel";
 
 interface SelectForm {
     label: string,
@@ -31,7 +32,8 @@ interface SelectForm {
         MultiSelect,
         DatePipe,
         Paginator,
-        NgClass
+        DecimalPipe,
+        IftaLabel
     ],
     templateUrl: './order.component.html',
     styleUrl: './order.component.css'
@@ -147,7 +149,7 @@ export class OrderComponent implements OnInit {
 
     onRowExpand(event: TableRowExpandEvent<OrderResponse>) {
         const orderId = event.data.id;
-        this.orderDetailService.findByOrderId(orderId).subscribe({
+        this.orderDetailService.findOrderDetailsByOrderId(orderId).subscribe({
             next: res => {
                 this.orders.update(orders => {
                     return orders.map(order =>

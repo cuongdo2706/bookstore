@@ -1,7 +1,7 @@
 import {inject, Injectable} from '@angular/core';
 import {HttpClient, HttpParams} from "@angular/common/http";
 import {CategoryResponse} from "../model/response/category-response.model";
-import {ApiResponse} from "../model/response/api-response";
+import {ApiResponse} from "../model/response/api-response.model";
 import {AppConstants} from "../../app.constants";
 
 @Injectable({

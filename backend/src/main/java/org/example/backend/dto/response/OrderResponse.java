@@ -8,11 +8,6 @@ public record OrderResponse(Long id,
                             String code,
                             LocalDateTime expiredAt,
                             LocalDateTime orderedAt,
-                            LocalDateTime processedAt,
-                            LocalDateTime shippedAt,
-                            LocalDateTime deliveredAt,
-                            LocalDateTime cancelledAt,
-                            LocalDateTime completedAt,
                             BigDecimal deliveryFee,//online
                             BigDecimal subTotal,//BOTH - tổng giá trị đơn hàng trước giảm
                             BigDecimal discount,//BOTH
@@ -26,6 +21,7 @@ public record OrderResponse(Long id,
                             String address,// online
                             StaffResponse staff,//offline
                             List<OrderDetailResponse> orderDetails,
+                            List<OrderStatusLogResponse> orderStatusLogs,
                             String note,//online
                             Short paymentStatus,
                             Short orderStatus,//online
