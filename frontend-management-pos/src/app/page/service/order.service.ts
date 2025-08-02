@@ -21,4 +21,20 @@ export class OrderService {
     searchOrder(request: OrderFilterRequest) {
         return this.http.post<ApiResponse<PageResponse<OrderResponse>>>(`${this.url}/search`, request);
     }
+
+    exportAllOrderExcel() {
+        return this.http.get(`${this.url}/export-all-excel`, {
+            responseType: "blob"
+        });
+    }
+    exportAllOrderDetailsExcel() {
+        return this.http.get(`${this.url}/export-all-details-excel`, {
+            responseType: "blob"
+        });
+    }
+    exportSingleOrderExcel(id:number) {
+        return this.http.get(`${this.url}/export-single-excel/${id}`, {
+            responseType: "blob"
+        });
+    }
 }

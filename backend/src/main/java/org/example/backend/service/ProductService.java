@@ -14,7 +14,9 @@ import java.util.List;
 import java.util.Set;
 
 public interface ProductService {
-    List<ProductResponse> findAll();
+    List<Product> findAll();
+
+    List<ProductResponse> findAllProductResponse();
 
     Product findById(Long id) throws DataNotFoundException;
 

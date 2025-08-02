@@ -1,4 +1,4 @@
 package org.example.backend.entity;
 
-public class ReturnDetail {
+public class ReturnDetail extends BaseEntity {
 }

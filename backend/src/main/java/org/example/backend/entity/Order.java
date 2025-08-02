@@ -25,6 +25,9 @@ public class Order extends BaseEntity {
     LocalDateTime expiredAt; //chỉ set khi payment type = 0
     LocalDateTime orderedAt;
 
+    String invoiceNumber;
+    LocalDateTime invoiceDate;
+
     @Column(precision = 19, scale = 2)
     BigDecimal deliveryFee; //online
 
@@ -94,8 +97,6 @@ public class Order extends BaseEntity {
     /*
     0 - UNPAID
     1 - PAID
-    2 - REFUNDING
-    3 - REFUNDED
     */
     Short paymentStatus;
 
@@ -108,11 +109,4 @@ public class Order extends BaseEntity {
     5 - COMPLETED (Hoàn thành đơn) -- DỪNG LUỒNG
     */
     Short orderStatus;
-    /*
-    0 - NONE
-    1 - PENDING
-    2 - COMPLETE
-     */
-    @ColumnDefault("0")
-    Short returnStatus;
 }

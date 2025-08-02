@@ -1,4 +1,4 @@
-package org.example.backend.controller;
+package org.example.backend.controller.rest;
 
 import org.example.backend.dto.response.SuccessResponse;
 import org.example.backend.entity.Staff;

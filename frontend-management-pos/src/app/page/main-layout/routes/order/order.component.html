@@ -1,5 +1,5 @@
 <div style = "overflow-y: auto;height: calc(100vh - 140px)">
-    <span style = "font-size: 25px"> <b>Hoá đơn</b> </span>
+    <span style = "font-size: 25px"> <b>Đơn hàng</b> </span>
     <p-table
 	  [value] = "orders()"
 	  [tableStyle] = "{ 'min-width': '30rem' }"
@@ -40,7 +40,11 @@
 		        placeholder = "Bộ lọc"
 		        (onChange) = "onSearchOrder()"></p-select>
 	      </div>
-	      <div class = "col-3 flex justify-content-end"></div>
+	      <div class = "col-3 flex justify-content-end">
+		<p-button icon="pi pi-plus" label="Tạo mới" (onClick)="onCreateOrder()"></p-button>
+<!--		<p-button icon="pi pi-file-export" class="ml-2" label="Xuất Excel" (onClick)="onExportAllOrderExcel()"></p-button>-->
+		<p-splitbutton icon="pi pi-file-export" class="ml-2" label="Xuất Excel" [model]="exportItems()"></p-splitbutton>
+	      </div>
 	  </div>
         </ng-template>
         <ng-template #header>
@@ -138,8 +142,10 @@
 		    </p-table>
 		    <div class = "flex flex-row mt-4">
 		        <div class = "col-9">
-			  <span>Ghi chú:</span>
-			  <p-iftalabel></p-iftalabel>
+			  <p-iftalabel>
+			      <textarea [disabled]="true" pTextarea id="des" rows="5" cols="120">{{order.note}}</textarea>
+			      <label for="des">Ghi chú</label>
+			  </p-iftalabel>
 		        </div>
 		        <div class = "col-3">
 			  <div class = "flex flex-row">
@@ -157,6 +163,12 @@
 			      </div>
 			  </div>
 		        </div>
+		    </div>
+		    <hr>
+		    <div class="flex justify-content-end">
+		        <p-button icon="pi pi-print" label="In"></p-button>
+		        <p-button class="ml-2" icon="pi pi-undo" label="Trả hàng"></p-button>
+		        <p-button class="ml-2" icon="pi pi-file-export" label="Xuất Excel" (onClick)="onExportSingleOrderExcel(order.id,order.code)"></p-button>
 		    </div>
 		</div>
 	      </td>

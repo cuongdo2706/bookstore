@@ -18,7 +18,7 @@ public class GenerateCodeUtil {
     public static String generateOrderCode() {
         int length = 10;
         StringBuilder sb = new StringBuilder(length);
-        String prefix = "HĐ";
+        String prefix = "HD";
         Random random = new Random();
 
         for (int i = 0 ; i < length ; i++) {

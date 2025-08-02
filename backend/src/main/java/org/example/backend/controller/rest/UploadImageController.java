@@ -1,4 +1,4 @@
-package org.example.backend.controller;
+package org.example.backend.controller.rest;
 
 import org.example.backend.dto.response.ImageResponse;
 import org.example.backend.dto.response.SuccessResponse;
@@ -19,13 +19,13 @@ public class UploadImageController {
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public SuccessResponse<ImageResponse> uploadImage(@RequestPart("file") MultipartFile file) throws IOException {
-        return new SuccessResponse<>(HttpStatus.OK.value(), "Upload image success",imageUtil.upload(file));
+        return new SuccessResponse<>(HttpStatus.OK.value(), "Upload image success", imageUtil.upload(file));
     }
 
     @PutMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public SuccessResponse<ImageResponse> updateImage(@RequestPart("file") MultipartFile file,
-                                     @RequestParam(name = "publicId") String publicId)
+                                                      @RequestParam(name = "publicId") String publicId)
             throws IOException {
-        return new SuccessResponse<>(HttpStatus.OK.value(), "Update image success",imageUtil.update(publicId, file));
+        return new SuccessResponse<>(HttpStatus.OK.value(), "Update image success", imageUtil.update(publicId, file));
     }
 }

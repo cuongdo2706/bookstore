@@ -1,4 +1,4 @@
-package org.example.backend.controller;
+package org.example.backend.controller.rest;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
@@ -38,7 +38,7 @@ public class ProductController {
     @GetMapping
     public SuccessResponse<List<ProductResponse>> getAllProducts() {
 
-        return new SuccessResponse<>(HttpStatus.OK.value(), "Getting data success", productService.findAll());
+        return new SuccessResponse<>(HttpStatus.OK.value(), "Getting data success", productService.findAllProductResponse());
     }
 
     @GetMapping("/stock/{id}")
@@ -65,7 +65,7 @@ public class ProductController {
 
     @GetMapping("/export-excel")
     public ResponseEntity<Resource> exportExcel() {
-        List<ProductResponse> list = productService.findAll();
+        List<Product> list = productService.findAll();
         ByteArrayInputStream bais = excelUtil.exportBookExcel(list);
         HttpHeaders headers = new HttpHeaders();
         headers.add("Content-Disposition", "attachment; filename=Danh-sach-san-pham.xlsx");

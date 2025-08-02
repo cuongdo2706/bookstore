@@ -8,7 +8,7 @@ import {OrderService} from "../../../service/order.service";
 import {ProductService} from "../../../service/product.service";
 import {AutoComplete, AutoCompleteCompleteEvent, AutoCompleteSelectEvent} from "primeng/autocomplete";
 import {ProductResponse} from "../../../model/response/product-response.model";
-import {DecimalPipe, NgOptimizedImage} from "@angular/common";
+import {DecimalPipe, Location, NgOptimizedImage} from "@angular/common";
 import {v4 as uuidv4} from 'uuid';
 import {InputText} from "primeng/inputtext";
 import {firstValueFrom, lastValueFrom} from "rxjs";
@@ -24,6 +24,7 @@ import {CustomerResponse} from "../../../model/response/customer-response.model"
 import {Paginator, PaginatorState} from "primeng/paginator";
 import {ScannerComponent} from "./scanner/scanner.component";
 import {ToggleSwitch} from "primeng/toggleswitch";
+import {ActivatedRoute} from "@angular/router";
 
 interface Tab {
     tabId: string;
@@ -76,6 +77,8 @@ export class PosComponent implements OnInit {
     activeTabId = signal<string>("");
     products = signal<ProductResponse[]>([]);
     customers = signal<CustomerResponse[]>([]);
+    private route = inject(ActivatedRoute);
+    private location = inject(Location);
     private orderService = inject(OrderService);
     private authService = inject(AuthService);
     private productService = inject(ProductService);
@@ -92,7 +95,7 @@ export class PosComponent implements OnInit {
     totalElements: number = 0;
     keyword = "";
     staffUsername: string = this.authService.getPayload().sub;
-    
+
     @ViewChild('scanner') scanner!: ScannerComponent;
 
     get orderDetailsFormArray(): FormArray<FormGroup> {
@@ -103,6 +106,13 @@ export class PosComponent implements OnInit {
         this.loadDataFromLocalStorage();
         this.orderDetailsFormArray.valueChanges.subscribe(values => {
             this.orderDetailsValues.set(values);
+        });
+        this.route.queryParams.subscribe(params => {
+            if (params['create']) {
+                this.createNewTab();
+            }
+            const path = this.location.path().split('?')[0];
+            this.location.replaceState(path);
         });
     }
 
@@ -261,7 +271,7 @@ export class PosComponent implements OnInit {
                 couponId: null,
                 customerId: null,
                 customer: null,
-                orderType:false,
+                orderType: false,
                 orderDetails: this.fb.array([])
             });
             this.formMap.set(this.activeTabId(), this.posForm);
@@ -335,7 +345,7 @@ export class PosComponent implements OnInit {
             couponId: null,
             customerId: null,
             customer: null,
-            orderType:false,
+            orderType: false,
             orderDetails: this.fb.array([])
         });
     }

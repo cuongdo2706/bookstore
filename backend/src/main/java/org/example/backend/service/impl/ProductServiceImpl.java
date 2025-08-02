@@ -53,8 +53,13 @@ public class ProductServiceImpl implements ProductService {
 
 
     @Override
-    public List<ProductResponse> findAll() {
-        return ProductMapper.toProductResponses(productRepository.findAll());
+    public List<Product> findAll() {
+        return productRepository.findAll();
+    }
+
+    @Override
+    public List<ProductResponse> findAllProductResponse() {
+        return ProductMapper.toProductResponses(findAll());
     }
 
 

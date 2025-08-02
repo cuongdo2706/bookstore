@@ -13,6 +13,7 @@ import {CouponComponent} from "./page/main-layout/routes/coupon/coupon.component
 import {PageNotFoundComponent} from "./page/main-layout/routes/page-not-found/page-not-found.component";
 import {AuthGuard} from "./core/auth/guard/auth.guard";
 import {LoginGuard} from "./core/auth/guard/login.guard";
+import {InvoiceComponent} from "./page/main-layout/routes/invoice/invoice.component";
 
 export const routes: Routes = [
     {
@@ -53,10 +54,9 @@ export const routes: Routes = [
                 title: "Thuộc tính",
                 canActivate: [AuthGuard],
                 component: CategoryComponent
-            },
-            {
-                path: "hoa-don",
-                title: "Hoá đơn",
+            }, {
+                path: "don-hang",
+                title: "Đơn hàng",
                 canActivate: [AuthGuard],
                 component: OrderComponent
             },

@@ -72,10 +72,11 @@
 	      <td style = "width: 100px">{{ product.code }}</td>
 	      <td>{{ product.name }}</td>
 	      <td style = "width: 60px">
-		<p-image
-		        src = "{{product.imgUrl||baseImg}}"
-		        width = "50"
-		/>
+<!--		<p-image-->
+<!--		        src = "{{product.imgUrl||baseImg}}"-->
+<!--		        width = "50"-->
+<!--		/>-->
+		<img ngSrc="{{product.imgUrl||baseImg}}" [width]="50" [height]="70">
 	      </td>
 	      <td
 		    style = "width: 120px">{{ product.price | number:"1.0-0" }}

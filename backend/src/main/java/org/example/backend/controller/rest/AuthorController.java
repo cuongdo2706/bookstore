@@ -1,4 +1,4 @@
-package org.example.backend.controller;
+package org.example.backend.controller.rest;
 
 import jakarta.validation.Valid;
 import org.example.backend.dto.request.PropertySearchRequest;
@@ -6,7 +6,6 @@ import org.example.backend.dto.response.AuthorResponse;
 import org.example.backend.dto.response.SuccessResponse;
 import org.example.backend.entity.Author;
 import org.example.backend.exception.DataNotFoundException;
-import org.example.backend.mapper.AuthorMapper;
 import org.example.backend.service.AuthorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

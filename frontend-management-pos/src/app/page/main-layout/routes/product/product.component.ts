@@ -9,7 +9,7 @@ import {InputText} from "primeng/inputtext";
 import {FormsModule} from "@angular/forms";
 import {Image} from "primeng/image";
 import {Paginator, PaginatorModule, PaginatorState} from "primeng/paginator";
-import {DecimalPipe} from "@angular/common";
+import {DecimalPipe, NgOptimizedImage} from "@angular/common";
 import {SaveFormComponent} from "./save-form/save-form.component";
 import {ProductResponse} from "../../../model/response/product-response.model";
 import {ConfirmDialog} from "primeng/confirmdialog";
@@ -36,7 +36,8 @@ import {Select} from "primeng/select";
         Image,
         PaginatorModule,
         TableModule,
-        ConfirmDialog
+        ConfirmDialog,
+        NgOptimizedImage
     ],
     templateUrl: './product.component.html',
     styleUrl: './product.component.css',
@@ -125,7 +126,6 @@ export class ProductComponent implements OnInit {
     }
 
     exportExcel() {
-
         this.productService.exportExcel().subscribe({
             next: (response: Blob) => {
                 const blob = new Blob([response], {type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'});

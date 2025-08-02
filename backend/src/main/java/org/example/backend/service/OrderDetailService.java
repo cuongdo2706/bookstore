@@ -7,4 +7,6 @@ import java.util.List;
 
 public interface OrderDetailService {
     List<OrderDetailResponse> findByOrderId(Long orderId);
+
+    List<OrderDetail> findAll();
 }

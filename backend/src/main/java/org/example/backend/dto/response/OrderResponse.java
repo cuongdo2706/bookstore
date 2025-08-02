@@ -26,6 +26,5 @@ public record OrderResponse(Long id,
                             Short paymentStatus,
                             Short orderStatus,//online
                             Short saleChannel,
-                            Short orderType,
-                            Short returnStatus) {
+                            Short orderType) {
 }

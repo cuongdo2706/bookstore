@@ -80,7 +80,7 @@
 	   row-gap: 3px;
 	   display: flex;
 	   flex-direction: column;
-	overflow: auto">
+	   overflow: auto">
 	  @for (item of orderDetailsFormArray.controls; let i = $index; track item.get('bookId')!.value) {
 
 	      <p-card styleClass = "item" [formGroupName] = "i">
@@ -106,7 +106,7 @@
 			      icon = "pi pi-minus"
 			      (click) = "decreaseItemQuantity(orderDetailsFormArray.controls[i])"></p-button>
 		        <p-input-number
-			      [min]="1"
+			      [min] = "1"
 			      (onBlur) = "checkEmptyItemQuantity($event,orderDetailsFormArray.controls[i])"
 			      formControlName = "quantity"
 			      class = "quantity-input"/>

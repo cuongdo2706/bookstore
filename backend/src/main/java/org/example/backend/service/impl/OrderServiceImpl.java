@@ -52,6 +52,16 @@ public class OrderServiceImpl implements OrderService {
 
     }
 
+    @Override
+    public List<Order> findAll() {
+        return orderRepository.findAll();
+    }
+
+    @Override
+    public List<OrderResponse> findAllOrderResponse() {
+        return OrderMapper.toOrderResponses(findAll());
+    }
+
     @Transactional
     @Override
     public OrderResponse create(OrderCreatedRequest request, String token) throws DataNotFoundException, DataConflictException {
@@ -96,7 +106,7 @@ public class OrderServiceImpl implements OrderService {
             BigDecimal changeAmount = amountPaid.subtract(grandTotal);
             newOrder.setAmountPaid(amountPaid);
             newOrder.setChangeAmount(changeAmount);
-            
+
         }
         for (OrderDetail orderDetail : newOrderDetails) {
             orderDetail.setOrder(newOrder);
@@ -131,5 +141,15 @@ public class OrderServiceImpl implements OrderService {
         Pageable pageable = PageRequest.of(filter.getPage() - 1, filter.getSize(), sort);
         Page<Order> orders = orderRepository.findAll(spec, pageable);
         return new PageResponse<>(OrderMapper.toOrderResponses(orders.getContent()), orders.getNumber(), orders.getSize(), orders.getTotalElements(), orders.getTotalPages());
+    }
+
+    @Override
+    public OrderResponse findOrderResponseById(Long id) throws DataNotFoundException {
+        return OrderMapper.toOrderResponse(findById(id));
+    }
+
+    @Override
+    public Order findById(Long id) throws DataNotFoundException {
+        return orderRepository.findById(id).orElseThrow(() -> new DataNotFoundException("Không tìm thấy order với id: " + id));
     }
 }

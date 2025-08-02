@@ -13,6 +13,11 @@ import {MultiSelect} from "primeng/multiselect";
 import {DatePipe, DecimalPipe, NgClass} from "@angular/common";
 import {OrderDetailService} from "../../../service/order-detail.service";
 import {IftaLabel} from "primeng/iftalabel";
+import {Textarea} from "primeng/textarea";
+import {Button} from "primeng/button";
+import {Router} from "@angular/router";
+import {SplitButton} from "primeng/splitbutton";
+import {MenuItem} from "primeng/api";
 
 interface SelectForm {
     label: string,
@@ -33,13 +38,26 @@ interface SelectForm {
         DatePipe,
         Paginator,
         DecimalPipe,
-        IftaLabel
+        IftaLabel,
+        Textarea,
+        Button,
+        SplitButton
     ],
     templateUrl: './order.component.html',
     styleUrl: './order.component.css'
 })
 export class OrderComponent implements OnInit {
     constructor() {
+        this.exportItems.set([
+            {
+                label: "Cơ bản",
+                command: () => this.onExportAllOrderExcel()
+            },
+            {
+                label: "Chi tiết",
+                command: () => this.onExportAllOrderDetailsExcel()
+            }
+        ]);
         this.orderTypeOptions.set([
             {label: "Online", value: 0},
             {label: "Tại quầy", value: 1}
@@ -63,11 +81,13 @@ export class OrderComponent implements OnInit {
     }
 
     paginator = viewChild<Paginator>('paginator');
+    readonly exportItems = signal<undefined | MenuItem[]>([]);
     readonly orderTypeOptions = signal<null | SelectForm[]>(null);
     readonly orderStatusOptions = signal<null | SelectForm[]>(null);
     readonly sortByOption = signal<null | SelectForm[]>(null);
     private orderService = inject(OrderService);
     private orderDetailService = inject(OrderDetailService);
+    private router = inject(Router);
     expandedRows: { [key: string]: boolean } = {};
     orders = signal<OrderResponse[]>([]);
     orderTypeSelection = signal<number[]>([0, 1]);
@@ -79,8 +99,8 @@ export class OrderComponent implements OnInit {
     size = signal<number>(10);
     isFilter = signal(false);
 
-    getOrderStatusLabel(value:number):string{
-        return this.orderStatusOptions()!.find(item=>item.value===value)!.label;
+    getOrderStatusLabel(value: number): string {
+        return this.orderStatusOptions()!.find(item => item.value === value)!.label;
     }
 
     onFetchOrder() {
@@ -165,4 +185,61 @@ export class OrderComponent implements OnInit {
         });
         this.expandedRows[orderId] = true;
     }
+
+    onCreateOrder() {
+        this.router.navigate(['/ban-hang'], {queryParams: {create: true}});
+    }
+
+    onExportAllOrderExcel() {
+        this.orderService.exportAllOrderExcel().subscribe({
+            next: (response: Blob) => {
+                const blob = new Blob([response], {type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'});
+                const url = window.URL.createObjectURL(blob);
+                const link = document.createElement('a');
+                link.href = url;
+                link.download = 'Danh-sach-hoa-don.xlsx';
+                link.click();
+                window.URL.revokeObjectURL(url);
+            },
+            error: (error) => {
+                console.error('Lỗi khi tải file Excel:', error);
+            }
+        });
+    }
+
+    onExportAllOrderDetailsExcel() {
+        this.orderService.exportAllOrderDetailsExcel().subscribe({
+            next: (response: Blob) => {
+                const blob = new Blob([response], {type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'});
+                const url = window.URL.createObjectURL(blob);
+                const link = document.createElement('a');
+                link.href = url;
+                link.download = 'Danh-sach-chi-tiet-hoa-don.xlsx';
+                link.click();
+                window.URL.revokeObjectURL(url);
+            },
+            error: (error) => {
+                console.error('Lỗi khi tải file Excel:', error);
+            }
+        });
+    }
+
+    onExportSingleOrderExcel(id: number, code: string) {
+        this.orderService.exportSingleOrderExcel(id).subscribe({
+            next: (response: Blob) => {
+                const blob = new Blob([response], {type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'});
+                const url = window.URL.createObjectURL(blob);
+                const link = document.createElement('a');
+                link.href = url;
+                link.download = 'Chi-tiet-hoa-don-' + code + '.xlsx';
+                link.click();
+                window.URL.revokeObjectURL(url);
+            },
+            error: (error) => {
+                console.error('Lỗi khi tải file Excel:', error);
+            }
+        });
+    }
+
+    onPrint(){}
 }

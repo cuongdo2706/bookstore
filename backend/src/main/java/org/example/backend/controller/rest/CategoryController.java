@@ -1,4 +1,4 @@
-package org.example.backend.controller;
+package org.example.backend.controller.rest;
 
 import jakarta.validation.Valid;
 import org.example.backend.dto.request.PropertySearchRequest;

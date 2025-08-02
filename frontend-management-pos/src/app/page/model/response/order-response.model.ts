@@ -8,6 +8,8 @@ export interface OrderResponse {
     code: string;
     expiredAt:Date;
     orderedAt: Date;
+    invoiceNumber:string;
+    invoiceDate:Date;
     processedAt:Date;
     shippedAt:Date;
     deliveredAt:Date;
@@ -32,5 +34,4 @@ export interface OrderResponse {
     orderStatus: number;
     saleChannel: number;
     orderType: number;
-    returnStatus:number;
 }

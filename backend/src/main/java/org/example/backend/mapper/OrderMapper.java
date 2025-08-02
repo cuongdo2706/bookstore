@@ -35,8 +35,7 @@ public class OrderMapper {
                 order.getPaymentStatus(),
                 order.getOrderStatus(),
                 order.getSaleChannel(),
-                order.getOrderType(),
-                order.getReturnStatus()
+                order.getOrderType()
         );
     }
 

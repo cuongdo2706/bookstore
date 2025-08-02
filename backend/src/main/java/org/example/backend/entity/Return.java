@@ -2,14 +2,16 @@ package org.example.backend.entity;
 
 import java.time.LocalDateTime;
 
-public class Return {
+public class Return extends BaseEntity {
     String code;
-    LocalDateTime returnDate;
-    /*
-    0 - RETURN
-    1 - EXCHANGE
-    2 - BOTH
-     */
-    Short returnType;
     Order order;
+    LocalDateTime returnedDate;
+    LocalDateTime processedDate;
+    String reason;
+    /*
+    0 - PENDING
+    1 - APPROVED
+    2 - REJECTED
+     */
+    Short returnStatus;
 }
