@@ -1,4 +1,14 @@
-import {Component, computed, inject, linkedSignal, OnInit, signal, ViewChild, ViewEncapsulation} from '@angular/core';
+import {
+    Component,
+    computed,
+    effect,
+    inject,
+    linkedSignal,
+    OnInit,
+    signal,
+    ViewChild,
+    ViewEncapsulation
+} from '@angular/core';
 import {MessageService} from "primeng/api";
 import {Button} from "primeng/button";
 import {FormArray, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule} from "@angular/forms";
@@ -56,12 +66,12 @@ interface OrderDetail {
         ReactiveFormsModule,
         AutoComplete,
         DecimalPipe,
-        InputText,
         Toast,
         NgOptimizedImage,
         Paginator,
         ScannerComponent,
-        ToggleSwitch
+        ToggleSwitch,
+        InputText,
     ],
     templateUrl: './pos.component.html',
     styleUrl: './pos.component.css',
@@ -90,6 +100,7 @@ export class PosComponent implements OnInit {
     couponNotFoundError = signal<string | null>(null);
     orderDetailsValues = signal<any[]>([]);
     scannerVisible = signal(false);
+
     page: number = 1;
     size: number = 10;
     totalElements: number = 0;
@@ -97,6 +108,13 @@ export class PosComponent implements OnInit {
     staffUsername: string = this.authService.getPayload().sub;
 
     @ViewChild('scanner') scanner!: ScannerComponent;
+
+    constructor() {
+        effect(()=>{
+            this.posForm.get('amountPaid')?.patchValue(this.amountPaid());
+        })
+    }
+
 
     get orderDetailsFormArray(): FormArray<FormGroup> {
         return this.posForm.get("orderDetails") as FormArray<FormGroup>;
@@ -451,19 +469,18 @@ export class PosComponent implements OnInit {
     }
 
     amountPaid = linkedSignal({
-        source: () => this.amountDue,
-        computation: (source) => {
-            this.posForm.get('amountPaid')?.patchValue(source());
-            return source();
-        }
+        source: () => this.amountDue(),
+        computation: (source) => source
+        // this.posForm.get('amountPaid')?.patchValue(source);
     });
+
 
     changeAmount = linkedSignal({
         source: () => ({
-            amountPaid: this.amountPaid,
-            amountDue: this.amountDue
+            amountPaid: this.amountPaid(),
+            amountDue: this.amountDue()
         }),
-        computation: (source) => source.amountPaid() - source.amountDue()
+        computation: (source) => source.amountPaid - source.amountDue
     });
 
     fillAmountPaid(event: InputNumberInputEvent) {

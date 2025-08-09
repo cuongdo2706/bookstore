@@ -11,7 +11,6 @@
 	  optionLabel = "code"
 	  placeholder = "Tìm sản phẩm theo tên hoặc mã"
 	  showClear = "true"
-	  styleClass = "searchInput"
     >
         <ng-template #item let-product>
 	  <div class = "flex align-items-center gap-2">
@@ -83,7 +82,7 @@
 	   overflow: auto">
 	  @for (item of orderDetailsFormArray.controls; let i = $index; track item.get('bookId')!.value) {
 
-	      <p-card styleClass = "item" [formGroupName] = "i">
+	      <p-card class="item" [formGroupName] = "i">
 		<div class = "flex align-items-center justify-content-between">
 		    <div class = "flex align-items-center" style = "width: 50%">
 		        <span>{{ orderDetailsFormArray.length - i }}</span>
@@ -133,7 +132,7 @@
 	  }
         </div>
         <div style = "width: 30%;flex-shrink: 0">
-	  <p-card styleClass = "order-info">
+	  <p-card class="order-info">
 	      <div class = "flex">
 		<b class = "mr-3">Giao hàng</b>
 		<p-toggleswitch
@@ -141,6 +140,7 @@
 	      </div>
 	      <div class = "flex mt-3">
 		<p-auto-complete
+		        [inputStyle]="{'width':'300px'}"
 		        (completeMethod) = "searchCustomer($event)"
 		        (onClear) = "clearCustomer()"
 		        (onSelect) = "selectCustomer($event)"
@@ -149,7 +149,7 @@
 		        [lazy] = "true"
 		        [showClear] = "true"
 		        [style] = "{'height':'35px','align-items': 'center','width':'300px'}"
-		        styleClass = "customerInput"
+
 		        optionLabel = "name"
 		        formControlName = "customer"
 		        placeholder = "Tìm khách hàng"
@@ -184,7 +184,7 @@
 	      </div>
 	      <div class = "flex mt-3">
 		<div class = "col-5 pl-0"><b>Voucher</b></div>
-		<div class = "col-7" style = "position: relative;padding: 0">
+		<div class = "col-7 flex flex-row justify-content-end" style = "position: relative;padding: 0">
 		    <input #voucherInput (input) = "findCouponById(voucherInput.value)"
 			 [style] = "{'height':'35px','width':'220px'}"
 			 type = "text" pInputText/>
@@ -208,13 +208,14 @@
 	      @if (orderDetailsFormArray.length > 0) {
 		<div class = "flex mt-3">
 		    <div class = "col-5 pl-0"><b>Khách thanh toán</b></div>
-		    <div class = "col-7" style = "position: relative;padding:0">
-		        <p-input-number #amountPaid
-				    (onInput) = "fillAmountPaid($event)"
-				    (onBlur) = "validateAmountPaid()"
-				    formControlName = "amountPaid" class = "amount-paid-input"
-				    inputId = "integeronly"
-				    [style] = "{'position': 'absolute'}"/>
+		    <div class = "col-7 flex flex-row justify-content-end" style = "position: relative;padding:0">
+		        <p-input-number
+			      (onInput) = "fillAmountPaid($event)"
+			      (onBlur) = "validateAmountPaid()"
+			      formControlName = "amountPaid"
+			      class = "amount-paid-input"
+			      inputId = "integeronly"
+			      [style] = "{'position': 'absolute'}"/>
 
 		    </div>
 		</div>
