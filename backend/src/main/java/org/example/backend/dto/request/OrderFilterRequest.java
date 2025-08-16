@@ -16,7 +16,7 @@ public class OrderFilterRequest {
     @Positive(message = "Size must be greater than 0")
     Integer size = 10;
     String sortBy = "ord-d";
-    Set<Short> orderType = new HashSet<>();
+    Boolean orderType;
     Set<Short> orderStatus = new HashSet<>();
     String orderCodeKeyword = null;
 }

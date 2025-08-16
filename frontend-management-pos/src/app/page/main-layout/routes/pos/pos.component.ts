@@ -22,7 +22,6 @@ import {DecimalPipe, Location, NgOptimizedImage} from "@angular/common";
 import {v4 as uuidv4} from 'uuid';
 import {InputText} from "primeng/inputtext";
 import {firstValueFrom, lastValueFrom} from "rxjs";
-import {ApiResponse} from "../../../model/response/api-response.model";
 import {CouponService} from "../../../service/coupon.service";
 import {UserResponse} from "../../../model/response/user-response.model";
 import {Toast} from "primeng/toast";
@@ -110,9 +109,9 @@ export class PosComponent implements OnInit {
     @ViewChild('scanner') scanner!: ScannerComponent;
 
     constructor() {
-        effect(()=>{
+        effect(() => {
             this.posForm.get('amountPaid')?.patchValue(this.amountPaid());
-        })
+        });
     }
 
 
@@ -488,11 +487,6 @@ export class PosComponent implements OnInit {
         this.posForm.get('amountPaid')?.patchValue(event.value);
     }
 
-    async getStockQuantity(id: number): Promise<number> {
-        let response: ApiResponse<number> = await firstValueFrom(this.productService.getProductStock(id));
-        return response.data;
-    }
-
     searchCustomer(event: AutoCompleteCompleteEvent) {
         this.customerService.searchCustomer(0, 10, event.query, "created-at-desc").subscribe({
             next: res => {
@@ -588,7 +582,7 @@ export class PosComponent implements OnInit {
                 couponId: value.couponId,
                 customerId: value.customerId,
                 staffUsername: this.staffUsername,
-                paymentMethod: 1,
+                paymentMethod: 0,
                 orderType: value.orderType,
                 orderItems: []
             };
@@ -637,5 +631,6 @@ export class PosComponent implements OnInit {
             }
         );
     }
+
 
 }

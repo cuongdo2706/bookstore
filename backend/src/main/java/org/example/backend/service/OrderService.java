@@ -15,6 +15,8 @@ public interface OrderService {
 
     List<OrderResponse> findAllOrderResponse();
 
+    void updateOrderStatus(Short oldStatus, Short newStatus, Long orderId) throws DataNotFoundException;
+
     OrderResponse create(OrderCreatedRequest request, String token) throws DataNotFoundException, DataConflictException;
 
     PageResponse<OrderResponse> searchOrder(OrderFilterRequest request);
@@ -22,4 +24,6 @@ public interface OrderService {
     OrderResponse findOrderResponseById(Long id) throws DataNotFoundException;
 
     Order findById(Long id) throws DataNotFoundException;
+
+
 }

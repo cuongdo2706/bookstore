@@ -75,7 +75,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public PageResponse<ProductResponse> searchProduct(ProductFilterRequest filter) {
-        Specification<Product> spec = Specification.where(ProductSpecification.isDeletedFalse()).and(ProductSpecification.isActive(filter.getIsActive()));
+        Specification<Product> spec = Specification.<Product> unrestricted().and(ProductSpecification.isDeletedFalse()).and(ProductSpecification.isActive(filter.getIsActive()));
         if (!Objects.equals(filter.getNameOrCodeKeyword(), null) && !filter.getNameOrCodeKeyword().isBlank()) {
             spec = spec.and(ProductSpecification.nameOrCodeContains(filter.getNameOrCodeKeyword()));
         }

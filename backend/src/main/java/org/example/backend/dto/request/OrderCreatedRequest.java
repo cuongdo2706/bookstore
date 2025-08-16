@@ -29,7 +29,7 @@ public class OrderCreatedRequest {
 
     Short paymentMethod;
 
-    Short orderType;
+    Boolean orderType;
 
     String customerName;//online
 

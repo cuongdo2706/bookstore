@@ -10,7 +10,7 @@ import {InputText} from "primeng/inputtext";
 import {FormsModule} from "@angular/forms";
 import {Select} from "primeng/select";
 import {MultiSelect} from "primeng/multiselect";
-import {DatePipe, DecimalPipe, NgClass} from "@angular/common";
+import {DatePipe, DecimalPipe} from "@angular/common";
 import {OrderDetailService} from "../../../service/order-detail.service";
 import {IftaLabel} from "primeng/iftalabel";
 import {Textarea} from "primeng/textarea";
@@ -59,8 +59,9 @@ export class OrderComponent implements OnInit {
             }
         ]);
         this.orderTypeOptions.set([
-            {label: "Online", value: 0},
-            {label: "Tại quầy", value: 1}
+            {label: "Trực tiếp + Giao hàng", value: null},
+            {label: "Online", value: true},
+            {label: "Tại quầy", value: false}
         ]);
         this.orderStatusOptions.set([
             {label: "Chờ xác nhận", value: 0},
@@ -90,7 +91,7 @@ export class OrderComponent implements OnInit {
     private router = inject(Router);
     expandedRows: { [key: string]: boolean } = {};
     orders = signal<OrderResponse[]>([]);
-    orderTypeSelection = signal<number[]>([0, 1]);
+    orderTypeSelection = signal<boolean | null>(null);
     orderStatusSelection = signal<number[]>([0, 5]);
     sortBySelection = signal<string>("ord-d");
     orderCodeKeyword = signal<string>("");
@@ -241,5 +242,6 @@ export class OrderComponent implements OnInit {
         });
     }
 
-    onPrint(){}
+    onPrint() {
+    }
 }

@@ -14,8 +14,8 @@ public class OrderSpecification {
         };
     }
 
-    public static Specification<Order> hasOrderType(Set<Short> orderTypes) {
-        return (root, query, criteriaBuilder) -> root.get("orderType").in(orderTypes);
+    public static Specification<Order> orderTypeEqual(Boolean orderType) {
+        return (root, query, criteriaBuilder) -> criteriaBuilder.equal(root.get("orderType"), orderType);
     }
 
     public static Specification<Order> hasOrderStatus(Set<Short> orderStatus) {

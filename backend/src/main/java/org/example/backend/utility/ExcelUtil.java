@@ -184,14 +184,14 @@ public class ExcelUtil {
                 Row row = sheet.createRow(rowNum++);
                 row.createCell(0).setCellValue(rowNum - 1);
                 row.createCell(1).setCellValue(od.getOrder().getCode());
-                row.createCell(2).setCellValue(od.getOrder().getAddress());
+//                row.createCell(2).setCellValue(od.getOrder().getAddress());
                 row.createCell(3).setCellValue(od.getOrder().getDeliveryFee() == null ? "" : od.getOrder().getDeliveryFee().toString());
-                row.createCell(4).setCellValue(od.getOrder().getCustomerName());
+//                row.createCell(4).setCellValue(od.getOrder().getCustomerName());
                 row.createCell(5).setCellValue(od.getOrder().getOrderedAt().format(formatter));
                 row.createCell(6).setCellValue(Objects.equals(od.getOrder().getCustomer(), null) ? "" : od.getOrder().getCustomer().getCode());
                 row.createCell(7).setCellValue(Objects.equals(od.getOrder().getCustomer(), null) ? "Khách lẻ" : od.getOrder().getCustomer().getName());
-                row.createCell(8).setCellValue(od.getOrder().getEmail());
-                row.createCell(9).setCellValue(od.getOrder().getPhoneNum());
+//                row.createCell(8).setCellValue(od.getOrder().getEmail());
+//                row.createCell(9).setCellValue(od.getOrder().getPhoneNum());
                 row.createCell(10).setCellValue(od.getOrder().getStaff().getName());
                 row.createCell(11).setCellValue(od.getOrder().getSaleChannel().equals((short) 0) ? "Tại quầy" : "Website");
                 row.createCell(12).setCellValue(od.getOrder().getOrderType().equals((short) 0) ? "Mua trực tiếp" : "Vận chuyển");

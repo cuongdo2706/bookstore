@@ -23,7 +23,8 @@ public class UserSpecification {
     }
 
     public static Specification<Customer> findByNameOrPhoneNum(String keyword) {
-        return Specification.where(nameOrPhoneNumContains(keyword))
+        return Specification.<Customer> unrestricted()
+                .and(nameOrPhoneNumContains(keyword))
                 .and(isActiveTrue())
                 .and(isDeletedFalse());
     }

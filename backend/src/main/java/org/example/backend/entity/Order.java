@@ -3,12 +3,11 @@ package org.example.backend.entity;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-import org.hibernate.annotations.ColumnDefault;
+
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Set;
 
 @Getter
 @Setter
@@ -22,7 +21,6 @@ public class Order extends BaseEntity {
     @Column(nullable = false, unique = true)
     String code;
 
-    LocalDateTime expiredAt; //chỉ set khi payment type = 0
     LocalDateTime orderedAt;
 
     String invoiceNumber;
@@ -60,13 +58,9 @@ public class Order extends BaseEntity {
     @JoinColumn(name = "staff_id")
     Staff staff;
 
-    String customerName;//online
-
-    String email;//online
-
-    String phoneNum;//online
-
-    String address;// online
+    @OneToOne(mappedBy = "order", cascade = CascadeType.ALL)
+    @PrimaryKeyJoinColumn
+    DeliveryInfo deliveryInfo;
 
     @Column(columnDefinition = "TEXT")
     String note;//online
@@ -78,7 +72,7 @@ public class Order extends BaseEntity {
     /*
     0 - CASH
     1 - BANK TRANSFER
-    2 - CREDIT CARD
+    2 - CREDIT/DEBIT CARD
      */
     Short paymentMethod;
 
@@ -92,7 +86,7 @@ public class Order extends BaseEntity {
     0 - POS
     1 - ONLINE
     */
-    Short orderType;
+    Boolean orderType;
 
     /*
     0 - UNPAID

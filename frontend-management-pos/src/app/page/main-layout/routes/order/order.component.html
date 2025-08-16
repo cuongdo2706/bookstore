@@ -29,11 +29,11 @@
 		        [(ngModel)] = "orderStatusSelection"
 		        (onChange) = "onSearchOrder()"></p-multi-select>
 
-		<p-multi-select
+		<p-select
 		        class = "mr-3"
 		        [options] = "orderTypeOptions()!"
 		        [(ngModel)] = "orderTypeSelection"
-		        (onChange) = "onSearchOrder()"></p-multi-select>
+		        (onChange) = "onSearchOrder()"></p-select>
 		<p-select
 		        [options] = "sortByOption()!"
 		        [(ngModel)] = "sortBySelection"

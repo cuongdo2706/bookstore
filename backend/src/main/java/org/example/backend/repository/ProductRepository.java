@@ -33,6 +33,7 @@ public interface ProductRepository extends
     @Query(nativeQuery = true, value = "UPDATE tbl_product SET is_deleted = true WHERE id = :id")
     void softDelete(@Param("id") Long id);
 
+    
     boolean existsByCode(String code);
 
     @Query(nativeQuery = true, value = "SELECT quantity FROM tbl_product WHERE id = :id AND is_deleted = FALSE")

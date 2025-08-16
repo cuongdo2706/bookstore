@@ -6,7 +6,6 @@ import java.util.List;
 
 public record OrderResponse(Long id,
                             String code,
-                            LocalDateTime expiredAt,
                             LocalDateTime orderedAt,
                             BigDecimal deliveryFee,//online
                             BigDecimal subTotal,//BOTH - tổng giá trị đơn hàng trước giảm
@@ -15,16 +14,13 @@ public record OrderResponse(Long id,
                             BigDecimal amountPaid,//offline
                             BigDecimal changeAmount,//offline
                             CustomerResponse customer,
-                            String customerName,//online
-                            String email,//online
-                            String phoneNum,//online
-                            String address,// online
                             StaffResponse staff,//offline
+                            DeliveryInfoResponse deliveryInfo,
                             List<OrderDetailResponse> orderDetails,
                             List<OrderStatusLogResponse> orderStatusLogs,
                             String note,//online
                             Short paymentStatus,
                             Short orderStatus,//online
                             Short saleChannel,
-                            Short orderType) {
+                            Boolean orderType) {
 }

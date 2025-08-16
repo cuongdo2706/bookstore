@@ -82,7 +82,7 @@
 	   overflow: auto">
 	  @for (item of orderDetailsFormArray.controls; let i = $index; track item.get('bookId')!.value) {
 
-	      <p-card class="item" [formGroupName] = "i">
+	      <p-card class = "item" [formGroupName] = "i">
 		<div class = "flex align-items-center justify-content-between">
 		    <div class = "flex align-items-center" style = "width: 50%">
 		        <span>{{ orderDetailsFormArray.length - i }}</span>
@@ -132,7 +132,7 @@
 	  }
         </div>
         <div style = "width: 30%;flex-shrink: 0">
-	  <p-card class="order-info">
+	  <p-card class = "order-info">
 	      <div class = "flex">
 		<b class = "mr-3">Giao hàng</b>
 		<p-toggleswitch
@@ -140,7 +140,7 @@
 	      </div>
 	      <div class = "flex mt-3">
 		<p-auto-complete
-		        [inputStyle]="{'width':'300px'}"
+		        [inputStyle] = "{'width':'300px'}"
 		        (completeMethod) = "searchCustomer($event)"
 		        (onClear) = "clearCustomer()"
 		        (onSelect) = "selectCustomer($event)"
@@ -149,7 +149,6 @@
 		        [lazy] = "true"
 		        [showClear] = "true"
 		        [style] = "{'height':'35px','align-items': 'center','width':'300px'}"
-
 		        optionLabel = "name"
 		        formControlName = "customer"
 		        placeholder = "Tìm khách hàng"
@@ -214,7 +213,10 @@
 			      (onBlur) = "validateAmountPaid()"
 			      formControlName = "amountPaid"
 			      class = "amount-paid-input"
-			      inputId = "integeronly"
+			      [minFractionDigits] = "0"
+			      mode = "decimal"
+			      locale = "en-US"
+			      inputId = "locale-us"
 			      [style] = "{'position': 'absolute'}"/>
 
 		    </div>
@@ -226,10 +228,17 @@
 		    </div>
 		</div>
 	      }
-	      <div>
+	      @if (this.posForm.get('orderType')?.value === true) {
 
 		<hr>
-	      </div>
+		<div class = "flex mt-3">
+		    <div class = "col-6 pl-0"><b>Tiền thừa</b></div>
+		    <div class = "col-6"
+		         style = "text-align: end">{{ changeAmount()|number:'1.0-0' }}
+		    </div>
+		</div>
+	      }
+
 	      <p-button [disabled] = "orderDetailsFormArray.length < 1" type = "submit"
 		      [style] = "{'width':'100%','margin-top':'20px'}"
 		      label = "Thanh toán"></p-button>

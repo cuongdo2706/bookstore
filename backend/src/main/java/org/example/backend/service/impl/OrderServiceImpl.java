@@ -46,11 +46,8 @@ public class OrderServiceImpl implements OrderService {
     private JwtTokenProvider jwtTokenProvider;
     @Autowired
     private Environment env;
-    RestTemplate restTemplate = new RestTemplate();
 
-    public void createDeliveryOrder() {
-
-    }
+    //    RestTemplate restTemplate = new RestTemplate();
 
     @Override
     public List<Order> findAll() {
@@ -62,32 +59,49 @@ public class OrderServiceImpl implements OrderService {
         return OrderMapper.toOrderResponses(findAll());
     }
 
+    @Override
+    public void updateOrderStatus(Short oldStatus, Short newStatus, Long orderId) throws DataNotFoundException {
+        Order order = findById(orderId);
+        order.setOrderStatus(newStatus);
+        order.getOrderStatusLogs().add(new OrderStatusLog(newStatus, LocalDateTime.now(), order.getStaff().getName(), order));
+    }
+
     @Transactional
     @Override
     public OrderResponse create(OrderCreatedRequest request, String token) throws DataNotFoundException, DataConflictException {
+        LocalDateTime createdDate = LocalDateTime.now();
+        //GEN CODE CHO ORDER
+        String code = GenerateCodeUtil.generateOrderCode();
+        //LẤY CUSTOMER
         Customer existedCustomer = request.getCustomerId() != null ? customerService.findById(request.getCustomerId()) : null;
+        //LẤY STAFF
         Staff existedStaff = staffService.findByUsername(request.getStaffUsername());
+        //LIST ĐỂ ADD CÁC ORDER DETAIL VÀO ORDER
         List<OrderDetail> newOrderDetails = new ArrayList<>();
+        //LẤY RA ID[] TỪ REQUEST
         Set<Long> productIds = request.getOrderItems().stream().map(OrderCreatedRequest.OrderItem::getProductId).collect(Collectors.toSet());
-
+        // DÙNG MẢNG ID[] ĐỂ QUERY GET PRODUCTS
         Map<Long, Product> productMap = productService.findAllByIds(productIds).stream().collect(Collectors.toMap(Product::getId, p -> p));
         BigDecimal subTotalCount = BigDecimal.ZERO;
+        //DUYỆT ORDER ITEMS TỪ REQUEST DTO, ADD ORDER DETAIL
         for (OrderCreatedRequest.OrderItem item : request.getOrderItems()) {
             Product existedProduct = productMap.get(item.getProductId());
+            BigDecimal discount = BigDecimal.ZERO;
             if (existedProduct == null) {
                 throw new DataNotFoundException("Product not found");
             }
             if (item.getQuantity() > existedProduct.getQuantity()) {
                 throw new DataConflictException("Stock is not enough");
             }
-            BigDecimal totalPrice = existedProduct.getPrice().multiply(BigDecimal.valueOf(item.getQuantity()));
+
+            BigDecimal totalPrice = existedProduct.getPrice().subtract(discount).multiply(BigDecimal.valueOf(item.getQuantity()));
             subTotalCount = subTotalCount.add(totalPrice);
-            newOrderDetails.add(OrderDetail.builder().product(existedProduct).productCode(existedProduct.getCode()).productName(existedProduct.getName()).quantity(item.getQuantity()).price(existedProduct.getPrice()).totalPrice(totalPrice).build());
+            newOrderDetails.add(OrderDetail.builder().product(existedProduct).discount(discount).productCode(existedProduct.getCode()).productName(existedProduct.getName()).quantity(item.getQuantity()).price(existedProduct.getPrice()).totalPrice(totalPrice).build());
         }
 
         BigDecimal discount = BigDecimal.ZERO;
         BigDecimal grandTotal;
-        Coupon coupon = null;
+        Coupon coupon;
         if (request.getCouponId() != null) {
             coupon = couponService.useCoupon(request.getCouponId(), subTotalCount);
             discount = couponService.calculateDiscount(coupon, subTotalCount);
@@ -96,17 +110,39 @@ public class OrderServiceImpl implements OrderService {
             grandTotal = subTotalCount;
         }
         String role = jwtTokenProvider.getRole(token);
-        Short saleChannel = (role.equals("ROLE_ADMIN") || role.equals("ROLE_CASHIER")) && (request.getOrderType() != null) ? (short) 0 : 1;
-        Order newOrder = Order.builder().subTotal(subTotalCount).discount(discount).grandTotal(grandTotal).code(GenerateCodeUtil.generateOrderCode()).customer(existedCustomer).staff(existedStaff).paymentMethod(request.getPaymentMethod()).saleChannel(saleChannel).orderType(request.getOrderType()).paymentStatus((short) 1).orderStatus((short) 6).build();
-        if (saleChannel == 0 && request.getOrderType().equals((short) 0)) {
+        short saleChannel = (role.equals("ROLE_ADMIN") || role.equals("ROLE_CASHIER")) && (request.getOrderType() != null)
+                ? (short) 0 : 1;
+
+
+        Order newOrder = Order.builder().
+                orderedAt(createdDate).
+                subTotal(subTotalCount).
+                discount(discount).
+                grandTotal(grandTotal).
+                code("DH" + code).
+                customer(existedCustomer).
+                staff(existedStaff).
+                orderStatusLogs(new ArrayList<>()).
+                paymentMethod(request.getPaymentMethod()).
+                saleChannel(saleChannel).
+                orderType(request.getOrderType()).
+                paymentStatus((short) 1).
+                build();
+
+        newOrder.getOrderStatusLogs().add(new OrderStatusLog((short) 0, createdDate, existedStaff.getName(), newOrder));
+        //Nếu là đơn mua tại quầy
+        if (saleChannel == 0 && request.getOrderType() == false) {
             BigDecimal amountPaid = request.getAmountPaid();
             if (amountPaid.compareTo(grandTotal) < 0) {
                 throw new DataConflictException("Amount paid must greater than or equal amount due");
             }
+            newOrder.setInvoiceNumber(code);
+            newOrder.setInvoiceDate(LocalDateTime.now());
+            newOrder.getOrderStatusLogs().add(new OrderStatusLog((short) 5, LocalDateTime.now(), existedStaff.getName(), newOrder));
             BigDecimal changeAmount = amountPaid.subtract(grandTotal);
             newOrder.setAmountPaid(amountPaid);
             newOrder.setChangeAmount(changeAmount);
-
+            newOrder.setOrderStatus((short) 5);
         }
         for (OrderDetail orderDetail : newOrderDetails) {
             orderDetail.setOrder(newOrder);
@@ -123,9 +159,9 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public PageResponse<OrderResponse> searchOrder(OrderFilterRequest filter) {
-        Specification<Order> spec = Specification.where(null);
+        Specification<Order> spec = Specification.unrestricted();
         if (!Objects.equals(filter.getOrderType(), null)) {
-            spec = spec.and(OrderSpecification.hasOrderType(filter.getOrderType()));
+            spec = spec.and(OrderSpecification.orderTypeEqual(filter.getOrderType()));
         }
         if (!filter.getOrderStatus().isEmpty()) {
             spec = spec.and(OrderSpecification.hasOrderStatus(filter.getOrderStatus()));
@@ -152,4 +188,6 @@ public class OrderServiceImpl implements OrderService {
     public Order findById(Long id) throws DataNotFoundException {
         return orderRepository.findById(id).orElseThrow(() -> new DataNotFoundException("Không tìm thấy order với id: " + id));
     }
+
+
 }

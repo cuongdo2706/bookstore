@@ -2,7 +2,7 @@ export interface OrderFilterRequest{
     page:number;
     size:number;
     sortBy:string;
-    orderType:number[];
+    orderType:boolean|null;
     orderStatus:number[];
     orderCodeKeyword:string;
 }
