@@ -22,7 +22,7 @@ public class DeliveryInfo {
     @JoinColumn(name = "id")
     private Order order;
 
-    String customerName;
+    String recipientName;
 
     String email;
 

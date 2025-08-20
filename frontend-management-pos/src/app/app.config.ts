@@ -1,4 +1,9 @@
-import {ApplicationConfig, importProvidersFrom, provideZoneChangeDetection} from '@angular/core';
+import {
+    ApplicationConfig,
+    importProvidersFrom,
+    provideZoneChangeDetection,
+    provideZonelessChangeDetection
+} from '@angular/core';
 import {provideRouter, withComponentInputBinding} from '@angular/router';
 import {routes} from './app.routes';
 import {provideAnimationsAsync} from "@angular/platform-browser/animations/async";
@@ -10,7 +15,8 @@ import Aura from '@primeng/themes/aura';
 
 export const appConfig: ApplicationConfig = {
     providers: [
-        provideZoneChangeDetection({eventCoalescing: true}),
+        // provideZoneChangeDetection({eventCoalescing: true}),
+        provideZonelessChangeDetection(),
         provideRouter(routes, withComponentInputBinding()),
         provideAnimationsAsync(),
         providePrimeNG({

@@ -31,13 +31,7 @@ public class OrderCreatedRequest {
 
     Boolean orderType;
 
-    String customerName;//online
-
-    String email;//online
-
-    String phoneNum;//online
-
-    String address;// online
+    DeliveryInfo deliveryInfo;
 
     @NotNull(message = "Cart must not be null")
     @Size(min = 1, message = "Cart must have at least 1 product")
@@ -56,4 +50,13 @@ public class OrderCreatedRequest {
         Integer quantity;
         BigDecimal price;
     }
+}
+
+@Getter
+@Setter
+@FieldDefaults(level = AccessLevel.PRIVATE)
+class DeliveryInfo {
+    String recipientName;
+    String phoneNum;
+    String address;
 }

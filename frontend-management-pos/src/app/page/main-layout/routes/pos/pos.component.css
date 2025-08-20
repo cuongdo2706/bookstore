@@ -43,7 +43,7 @@
 
 .order-info {
     .p-card-body {
-        height: calc(100vh - 190px)
+        overflow-x: clip;
     }
 }
 

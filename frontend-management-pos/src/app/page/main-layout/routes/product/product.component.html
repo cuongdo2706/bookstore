@@ -5,12 +5,12 @@
 	      [(visible)] = "saveFormVisible"
 	      (onSave) = "onSaveForm($event)"
 	      (message) = "saveMessage($event)"
-	      [productStatus] = "statusSelection"
+	      [productStatus] = "statusSelection()"
         ></app-save-form>
     }
-    <p-table [value] = "products"
+    <p-table [value] = "products()"
 	   [tableStyle] = "{ 'min-width': '30rem' }"
-	   [expandedRowKeys] = "expandedRows"
+	   [expandedRowKeys] = "expandedRows()"
 	   dataKey = "id"
 	   [rowHover]="true"
 	   [stripedRows]="true"
@@ -31,7 +31,7 @@
 		</p-iconfield>
 		<p-select
 		        [style.margin-left.px] = "10"
-		        [options] = "filterOption"
+		        [options] = "filterOption()"
 		        (onChange) = "onSearchProduct()"
 		        optionLabel = "name"
 		        optionValue = "value"
@@ -39,7 +39,7 @@
 		        placeholder = "Bộ lọc"/>
 		<p-select
 		        [style.margin-left.px] = "10"
-		        [options] = "statusOption"
+		        [options] = "statusOption()"
 		        (onChange) = "onSearchProduct()"
 		        optionLabel = "name"
 		        optionValue = "value"
@@ -170,13 +170,13 @@
 			  </div>
 		        </div>
 		    </div>
-		    @if (updateFormVisible) {
+		    @if (updateFormVisible()) {
 		        <app-update-form
 			      [(visible)] = "updateFormVisible"
 			      [updateId] = "updateId"
 			      (onUpdate) = "onUpdateForm($event)"
 			      (message) = "updateMessage($event)"
-			      [productStatus] = "this.statusSelection"
+			      [productStatus] = "this.statusSelection()"
 		        ></app-update-form>
 		    }
 		    <div class = "flex pt-2 justify-content-end">

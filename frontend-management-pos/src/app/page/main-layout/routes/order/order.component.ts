@@ -89,7 +89,7 @@ export class OrderComponent implements OnInit {
     private orderService = inject(OrderService);
     private orderDetailService = inject(OrderDetailService);
     private router = inject(Router);
-    expandedRows: { [key: string]: boolean } = {};
+    expandedRows  = signal<{ [key: string]: boolean }>({});
     orders = signal<OrderResponse[]>([]);
     orderTypeSelection = signal<boolean | null>(null);
     orderStatusSelection = signal<number[]>([0, 5]);
@@ -179,12 +179,14 @@ export class OrderComponent implements OnInit {
                 });
             }
         });
-        Object.keys(this.expandedRows).forEach(key => {
-            if (key !== orderId.toString()) {
-                delete this.expandedRows[key];
-            }
+        this.expandedRows.update(rows => {
+            const newRows = {...rows};
+            Object.keys(newRows).forEach(k => {
+                if (k !== orderId.toString()) delete newRows[k];
+            });
+            newRows[orderId] = true;
+            return newRows;
         });
-        this.expandedRows[orderId] = true;
     }
 
     onCreateOrder() {

@@ -47,30 +47,30 @@ export class ProductComponent implements OnInit {
     private confirmationService = inject(ConfirmationService);
     private messageService = inject(MessageService);
     private productService = inject(ProductService);
-    products!: ProductResponse[];
-    nameOrCodeKeyword: string = "";
-    filterSelection: string = "name";
-    expandedRows: { [key: string]: boolean } = {};
-    filterOption: {}[] = [
+    products = signal<ProductResponse[]>([]);
+    nameOrCodeKeyword = signal("");
+    filterSelection = signal("name");
+    expandedRows = signal<{ [key: string]: boolean }>({});
+    filterOption = signal([
         {name: "Tên: A -> Z", value: "name"},
         {name: "Tên: Z -> A", value: "name-d"},
         {name: "Giá: thấp -> cao", value: "price"},
         {name: "Giá: cao -> thấp", value: "price-d"}
-    ];
-    statusOption: {}[] = [
+    ]);
+    statusOption = signal([
         {name: "Đang bán", value: true},
         {name: "Ngừng bán", value: false}
-    ];
-    statusSelection: boolean = true;
-    page: number = 0;
-    size: number = 10;
-    totalElements: number = 0;
+    ]);
+    statusSelection = signal(true);
+    page = signal(0);
+    size = signal(10);
+    totalElements = signal(0);
 
     paginator = viewChild<Paginator>('paginator');
     saveFormVisible = signal(false);
-    updateFormVisible: boolean = false;
+    updateFormVisible = signal(false);
     updateId!: number;
-    baseImg = AppConstants.BASE_IMAGE;
+    readonly baseImg = AppConstants.BASE_IMAGE;
     isFilter = signal(false);
 
 
@@ -82,13 +82,13 @@ export class ProductComponent implements OnInit {
         this.productService.searchProducts({
             page: 1,
             size: 10,
-            sortBy: this.filterSelection,
+            sortBy: this.filterSelection(),
             nameOrCodeKeyword: "",
-            isActive: this.statusSelection
+            isActive: this.statusSelection()
         }).subscribe({
                 next: res => {
-                    this.products = res.data.content;
-                    this.totalElements = res.data.totalElements;
+                    this.products.set(res.data.content);
+                    this.totalElements.set(res.data.totalElements);
                 }
             }
         );
@@ -105,15 +105,15 @@ export class ProductComponent implements OnInit {
                 const paginator = this.paginator();
                 this.productService.searchProducts({
                     page: 1,
-                    size: this.size,
-                    sortBy: this.filterSelection,
-                    nameOrCodeKeyword: this.nameOrCodeKeyword,
-                    isActive: this.statusSelection
+                    size: this.size(),
+                    sortBy: this.filterSelection(),
+                    nameOrCodeKeyword: this.nameOrCodeKeyword(),
+                    isActive: this.statusSelection()
                 })
                     .subscribe({
                         next: res => {
-                            this.products = res.data.content;
-                            this.totalElements = res.data.totalElements;
+                            this.products.set(res.data.content);
+                            this.totalElements.set(res.data.totalElements);
                             if (paginator) {
                                 paginator.changePage(0);
                             }
@@ -145,13 +145,14 @@ export class ProductComponent implements OnInit {
     onRowExpand(event: TableRowExpandEvent<ProductResponse>) {
         const productId = event.data.id;
         // Đóng tất cả các hàng khác
-        Object.keys(this.expandedRows).forEach(key => {
-            if (key !== productId.toString()) {
-                delete this.expandedRows[key];
-            }
+        this.expandedRows.update(rows => {
+            const newRows = {...rows};
+            Object.keys(newRows).forEach(k => {
+                if (k !== productId.toString()) delete newRows[k];
+            });
+            newRows[productId] = true;
+            return newRows;
         });
-        // Mở hàng hiện tại
-        this.expandedRows[productId] = true;
     }
 
     onPageChange(event: PaginatorState) {
@@ -159,13 +160,13 @@ export class ProductComponent implements OnInit {
         this.productService.searchProducts({
             page: event.page! + 1,
             size: event.rows!,
-            sortBy: this.filterSelection,
-            nameOrCodeKeyword: this.nameOrCodeKeyword,
-            isActive: this.statusSelection
+            sortBy: this.filterSelection(),
+            nameOrCodeKeyword: this.nameOrCodeKeyword(),
+            isActive: this.statusSelection()
         }).subscribe({
                 next: res => {
-                    this.products = res.data.content;
-                    this.totalElements = res.data.totalElements;
+                    this.products.set(res.data.content);
+                    this.totalElements.set(res.data.totalElements);
                 }
             }
         );
@@ -173,8 +174,8 @@ export class ProductComponent implements OnInit {
 
 
     onSaveForm(event: PageResponse<ProductResponse>) {
-        this.products = event.content;
-        this.totalElements = event.totalElements;
+        this.products.set(event.content);
+        this.totalElements.set(event.totalElements);
     }
 
     saveMessage(event: {}) {
@@ -204,13 +205,13 @@ export class ProductComponent implements OnInit {
     }
 
     showUpdateDialog(id: number) {
-        this.updateFormVisible = true;
+        this.updateFormVisible.set(true);
         this.updateId = id;
     }
 
     onUpdateForm(event: PageResponse<ProductResponse>) {
-        this.products = event.content;
-        this.totalElements = event.totalElements;
+        this.products.set(event.content);
+        this.totalElements.set(event.totalElements);
     }
 
     updateMessage(event: {}) {

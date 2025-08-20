@@ -47,7 +47,6 @@
     }
 
     @for (t of tabs(); let i = $index; track t.tabId) {
-
         <div [style.background-color] = "t.tabId===activeTabId()?'#10F6B6':'#10B981'"
 	   (click) = "chooseTab(t.tabId)"
 	   class = "select-tab-button ml-3">
@@ -132,11 +131,14 @@
 	  }
         </div>
         <div style = "width: 30%;flex-shrink: 0">
-	  <p-card class = "order-info">
+	  <p-card [style] = "{'height':'calc(100vh - 190px)','overflow-y':'auto'}" class = "order-info">
 	      <div class = "flex">
 		<b class = "mr-3">Giao hàng</b>
 		<p-toggleswitch
-		        formControlName = "orderType"></p-toggleswitch>
+		        formControlName = "orderType"
+		        (onChange) = "onSelectOrderType($event)">
+
+		</p-toggleswitch>
 	      </div>
 	      <div class = "flex mt-3">
 		<p-auto-complete
@@ -232,9 +234,37 @@
 
 		<hr>
 		<div class = "flex mt-3">
-		    <div class = "col-6 pl-0"><b>Tiền thừa</b></div>
-		    <div class = "col-6"
-		         style = "text-align: end">{{ changeAmount()|number:'1.0-0' }}
+		    <div class = "col-5 pl-0"><b>Tên người nhận</b></div>
+		    <div class = "col-7 flex flex-row justify-content-end" style = "position: relative;padding: 0">
+		        <input [style] = "{'height':'35px','width':'220px'}" type = "text" pInputText/>
+		    </div>
+		</div>
+		<div class = "flex mt-3">
+		    <div class = "col-5 pl-0"><b>Số điện thoại</b></div>
+		    <div class = "col-7 flex flex-row justify-content-end" style = "position: relative;padding: 0">
+		        <input [style] = "{'height':'35px','width':'220px'}" type = "text" pInputText/>
+		    </div>
+		</div>
+		<div class = "flex mt-3">
+		    <div class = "col-5 pl-0"><b>Tỉnh/Thành phố</b></div>
+		    <div class = "col-7 flex flex-row justify-content-end" style = "position: relative;padding: 0">
+		        <p-select formControlName = "province" (onChange) = "onSelectProvince($event)"
+			        [options] = "provinces()" optionLabel = "name"
+			        [style] = "{'height':'35px','width':'220px'}"></p-select>
+		    </div>
+		</div>
+		<div class = "flex mt-3">
+		    <div class = "col-5 pl-0"><b>Phường/Xã</b></div>
+		    <div class = "col-7 flex flex-row justify-content-end" style = "position: relative;padding: 0">
+		        <p-select formControlName = "commune" [disabled] = "!this.posForm.get('province')?.value"
+			        [options] = "communes()" optionLabel = "name"
+			        [style] = "{'height':'35px','width':'220px'}"></p-select>
+		    </div>
+		</div>
+		<div class = "flex mt-3">
+		    <div class = "col-5 pl-0"><b>Địa chỉ</b></div>
+		    <div class = "col-7 flex flex-row justify-content-end" style = "position: relative;padding: 0">
+		        <input [style] = "{'height':'35px','width':'220px'}" type = "text" pInputText/>
 		    </div>
 		</div>
 	      }

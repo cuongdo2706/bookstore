@@ -1,4 +1,4 @@
-import {Component, inject, input, model, OnInit, output, ViewEncapsulation} from '@angular/core';
+import {Component, inject, input, model, OnInit, output, signal, ViewEncapsulation} from '@angular/core';
 import {Dialog} from "primeng/dialog";
 import {Button} from "primeng/button";
 import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} from "@angular/forms";
@@ -71,19 +71,18 @@ export class SaveFormComponent implements OnInit {
     saveForm!: FormGroup;
     categoryInput!: FormGroup;
     authorInput!: FormGroup;
-    years: number[] = [];
-    submitted = false;
+    years = signal<number[]>([]);
+    submitted = signal(false);
     private messageService = inject(MessageService);
     private fb = inject(FormBuilder);
     private productService = inject(ProductService);
-    private uploadImageService = inject(UploadImageService);
     private categoryService = inject(CategoryService);
     private authorService = inject(AuthorService);
     visible = model(false);
-    categoryVisible = false;
-    authorVisible = false;
-    authors: AuthorResponse[] = [];
-    categories: CategoryResponse[] = [];
+    categoryVisible = signal(false);
+    authorVisible = signal(false);
+    authors = signal<AuthorResponse[]>([]);
+    categories = signal<CategoryResponse[]>([]);
     onSave = output<any>();
     message = output<{}>();
     productStatus = input.required<boolean>();
@@ -92,7 +91,7 @@ export class SaveFormComponent implements OnInit {
     fetchAuthors() {
         this.authorService.fetchAuthors().subscribe({
             next: res => {
-                this.authors = res.data;
+                this.authors.set(res.data);
             }
         });
     }
@@ -100,7 +99,7 @@ export class SaveFormComponent implements OnInit {
     fetchCategories() {
         this.categoryService.fetchCategories().subscribe({
             next: res => {
-                this.categories = res.data;
+                this.categories.set(res.data);
             }
         });
     }
@@ -119,14 +118,8 @@ export class SaveFormComponent implements OnInit {
     removeImage() {
         this.saveForm.patchValue({imgFile: null});
     }
-
-    async uploadImage(file: File): Promise<ImageResponse> {
-        return await lastValueFrom(this.uploadImageService.uploadImage(file));
-    }
-
-
     async saveBook() {
-        this.submitted = true;
+        this.submitted.set(true);
         if (this.saveForm.valid) {
             let fileReq: File | null = this.saveForm.controls['imgFile'].value;
             let bookReq: ProductCreatedRequest = {
@@ -142,7 +135,13 @@ export class SaveFormComponent implements OnInit {
                 categoryIds: this.saveForm.controls['categories'].value!
             };
             await firstValueFrom(this.productService.saveProduct(bookReq, fileReq));
-            await firstValueFrom(this.productService.searchProducts({page: 1, size: 10, sortBy: "name", nameOrCodeKeyword: "", isActive: this.productStatus()}))
+            await firstValueFrom(this.productService.searchProducts({
+                page: 1,
+                size: 10,
+                sortBy: "name",
+                nameOrCodeKeyword: "",
+                isActive: this.productStatus()
+            }))
                 .then(res => {
                     this.onSave.emit(res.data);
                     this.message.emit(
@@ -155,7 +154,7 @@ export class SaveFormComponent implements OnInit {
                 });
             this.saveForm.reset();
             this.saveForm.patchValue({isActive: true});
-            this.submitted = false;
+            this.submitted.set(true);
             this.visible.set(false);
         } else {
             this.messageService.add({
@@ -169,7 +168,7 @@ export class SaveFormComponent implements OnInit {
 
 
     saveCategoryForm() {
-        this.categoryVisible = true;
+        this.categoryVisible.set(true);
     }
 
     saveCategory(input: any) {
@@ -178,7 +177,7 @@ export class SaveFormComponent implements OnInit {
             next: res => {
                 console.log("Save category success");
                 this.fetchCategories();
-                this.categoryVisible = false;
+                this.categoryVisible.set(false);
             },
             error: err => {
                 console.log(err);
@@ -187,7 +186,7 @@ export class SaveFormComponent implements OnInit {
     }
 
     saveAuthorForm() {
-        this.authorVisible = true;
+        this.authorVisible.set(true);
     }
 
     saveAuthor(input: any) {
@@ -196,7 +195,7 @@ export class SaveFormComponent implements OnInit {
             next: res => {
                 console.log("Save author success");
                 this.fetchAuthors();
-                this.authorVisible = false;
+                this.authorVisible.set(false);
             }
         });
     }
@@ -205,7 +204,7 @@ export class SaveFormComponent implements OnInit {
         const currentYear = new Date().getFullYear();
         const startYear = 1900;
         for (let year = currentYear; year >= startYear; year--) {
-            this.years.push(year);
+            this.years.update(item => [...item, year]);
         }
     }
 }

@@ -5,13 +5,15 @@ export interface OrderCreatedRequest {
     staffUsername: string;
     paymentMethod: number;
     orderType: number;
-    customerName?: string;
-    email?: string;
-    phoneNum?: string;
-    address?: string;
+    deliveryInfo: {
+        recipientName: string;
+        phoneNum: string;
+        address: string;
+    } | null;
     orderItems: {
         productId: number;
         quantity: number;
         price: number;
     }[];
+
 }

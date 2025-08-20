@@ -32,8 +32,11 @@ import {CustomerService} from "../../../service/customer.service";
 import {CustomerResponse} from "../../../model/response/customer-response.model";
 import {Paginator, PaginatorState} from "primeng/paginator";
 import {ScannerComponent} from "./scanner/scanner.component";
-import {ToggleSwitch} from "primeng/toggleswitch";
+import {ToggleSwitch, ToggleSwitchChangeEvent} from "primeng/toggleswitch";
 import {ActivatedRoute} from "@angular/router";
+import {Select, SelectChangeEvent} from "primeng/select";
+import {Address} from "../../../../../../public/address";
+import {fakeAsync} from "@angular/core/testing";
 
 interface Tab {
     tabId: string;
@@ -44,6 +47,11 @@ interface Tab {
         customer: UserResponse | null;
         orderType: boolean;
         orderDetails: OrderDetail[];
+        recipientName: string | null;
+        phoneNum: string | null;
+        province: string | null;
+        commune: string | null;
+        address: string | null;
     };
 }
 
@@ -71,6 +79,7 @@ interface OrderDetail {
         ScannerComponent,
         ToggleSwitch,
         InputText,
+        Select,
     ],
     templateUrl: './pos.component.html',
     styleUrl: './pos.component.css',
@@ -99,7 +108,9 @@ export class PosComponent implements OnInit {
     couponNotFoundError = signal<string | null>(null);
     orderDetailsValues = signal<any[]>([]);
     scannerVisible = signal(false);
-
+    readonly provinces = signal<{}[]>(new Address().provinces);
+    selectedProvince = signal<{ code: string, name: string } | null>(null);
+    communes = signal<{}[]>([]);
     page: number = 1;
     size: number = 10;
     totalElements: number = 0;
@@ -120,6 +131,19 @@ export class PosComponent implements OnInit {
     }
 
     ngOnInit() {
+        // this.posForm=this.fb.group({
+        //     amountPaid: 0,
+        //     couponId: null,
+        //     customerId: null,
+        //     customer: null,
+        //     orderType: false,
+        //     orderDetails: this.fb.array([]),
+        //     recipientName: null,
+        //     phoneNum: null,
+        //     province: null,
+        //     commune: null,
+        //     address: null
+        // })
         this.loadDataFromLocalStorage();
         this.orderDetailsFormArray.valueChanges.subscribe(values => {
             this.orderDetailsValues.set(values);
@@ -251,6 +275,11 @@ export class PosComponent implements OnInit {
                 customer: null,
                 orderType: false,
                 orderDetails: [],
+                recipientName: null,
+                phoneNum: null,
+                province: null,
+                commune: null,
+                address: null
             }
         };
         this.tabs.update(tabs => [...tabs, newTab]);
@@ -289,7 +318,12 @@ export class PosComponent implements OnInit {
                 customerId: null,
                 customer: null,
                 orderType: false,
-                orderDetails: this.fb.array([])
+                orderDetails: this.fb.array([]),
+                recipientName: null,
+                phoneNum: null,
+                province: null,
+                commune: null,
+                address: null
             });
             this.formMap.set(this.activeTabId(), this.posForm);
             const newTab: Tab = {
@@ -301,6 +335,11 @@ export class PosComponent implements OnInit {
                     customer: null,
                     orderType: false,
                     orderDetails: [],
+                    recipientName: null,
+                    phoneNum: null,
+                    province: null,
+                    commune: null,
+                    address: null
                 }
             };
             this.tabs.set([newTab]);
@@ -363,7 +402,12 @@ export class PosComponent implements OnInit {
             customerId: null,
             customer: null,
             orderType: false,
-            orderDetails: this.fb.array([])
+            orderDetails: this.fb.array([]),
+            recipientName: null,
+            phoneNum: null,
+            province: null,
+            commune: null,
+            address: null
         });
     }
 
@@ -584,7 +628,12 @@ export class PosComponent implements OnInit {
                 staffUsername: this.staffUsername,
                 paymentMethod: 0,
                 orderType: value.orderType,
-                orderItems: []
+                orderItems: [],
+                deliveryInfo: <boolean>value.orderType ? {
+                    recipientName:value.recipientName,
+                    phoneNum:value.phoneNum,
+                    address:value.address,
+                } : null
             };
             value.orderDetails.forEach((item: { bookId: number; quantity: number; price: number; }) => {
                 let newItem = {
@@ -632,5 +681,24 @@ export class PosComponent implements OnInit {
         );
     }
 
+
+    onSelectOrderType(event: ToggleSwitchChangeEvent) {
+        let orderType = event.checked;
+        this.posForm.get("orderType")?.patchValue(orderType);
+        this.formMap.set(this.activeTabId(), this.posForm);
+        this.tabs.update(tabs => {
+            let newTabs = tabs;
+            let tab = newTabs.find(tab => tab.tabId === this.activeTabId())!;
+            tab.formData.orderType = orderType;
+            return newTabs;
+        });
+        this.saveTabsToLocalStorage(this.tabs());
+    }
+
+    onSelectProvince(event: SelectChangeEvent) {
+        let value: string = event.value.code;
+        this.communes.set(new Address().communes.filter(item => item.provinceCode === value));
+        console.log(this.posForm.get('province')?.value.name);
+    }
 
 }
