@@ -12,8 +12,8 @@
 	   [tableStyle] = "{ 'min-width': '30rem' }"
 	   [expandedRowKeys] = "expandedRows()"
 	   dataKey = "id"
-	   [rowHover]="true"
-	   [stripedRows]="true"
+	   [rowHover] = "true"
+	   [stripedRows] = "true"
 	   (onRowExpand) = "onRowExpand($event)">
         <ng-template #caption>
 	  <div class = "flex">
@@ -72,11 +72,11 @@
 	      <td style = "width: 100px">{{ product.code }}</td>
 	      <td>{{ product.name }}</td>
 	      <td style = "width: 60px">
-<!--		<p-image-->
-<!--		        src = "{{product.imgUrl||baseImg}}"-->
-<!--		        width = "50"-->
-<!--		/>-->
-		<img ngSrc="{{product.imgUrl||baseImg}}" [width]="50" [height]="70">
+		<!--		<p-image-->
+		<!--		        src = "{{product.imgUrl||baseImg}}"-->
+		<!--		        width = "50"-->
+		<!--		/>-->
+		<img ngSrc = "{{product.imgUrl||baseImg}}" [width] = "50" [height] = "70">
 	      </td>
 	      <td
 		    style = "width: 120px">{{ product.price | number:"1.0-0" }}
@@ -193,9 +193,7 @@
 				<div class = "border-circle bg-primary inline-flex justify-content-center align-items-center h-6rem w-6rem">
 				    <i class = "pi pi-question text-5xl"></i>
 				</div>
-				<span class = "font-bold text-2xl block mb-2 mt-4">
-                {{ message.header }}
-            </span>
+				<span class = "font-bold text-2xl block mb-2 mt-4">{{ message.header }}</span>
 				<div class = "flex align-items-center gap-2 mt-4">
 				    <p-button
 					  label = "Đồng ý"
@@ -230,8 +228,8 @@
 	      <td colspan = "100%" style = "background-color: #ffffff">
 		<p-paginator #paginator
 			   (onPageChange) = "onPageChange($event)"
-			   [rows] = "size"
-			   [totalRecords] = "totalElements"
+			   [rows] = "size()"
+			   [totalRecords] = "totalElements()"
 			   [rowsPerPageOptions] = "[10, 20, 30]"/>
 	      </td>
 	  </tr>

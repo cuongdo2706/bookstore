@@ -12,7 +12,7 @@
 		       formControlName = "name"/>
 		<label for = "name">Tên sách</label>
 	      </p-floatlabel>
-	      @if (submitted && updateForm.get('name')?.invalid) {
+	      @if (submitted() && updateForm.get('name')?.invalid) {
 		<small class = "p-error block mt-1">
 		    Tên không được để trống
 		</small>
@@ -34,7 +34,7 @@
 			      formControlName = "numOfPages"></p-input-number>
 		<label for = "numOfPages">Số trang</label>
 	      </p-floatlabel>
-	      @if (submitted && updateForm.get('numOfPages')?.invalid && updateForm.get('numOfPages')?.value != null) {
+	      @if (submitted() && updateForm.get('numOfPages')?.invalid && updateForm.get('numOfPages')?.value != null) {
 		<small class = "p-error block mt-1">
 		    Số trang phải là số và lớn hơn 0
 		</small>
@@ -43,7 +43,7 @@
 		<p-select
 		        [style] = "{'width':'600px'}"
 		        formControlName = "publishedYear"
-		        [options] = "years"
+		        [options] = "years()"
 		        [filter] = "true"
 		        [showClear] = "true"
 		/>
@@ -54,7 +54,7 @@
 		    <p-multi-select
 			  [style] = "{'width':'600px'}"
 			  formControlName = "authors"
-			  [options] = "authors"
+			  [options] = "authors()"
 			  optionLabel = "name"
 			  optionValue = "id"
 			  [filter] = "true"
@@ -86,12 +86,12 @@
 		        </div>
 		        <div class = "flex justify-content-end gap-2 mt-4">
 			  <p-button label = "Thêm mới" type = "submit"/>
-			  <p-button label = "Huỷ" severity = "secondary" (onClick) = "authorVisible = false"/>
+			  <p-button label = "Huỷ" severity = "secondary" (onClick) = "authorVisible.set(false)"/>
 		        </div>
 		    </form>
 		</p-dialog>
 	      </div>
-	      @if (submitted && updateForm.get('author')?.invalid) {
+	      @if (submitted() && updateForm.get('author')?.invalid) {
 		<small class = "p-error block mt-1">
 		    Tác giả phải được chọn
 		</small>
@@ -102,7 +102,7 @@
 		    <p-multi-select
 			  [style] = "{'width':'600px'}"
 			  formControlName = "categories"
-			  [options] = "categories"
+			  [options] = "categories()"
 			  optionLabel = "name"
 			  optionValue = "id"
 			  [filter] = "true"
@@ -136,12 +136,12 @@
 		        <div class = "flex justify-content-end gap-2 mt-4">
 			  <p-button label = "Thêm mới" type = "submit"/>
 			  <p-button label = "Huỷ" severity = "secondary"
-				  (onClick) = "categoryVisible = false"/>
+				  (onClick) = "categoryVisible.set(false)"/>
 		        </div>
 		    </form>
 		</p-dialog>
 	      </div>
-	      @if (submitted && updateForm.get('category')?.invalid) {
+	      @if (submitted() && updateForm.get('category')?.invalid) {
 		<small class = "p-error block mt-1">
 		    Danh mục phải được chọn
 		</small>
@@ -154,7 +154,7 @@
 			      formControlName = "quantity"></p-input-number>
 		<label for = "quantity">Số lượng</label>
 	      </p-floatlabel>
-	      @if (submitted && updateForm.get('quantity')?.invalid) {
+	      @if (submitted() && updateForm.get('quantity')?.invalid) {
 		<small class = "p-error block mt-1">
 		    Số lượng phải là số và lớn hơn hoặc bằng 0
 		</small>
@@ -165,7 +165,7 @@
 			      formControlName = "price"></p-input-number>
 		<label for = "price">Giá</label>
 	      </p-floatlabel>
-	      @if (submitted && updateForm.get('price')?.invalid) {
+	      @if (submitted() && updateForm.get('price')?.invalid) {
 		<small class = "p-error block mt-1">
 		    Giá phải là số và lớn hơn 0
 		</small>
@@ -187,7 +187,7 @@
 	      <div class = "flex">
 		<div class = "col-3">
 		    <p-image
-			  [src] = "imageUrl"
+			  [src] = "imageUrl()"
 			  preview = "true"
 			  width = "100"
 		    />

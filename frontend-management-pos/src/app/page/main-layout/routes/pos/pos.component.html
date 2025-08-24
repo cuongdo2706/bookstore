@@ -1,8 +1,9 @@
 <p-toast/>
 <div class = "nav-tabs">
     <p-auto-complete
-	  (completeMethod) = "searchProduct($event)"
+	  (completeMethod) = "searchProduct()"
 	  (onSelect) = "selectProduct($event)"
+	  [(ngModel)] = "keyword"
 	  [suggestions] = "products()"
 	  [lazy] = "true"
 	  delay = "500"
@@ -22,8 +23,8 @@
 	  @if (products().length > 0) {
 	      <p-paginator #paginator
 		         (onPageChange) = "onProductPageChange($event)"
-		         [rows] = "size"
-		         [totalRecords] = "totalElements"
+		         [rows] = "size()"
+		         [totalRecords] = "totalElements()"
 		         [rowsPerPageOptions] = "[10, 20, 30]"/>
 	  }
 	  <div class = "p-3">
@@ -132,14 +133,14 @@
         </div>
         <div style = "width: 30%;flex-shrink: 0">
 	  <p-card [style] = "{'height':'calc(100vh - 190px)','overflow-y':'auto'}" class = "order-info">
-	      <div class = "flex">
-		<b class = "mr-3">Giao hàng</b>
-		<p-toggleswitch
-		        formControlName = "orderType"
-		        (onChange) = "onSelectOrderType($event)">
+<!--	      <div class = "flex">-->
+<!--		<b class = "mr-3">Giao hàng</b>-->
+<!--		<p-toggleswitch-->
+<!--		        formControlName = "orderType"-->
+<!--		        (onChange) = "onSelectOrderType($event)">-->
 
-		</p-toggleswitch>
-	      </div>
+<!--		</p-toggleswitch>-->
+<!--	      </div>-->
 	      <div class = "flex mt-3">
 		<p-auto-complete
 		        [inputStyle] = "{'width':'300px'}"
@@ -164,8 +165,8 @@
 		        @if (customers().length > 0) {
 			  <p-paginator #paginator
 				     (onPageChange) = "onProductPageChange($event)"
-				     [rows] = "size"
-				     [totalRecords] = "totalElements"
+				     [rows] = "size()"
+				     [totalRecords] = "totalElements()"
 				     [rowsPerPageOptions] = "[10, 20, 30]"/>
 		        }
 		        <div class = "p-3">
@@ -230,44 +231,48 @@
 		    </div>
 		</div>
 	      }
-	      @if (this.posForm.get('orderType')?.value === true) {
+<!--	      @if (this.posForm.get('orderType')?.value === true) {-->
 
-		<hr>
-		<div class = "flex mt-3">
-		    <div class = "col-5 pl-0"><b>Tên người nhận</b></div>
-		    <div class = "col-7 flex flex-row justify-content-end" style = "position: relative;padding: 0">
-		        <input [style] = "{'height':'35px','width':'220px'}" type = "text" pInputText/>
-		    </div>
-		</div>
-		<div class = "flex mt-3">
-		    <div class = "col-5 pl-0"><b>Số điện thoại</b></div>
-		    <div class = "col-7 flex flex-row justify-content-end" style = "position: relative;padding: 0">
-		        <input [style] = "{'height':'35px','width':'220px'}" type = "text" pInputText/>
-		    </div>
-		</div>
-		<div class = "flex mt-3">
-		    <div class = "col-5 pl-0"><b>Tỉnh/Thành phố</b></div>
-		    <div class = "col-7 flex flex-row justify-content-end" style = "position: relative;padding: 0">
-		        <p-select formControlName = "province" (onChange) = "onSelectProvince($event)"
-			        [options] = "provinces()" optionLabel = "name"
-			        [style] = "{'height':'35px','width':'220px'}"></p-select>
-		    </div>
-		</div>
-		<div class = "flex mt-3">
-		    <div class = "col-5 pl-0"><b>Phường/Xã</b></div>
-		    <div class = "col-7 flex flex-row justify-content-end" style = "position: relative;padding: 0">
-		        <p-select formControlName = "commune" [disabled] = "!this.posForm.get('province')?.value"
-			        [options] = "communes()" optionLabel = "name"
-			        [style] = "{'height':'35px','width':'220px'}"></p-select>
-		    </div>
-		</div>
-		<div class = "flex mt-3">
-		    <div class = "col-5 pl-0"><b>Địa chỉ</b></div>
-		    <div class = "col-7 flex flex-row justify-content-end" style = "position: relative;padding: 0">
-		        <input [style] = "{'height':'35px','width':'220px'}" type = "text" pInputText/>
-		    </div>
-		</div>
-	      }
+<!--		<hr>-->
+<!--		<div class = "flex mt-3">-->
+<!--		    <div class = "col-5 pl-0"><b>Tên người nhận</b></div>-->
+<!--		    <div class = "col-7 flex flex-row justify-content-end" style = "position: relative;padding: 0">-->
+<!--		        <input [style] = "{'height':'35px','width':'220px'}" type = "text" pInputText/>-->
+<!--		    </div>-->
+<!--		</div>-->
+<!--		<div class = "flex mt-3">-->
+<!--		    <div class = "col-5 pl-0"><b>Số điện thoại</b></div>-->
+<!--		    <div class = "col-7 flex flex-row justify-content-end" style = "position: relative;padding: 0">-->
+<!--		        <input [style] = "{'height':'35px','width':'220px'}" type = "text" pInputText/>-->
+<!--		    </div>-->
+<!--		</div>-->
+<!--		<div class = "flex mt-3">-->
+<!--		    <div class = "col-5 pl-0"><b>Tỉnh/Thành phố</b></div>-->
+<!--		    <div class = "col-7 flex flex-row justify-content-end" style = "position: relative;padding: 0">-->
+<!--		        <p-select [showClear] = "true" formControlName = "province"-->
+<!--			        (onChange) = "onSelectProvince($event)"-->
+<!--			        [options] = "provinces()" optionLabel = "name"-->
+<!--			        [style] = "{'height':'35px','width':'220px'}"-->
+<!--			        (onClear) = "onClearProvince()"></p-select>-->
+<!--		    </div>-->
+<!--		</div>-->
+<!--		<div class = "flex mt-3">-->
+<!--		    <div class = "col-5 pl-0"><b>Phường/Xã</b></div>-->
+<!--		    <div class = "col-7 flex flex-row justify-content-end" style = "position: relative;padding: 0">-->
+<!--		        <p-select formControlName = "commune"-->
+<!--			        [options] = "communes()" optionLabel = "name"-->
+<!--			        [style] = "{'height':'35px','width':'220px'}"-->
+<!--			        [showClear]="true"-->
+<!--			        (onClear) = "onClearCommune()"></p-select>-->
+<!--		    </div>-->
+<!--		</div>-->
+<!--		<div class = "flex mt-3">-->
+<!--		    <div class = "col-5 pl-0"><b>Địa chỉ</b></div>-->
+<!--		    <div class = "col-7 flex flex-row justify-content-end" style = "position: relative;padding: 0">-->
+<!--		        <input [style] = "{'height':'35px','width':'220px'}" type = "text" pInputText/>-->
+<!--		    </div>-->
+<!--		</div>-->
+<!--	      }-->
 
 	      <p-button [disabled] = "orderDetailsFormArray.length < 1" type = "submit"
 		      [style] = "{'width':'100%','margin-top':'20px'}"

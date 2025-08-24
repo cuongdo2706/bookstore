@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("category")
+@RequestMapping("/api/category")
 //@PreAuthorize("hasAnyRole('MANAGER','STAFF')")
 public class CategoryController {
     @Autowired

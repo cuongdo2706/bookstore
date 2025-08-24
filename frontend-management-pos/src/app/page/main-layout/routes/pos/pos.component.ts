@@ -36,7 +36,6 @@ import {ToggleSwitch, ToggleSwitchChangeEvent} from "primeng/toggleswitch";
 import {ActivatedRoute} from "@angular/router";
 import {Select, SelectChangeEvent} from "primeng/select";
 import {Address} from "../../../../../../public/address";
-import {fakeAsync} from "@angular/core/testing";
 
 interface Tab {
     tabId: string;
@@ -77,9 +76,8 @@ interface OrderDetail {
         NgOptimizedImage,
         Paginator,
         ScannerComponent,
-        ToggleSwitch,
         InputText,
-        Select,
+
     ],
     templateUrl: './pos.component.html',
     styleUrl: './pos.component.css',
@@ -109,12 +107,10 @@ export class PosComponent implements OnInit {
     orderDetailsValues = signal<any[]>([]);
     scannerVisible = signal(false);
     readonly provinces = signal<{}[]>(new Address().provinces);
-    selectedProvince = signal<{ code: string, name: string } | null>(null);
     communes = signal<{}[]>([]);
-    page: number = 1;
-    size: number = 10;
-    totalElements: number = 0;
-    keyword = "";
+    size = signal(10);
+    totalElements = signal(0);
+    keyword = signal("");
     staffUsername: string = this.authService.getPayload().sub;
 
     @ViewChild('scanner') scanner!: ScannerComponent;
@@ -131,19 +127,6 @@ export class PosComponent implements OnInit {
     }
 
     ngOnInit() {
-        // this.posForm=this.fb.group({
-        //     amountPaid: 0,
-        //     couponId: null,
-        //     customerId: null,
-        //     customer: null,
-        //     orderType: false,
-        //     orderDetails: this.fb.array([]),
-        //     recipientName: null,
-        //     phoneNum: null,
-        //     province: null,
-        //     commune: null,
-        //     address: null
-        // })
         this.loadDataFromLocalStorage();
         this.orderDetailsFormArray.valueChanges.subscribe(values => {
             this.orderDetailsValues.set(values);
@@ -154,6 +137,10 @@ export class PosComponent implements OnInit {
             }
             const path = this.location.path().split('?')[0];
             this.location.replaceState(path);
+        });
+        this.posForm.get('province')?.valueChanges.subscribe(value => {
+            if (value) this.posForm.get('commune')?.enable();
+            else this.posForm.get('commune')?.disable();
         });
     }
 
@@ -176,19 +163,18 @@ export class PosComponent implements OnInit {
         this.couponNotFoundError.set(null);
     }
 
-    searchProduct(event: AutoCompleteCompleteEvent) {
-        this.keyword = event.query;
+    searchProduct() {
         this.productService.searchProducts({
             page: 1,
             size: 10,
-            nameOrCodeKeyword: this.keyword,
+            nameOrCodeKeyword: this.keyword(),
             sortBy: "name",
             isActive: true
         })
             .subscribe({
                 next: res => {
                     this.products.set(res.data.content);
-                    this.totalElements = res.data.totalElements;
+                    this.totalElements.set(res.data.totalElements);
                 }
             });
     }
@@ -322,7 +308,7 @@ export class PosComponent implements OnInit {
                 recipientName: null,
                 phoneNum: null,
                 province: null,
-                commune: null,
+                commune: [{value: null, disabled: true}],
                 address: null
             });
             this.formMap.set(this.activeTabId(), this.posForm);
@@ -406,7 +392,7 @@ export class PosComponent implements OnInit {
             recipientName: null,
             phoneNum: null,
             province: null,
-            commune: null,
+            commune: [{value: null, disabled: true}],
             address: null
         });
     }
@@ -630,9 +616,9 @@ export class PosComponent implements OnInit {
                 orderType: value.orderType,
                 orderItems: [],
                 deliveryInfo: <boolean>value.orderType ? {
-                    recipientName:value.recipientName,
-                    phoneNum:value.phoneNum,
-                    address:value.address,
+                    recipientName: value.recipientName,
+                    phoneNum: value.phoneNum,
+                    address: value.address,
                 } : null
             };
             value.orderDetails.forEach((item: { bookId: number; quantity: number; price: number; }) => {
@@ -669,13 +655,13 @@ export class PosComponent implements OnInit {
         this.productService.searchProducts({
             page: event.page!,
             size: event.rows!,
-            nameOrCodeKeyword: this.keyword,
+            nameOrCodeKeyword: this.keyword(),
             sortBy: "name",
             isActive: true
         }).subscribe({
                 next: res => {
                     this.products.set(res.data.content);
-                    this.totalElements = res.data.totalElements;
+                    this.totalElements.set(res.data.totalElements);
                 }
             }
         );
@@ -696,9 +682,16 @@ export class PosComponent implements OnInit {
     }
 
     onSelectProvince(event: SelectChangeEvent) {
-        let value: string = event.value.code;
-        this.communes.set(new Address().communes.filter(item => item.provinceCode === value));
-        console.log(this.posForm.get('province')?.value.name);
+        if(event.value)
+        this.communes.set(new Address().communes.filter(item => item.provinceCode === event.value.code));
     }
 
+    onClearProvince() {
+        this.posForm.get("province")?.reset();
+        this.posForm.get("commune")?.reset();
+    }
+
+    onClearCommune() {
+        this.posForm.get("commune")?.reset();
+    }
 }

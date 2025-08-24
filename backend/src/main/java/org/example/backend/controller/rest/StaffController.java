@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("staff")
+@RequestMapping("/api/staff")
 public class StaffController {
     @Autowired
     private StaffServiceImpl staffService;

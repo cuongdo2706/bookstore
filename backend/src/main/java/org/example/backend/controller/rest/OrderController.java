@@ -29,7 +29,7 @@ import java.io.IOException;
 import java.util.List;
 
 @RestController
-@RequestMapping("order")
+@RequestMapping("/api/order")
 public class OrderController {
     @Autowired
     private OrderService orderService;
