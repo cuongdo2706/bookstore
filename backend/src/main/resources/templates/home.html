@@ -1,6 +1,7 @@
-<html xmlns:th = "http://www.thymeleaf.org" lang = "">
-<div th:fragment = "home">
+<html xmlns:th = "http://www.thymeleaf.org" th:replace = "~{index::content(~{::div})}">
+<div>
     <button onclick = "test()">THỬ</button>
     <script type = "text/javascript" th:src = "@{/js/index.js}"></script>
 </div>
 </html>
+

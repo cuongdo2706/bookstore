@@ -37,19 +37,20 @@ import java.util.stream.Collectors;
 
 @Service
 public class ProductServiceImpl implements ProductService {
+    private final ProductRepository productRepository;
+    private final CategoryService categoryService;
+    private final AuthorService authorService;
+    private final ImageUtil imageUtil;
 
-
-    @Autowired
-    private ProductRepository productRepository;
-
-    @Autowired
-    private CategoryService categoryService;
-
-    @Autowired
-    private AuthorService authorService;
-
-    @Autowired
-    private ImageUtil imageUtil;
+    public ProductServiceImpl(ProductRepository productRepository,
+                              CategoryService categoryService,
+                              AuthorService authorService,
+                              ImageUtil imageUtil) {
+        this.productRepository = productRepository;
+        this.categoryService = categoryService;
+        this.authorService = authorService;
+        this.imageUtil = imageUtil;
+    }
 
 
     @Override

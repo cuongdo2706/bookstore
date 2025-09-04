@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang = "en" xmlns:th = "http://www.thymeleaf.org">
+<html lang = "en" xmlns:th = "http://www.thymeleaf.org" th:fragment = "content(body)">
 <head>
     <meta charset = "UTF-8">
     <meta name = "viewport" content = "width=device-width, initial-scale=1">
@@ -26,27 +26,27 @@
 	      </div>
 	      <div class = "ms-4 header-button">
 		<a class = "d-flex align-items-center text-decoration-none">
-		    <i style = "border: 1px solid grey;border-radius: 50%;display: inline-block">
+		    <i style = "display: inline-block">
 		        <img style = "margin: 10px" width = "24" height = "24" th:src = "@{/icon/bell.svg}">
 		    </i>
-		    <span class = "text-nowrap ps-2 pe-2 text-black">Thông báo</span>
+		    <span class = "text-nowrap pe-2 text-black">Thông báo</span>
 		</a>
 	      </div>
 	      <div class = "ms-2 header-button">
 		<a class = "d-flex align-items-center text-decoration-none">
-		    <i style = "border: 1px solid grey;border-radius: 50%;display: inline-block">
+		    <i style = "display: inline-block">
 		        <img style = "margin: 10px" width = "24" height = "24"
 			   th:src = "@{/icon/shopping-cart.svg}">
 		    </i>
-		    <span class = "text-nowrap ps-2 pe-2 text-black">Giỏ hàng</span>
+		    <span class = "text-nowrap pe-2 text-black">Giỏ hàng</span>
 		</a>
 	      </div>
 	      <div class = "ms-2 header-button">
 		<a class = "d-flex align-items-center text-decoration-none">
-		    <i style = "border: 1px solid grey;border-radius: 50%;display: inline-block">
+		    <i style = "display: inline-block">
 		        <img style = "margin: 10px" width = "24" height = "24" th:src = "@{/icon/user.svg}">
 		    </i>
-		    <span class = "text-nowrap ps-2 pe-2 text-black">Đăng nhập</span>
+		    <span class = "text-nowrap pe-2 text-black">Đăng nhập</span>
 
 		</a>
 	      </div>
@@ -54,13 +54,18 @@
         </div>
     </div>
 </header>
-<nav style = "background-color: palegreen">
+<nav class = "p-1" style = "background-color: palegreen">
     <div class = "container">
-        <h1>a</h1>
+        <div class = "p-1 d-flex align-items-center">
+	  <i style = "display: inline-block">
+	      <img th:src = "@{/icon/align-justify.svg}">
+	  </i>
+	  <span class = "ms-1" style = "font-size: 13px;font-weight: bold">DANH MỤC SÁCH</span>
+        </div>
     </div>
 </nav>
-<main style = "background-color: lightgrey"><h1>a</h1></main>
-<script type = "text/javascript" th:src = "@{/js/bootstrap.bundle.min.js}"></script>
+<main class = "container" style = "background-color: lightgrey" th:insert = "${body}"></main>
+<script type = "text/javascript" th:src = "@{/js/bootstrap/bootstrap.bundle.min.js}"></script>
 <!--<script type = "text/javascript" th:src = "@{/js/index.js}"></script>-->
 </body>
 </html>
