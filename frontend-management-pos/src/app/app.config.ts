@@ -1,24 +1,18 @@
-import {
-    ApplicationConfig,
-    importProvidersFrom,
-    provideZoneChangeDetection,
-    provideZonelessChangeDetection
-} from '@angular/core';
+import {ApplicationConfig, importProvidersFrom, provideZonelessChangeDetection} from '@angular/core';
 import {provideRouter, withComponentInputBinding} from '@angular/router';
 import {routes} from './app.routes';
-import {provideAnimationsAsync} from "@angular/platform-browser/animations/async";
 import {provideHttpClient, withInterceptors} from "@angular/common/http";
 import {JwtModule} from "@auth0/angular-jwt";
 import {authInterceptor} from "./core/auth/interceptor/auth.interceptor";
 import {providePrimeNG} from "primeng/config";
 import Aura from '@primeng/themes/aura';
+import {provideAnimationsAsync} from "@angular/platform-browser/animations/async";
 
 export const appConfig: ApplicationConfig = {
     providers: [
-        // provideZoneChangeDetection({eventCoalescing: true}),
         provideZonelessChangeDetection(),
-        provideRouter(routes, withComponentInputBinding()),
         provideAnimationsAsync(),
+        provideRouter(routes, withComponentInputBinding()),
         providePrimeNG({
             ripple: true,
             theme: {

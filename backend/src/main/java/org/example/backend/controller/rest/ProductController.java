@@ -28,7 +28,7 @@ import java.util.List;
 import java.util.Set;
 
 @RestController
-@RequestMapping("/api/product")
+@RequestMapping("product")
 public class ProductController {
     @Autowired
     private ExcelUtil excelUtil;

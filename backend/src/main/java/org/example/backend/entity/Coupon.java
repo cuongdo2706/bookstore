@@ -35,10 +35,10 @@ public class Coupon extends BaseEntity {
     @Column(precision = 19, scale = 2)
     BigDecimal maxDiscount; //số tiền được giảm tối đa (nếu couponType là percent)
     Integer quantity;
-    @Column(columnDefinition = "INTEGER DEFAULT 0")
+    @Column(columnDefinition = "DEFAULT 0")
     Integer usedCount;
-    @Column(columnDefinition = "BOOLEAN DEFAULT TRUE")
+    @Column(columnDefinition = "default 1")
     Boolean isActive;
-    @Column(columnDefinition = "BOOLEAN DEFAULT FALSE")
+    @Column(columnDefinition = "default 0")
     Boolean isDeleted;
 }

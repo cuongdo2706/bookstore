@@ -16,7 +16,7 @@ import java.util.Set;
 @Builder
 @Entity
 @Table(name = "tbl_product")
-@SQLRestriction("is_deleted = FALSE")
+@SQLRestriction("is_deleted = 0")
 @FieldDefaults(level = AccessLevel.PRIVATE)
 
 public class Product extends BaseEntity {
@@ -54,8 +54,8 @@ public class Product extends BaseEntity {
     @ManyToOne
     @JoinColumn(name = "promotion_id")
     Promotion promotion;
-    @Column(columnDefinition = "boolean default true")
+    @Column(columnDefinition = "default 1")
     Boolean isActive;
-    @Column(columnDefinition = "boolean default false")
+    @Column(columnDefinition = "default 0")
     Boolean isDeleted;
 }

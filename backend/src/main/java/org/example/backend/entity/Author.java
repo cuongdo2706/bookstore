@@ -14,12 +14,12 @@ import java.util.Set;
 @Builder
 @Entity
 @Table(name = "tbl_author")
-@SQLRestriction("is_deleted = FALSE")
+@SQLRestriction("is_deleted = 0")
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @NoArgsConstructor
 public class Author extends BaseEntity {
     String name;
-    @Column(columnDefinition = "BOOLEAN DEFAULT FALSE")
+    @Column(columnDefinition = "default 0")
     Boolean isDeleted;
     @ManyToMany(mappedBy = "authors")
     Set<Product> products;

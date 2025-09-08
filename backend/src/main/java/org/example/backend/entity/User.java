@@ -21,10 +21,10 @@ public class User extends BaseEntity {
 
     String role;
 
-    @Column(columnDefinition = "boolean default true")
+    @Column(columnDefinition = "default 1")
     Boolean isActive;
 
-    @Column(columnDefinition = "boolean default false")
+    @Column(columnDefinition = "default 0")
     Boolean isDeleted;
 
     @OneToOne

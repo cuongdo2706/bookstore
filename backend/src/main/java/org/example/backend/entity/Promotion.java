@@ -34,6 +34,6 @@ public class Promotion extends BaseEntity {
     BigDecimal minAmount;
     @Column(precision = 19, scale = 2)
     BigDecimal maxDiscount; //số tiền được giảm tối đa
-    @Column(columnDefinition = "BOOLEAN DEFAULT TRUE")
+    @Column(columnDefinition = "default 1")
     Boolean isActive;
 }

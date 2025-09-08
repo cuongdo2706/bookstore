@@ -1,14 +1,4 @@
-import {
-    Component,
-    computed,
-    effect,
-    inject,
-    linkedSignal,
-    OnInit,
-    signal,
-    ViewChild,
-    ViewEncapsulation
-} from '@angular/core';
+import {Component, computed, effect, inject, linkedSignal, OnInit, signal, ViewChild, ViewEncapsulation} from '@angular/core';
 import {MessageService} from "primeng/api";
 import {Button} from "primeng/button";
 import {FormArray, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule} from "@angular/forms";
@@ -682,8 +672,8 @@ export class PosComponent implements OnInit {
     }
 
     onSelectProvince(event: SelectChangeEvent) {
-        if(event.value)
-        this.communes.set(new Address().communes.filter(item => item.provinceCode === event.value.code));
+        if (event.value)
+            this.communes.set(new Address().communes.filter(item => item.provinceCode === event.value.code));
     }
 
     onClearProvince() {
