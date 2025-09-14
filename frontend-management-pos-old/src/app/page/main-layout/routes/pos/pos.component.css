@@ -1,0 +1,77 @@
+.nav-tabs {
+    display: flex;
+    align-items: center;
+}
+
+.itemPrice {
+    font-size: 16px;
+    font-family: "Segoe UI";
+    width: 100px;
+    text-align: right;
+    background-color: white;
+    border: hidden;
+    border-bottom: solid 1px;
+}
+
+.item {
+    .p-card-body {
+        padding-bottom: 10px;
+        padding-top: 10px;
+    }
+
+    .p-card-body:hover {
+        border: 1px solid green;
+        border-radius: 12px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    }
+}
+
+.quantity-input {
+    .p-inputnumber-input {
+        width: 80px;
+        height: 35px;
+    }
+}
+
+.amount-paid-input {
+    .p-inputnumber-input {
+        width: 220px;
+        height: 35px;
+        text-align: right;
+    }
+}
+
+.order-info {
+    .p-card-body {
+        overflow-x: clip;
+    }
+}
+
+
+.tab-index-custom {
+    .p-button-icon {
+        font-size: 10px;
+    }
+}
+
+.select-tab-button {
+    border: 1px solid;
+    padding: 9px 13px;
+    height: 41px;
+    border-radius: 20px;
+    color: white;
+    font-size: 17px;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+.customerInput {
+    .p-inputtext {
+        width: 300px;
+    }
+
+    /*.p-virtualscroller {*/
+    /*    width: 450px;*/
+    /*}*/
+}
+

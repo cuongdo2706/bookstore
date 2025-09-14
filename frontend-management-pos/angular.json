@@ -3,28 +3,31 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "frontend-management-pos": {
+    "frontend-management-pos1": {
       "projectType": "application",
       "schematics": {
-        "@schematics/angular:component": {
+        "@schematics/angular:class": {
           "skipTests": true
         },
-        "@schematics/angular:class": {
+        "@schematics/angular:component": {
           "skipTests": true
         },
         "@schematics/angular:directive": {
           "skipTests": true
         },
-        "@schematics/angular:pipe": {
-          "skipTests": true
-        },
-        "@schematics/angular:service": {
+        "@schematics/angular:guard": {
           "skipTests": true
         },
         "@schematics/angular:interceptor": {
           "skipTests": true
         },
-        "@schematics/angular:guard": {
+        "@schematics/angular:pipe": {
+          "skipTests": true
+        },
+        "@schematics/angular:resolver": {
+          "skipTests": true
+        },
+        "@schematics/angular:service": {
           "skipTests": true
         }
       },
@@ -35,23 +38,17 @@
         "build": {
           "builder": "@angular/build:application",
           "options": {
-            "outputPath": "dist/frontend-management-pos",
-            "index": "src/index.html",
             "browser": "src/main.ts",
-            "polyfills": [
-            ],
             "tsConfig": "tsconfig.app.json",
             "assets": [
               {
                 "glob": "**/*",
-                "input": "node_modules/ngx-scanner-qrcode/wasm/",
-                "output": "./assets/wasm/"
+                "input": "public"
               }
             ],
             "styles": [
               "src/styles.css"
-            ],
-            "scripts": []
+            ]
           },
           "configurations": {
             "production": {
@@ -63,8 +60,8 @@
                 },
                 {
                   "type": "anyComponentStyle",
-                  "maximumWarning": "2kB",
-                  "maximumError": "4kB"
+                  "maximumWarning": "4kB",
+                  "maximumError": "8kB"
                 }
               ],
               "outputHashing": "all"
@@ -81,10 +78,10 @@
           "builder": "@angular/build:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "frontend-management-pos:build:production"
+              "buildTarget": "frontend-management-pos1:build:production"
             },
             "development": {
-              "buildTarget": "frontend-management-pos:build:development"
+              "buildTarget": "frontend-management-pos1:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -95,8 +92,6 @@
         "test": {
           "builder": "@angular/build:karma",
           "options": {
-            "polyfills": [
-            ],
             "tsConfig": "tsconfig.spec.json",
             "assets": [
               {
@@ -106,40 +101,10 @@
             ],
             "styles": [
               "src/styles.css"
-            ],
-            "scripts": []
+            ]
           }
         }
       }
-    }
-  },
-  "cli": {
-    "analytics": false
-  },
-  "schematics": {
-    "@schematics/angular:component": {
-      "type": "component"
-    },
-    "@schematics/angular:directive": {
-      "type": "directive"
-    },
-    "@schematics/angular:service": {
-      "type": "service"
-    },
-    "@schematics/angular:guard": {
-      "typeSeparator": "."
-    },
-    "@schematics/angular:interceptor": {
-      "typeSeparator": "."
-    },
-    "@schematics/angular:module": {
-      "typeSeparator": "."
-    },
-    "@schematics/angular:pipe": {
-      "typeSeparator": "."
-    },
-    "@schematics/angular:resolver": {
-      "typeSeparator": "."
     }
   }
 }

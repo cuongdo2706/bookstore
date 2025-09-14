@@ -1,0 +1,194 @@
+<div style = "overflow-y: auto;height: calc(100vh - 140px)">
+    <span style = "font-size: 25px"> <b>Đơn hàng</b> </span>
+    <p-table
+	  [value] = "orders()"
+	  [tableStyle] = "{ 'min-width': '30rem' }"
+	  [expandedRowKeys] = "expandedRows()"
+	  [rowHover] = "true"
+	  [stripedRows] = "true"
+	  dataKey = "id"
+	  (onRowExpand) = "onRowExpand($event)">
+        <ng-template #caption>
+	  <div class = "flex">
+	      <div class = "col-9 flex">
+		<p-iconfield iconPosition = "left" class = "mr-3">
+		    <p-inputicon>
+		        <i class = "pi pi-search"></i>
+		    </p-inputicon>
+		    <input
+			  (input) = "onSearchOrder()"
+			  pInputText
+			  type = "text"
+			  [(ngModel)] = "orderCodeKeyword"
+			  placeholder = "Tìm theo mã hoá đơn"
+		    >
+		</p-iconfield>
+		<p-multi-select
+		        class = "mr-3"
+		        [options] = "orderStatusOptions()!"
+		        [(ngModel)] = "orderStatusSelection"
+		        (onChange) = "onSearchOrder()"></p-multi-select>
+
+		<p-select
+		        class = "mr-3"
+		        [options] = "orderTypeOptions()!"
+		        [(ngModel)] = "orderTypeSelection"
+		        (onChange) = "onSearchOrder()"></p-select>
+		<p-select
+		        [options] = "sortByOption()!"
+		        [(ngModel)] = "sortBySelection"
+		        placeholder = "Bộ lọc"
+		        (onChange) = "onSearchOrder()"></p-select>
+	      </div>
+	      <div class = "col-3 flex justify-content-end">
+		<p-button icon="pi pi-plus" label="Tạo mới" (onClick)="onCreateOrder()"></p-button>
+<!--		<p-button icon="pi pi-file-export" class="ml-2" label="Xuất Excel" (onClick)="onExportAllOrderExcel()"></p-button>-->
+		<p-splitbutton icon="pi pi-file-export" class="ml-2" label="Xuất Excel" [model]="exportItems()"></p-splitbutton>
+	      </div>
+	  </div>
+        </ng-template>
+        <ng-template #header>
+	  <tr>
+	      <th>Mã hoá đơn</th>
+	      <th>Ngày tạo</th>
+	      <th>Khách hàng</th>
+	      <th>Tổng tiền</th>
+	      <th>Giảm giá</th>
+	      <th>Phải trả</th>
+	  </tr>
+        </ng-template>
+
+        <ng-template
+            #body let-order>
+	  <tr [pRowToggler] = "order">
+	      <td>{{ order.code }}</td>
+	      <td>{{ order.orderedAt|date:'dd/MM/yyyy HH:mm:ss' }}</td>
+	      <td>{{ order.customer === null ? "Khách lẻ" : order.customer.name }}</td>
+	      <td>{{ order.subTotal| number:"1.0-0" }}</td>
+	      <td>{{ order.discount| number:"1.0-0" }}</td>
+	      <td>{{ order.grandTotal| number:"1.0-0" }}</td>
+	  </tr>
+        </ng-template>
+        <ng-template #expandedrow let-order>
+	  <tr class = "bg-primary-50">
+	      <td colspan = "6">
+		<div class = "p-3">
+		    <div class = "mb-4">
+		        <span class = "mr-3"
+			    style = "font-size: 20px"><b>{{ order.customer === null ? "Khách lẻ" : order.customer.name }}</b></span>
+		        <span class = "mr-3">{{ order.code }}</span>
+		        <span class = "p-1"
+			    style = "font-weight: bold;color: darkgreen;background-color: lightgreen">{{ getOrderStatusLabel(order.orderStatus) }}</span>
+		    </div>
+		    <div class = "flex flex-row mb-4">
+		        @let type = order.orderType;
+		        <div class = "col-3">
+			  <div class = "mb-3">
+			      <span style = "color: grey">Người bán:</span>
+			      <span class = "ml-3">{{ order.staff.name }}</span>
+			  </div>
+			  @if (type == 1) {
+			      <div class = "mb-3">
+				<span style = "color: grey">Ngày:</span>
+				<span class = "ml-3">{{ order.staff.name }}</span>
+			      </div>
+			  }
+		        </div>
+		        <div class = "col-3">
+			  <div class = "mb-3">
+			      <span style = "color: grey">Loại đơn:</span>
+			      <span class = "ml-3">{{ order.orderType == 0 ? "Trực tiếp" : "Vận chuyển" }}</span>
+			  </div>
+
+		        </div>
+		        <div class = "col-3">
+			  <div class = "mb-3">
+			      <span style = "color: grey">Kênh bán:</span>
+			      <span class = "ml-3">{{ order.saleChannel == 0 ? "Tại quầy" : "Website" }}</span>
+			  </div>
+
+		        </div>
+		        <div class = "col-3">
+
+			  <div class = "mb-3">
+			      <span style = "color: grey">Ngày bán:</span>
+			      <span class = "ml-3">{{ order.orderedAt|date:'dd/MM/yyyy HH:mm:ss' }}</span>
+			  </div>
+		        </div>
+		    </div>
+
+		    <p-table [tableStyle] = "{'border':' 1px solid green'}" [value] = "order.orderDetails"
+			   dataKey = "id">
+		        <ng-template #header>
+			  <tr>
+			      <th>Mã sản phẩm</th>
+			      <th>Tên sản phẩm</th>
+			      <th>Số lượng</th>
+			      <th>Đơn giá</th>
+			      <th>Giảm giá</th>
+			      <th>Thành tiền</th>
+			  </tr>
+		        </ng-template>
+		        <ng-template #body let-od>
+			  <tr>
+			      <td>{{ od.productCode }}</td>
+			      <td>{{ od.productName }}</td>
+			      <td>{{ od.quantity }}</td>
+			      <td>{{ od.price| number:"1.0-0" }}</td>
+			      <td>{{ od.discount| number:"1.0-0" }}</td>
+			      <td>{{ od.totalPrice| number:"1.0-0" }}</td>
+			  </tr>
+		        </ng-template>
+		    </p-table>
+		    <div class = "flex flex-row mt-4">
+		        <div class = "col-9">
+			  <p-iftalabel>
+			      <textarea [disabled]="true" pTextarea id="des" rows="5" cols="120">{{order.note}}</textarea>
+			      <label for="des">Ghi chú</label>
+			  </p-iftalabel>
+		        </div>
+		        <div class = "col-3">
+			  <div class = "flex flex-row">
+			      <div class = "col-7 flex flex-column">
+				<span style = "color: grey">Tổng tiền hàng:</span>
+				<span class = "mt-3" style = "color: grey">Giảm giá hoá đơn:</span>
+				<span class = "mt-3" style = "color: grey">Khách cần trả:</span>
+				<span class = "mt-3" style = "color: grey">Khách đã trả:</span>
+			      </div>
+			      <div class = "col-5 flex flex-column text-right" style = "margin-left: auto">
+				<span class = "">{{ order.subTotal| number:"1.0-0" }}</span>
+				<span class = "mt-3 ">{{ order.discount| number:"1.0-0" }}</span>
+				<span class = "mt-3 ">{{ order.grandTotal| number:"1.0-0" }}</span>
+				<span class = "mt-3 ">{{ order.amountPaid| number:"1.0-0" }}</span>
+			      </div>
+			  </div>
+		        </div>
+		    </div>
+		    <hr>
+		    <div class="flex justify-content-end">
+		        <p-button icon="pi pi-print" label="In"></p-button>
+		        <p-button class="ml-2" icon="pi pi-undo" label="Trả hàng"></p-button>
+		        <p-button class="ml-2" icon="pi pi-file-export" label="Xuất Excel" (onClick)="onExportSingleOrderExcel(order.id,order.code)"></p-button>
+		    </div>
+		</div>
+	      </td>
+	  </tr>
+        </ng-template>
+        <ng-template #emptymessage>
+	  <tr>
+	      <td colspan = "7" style = "text-align: center">Không tìm thấy bản ghi nào</td>
+	  </tr>
+        </ng-template>
+        <ng-template #footer class = "flex justify-content-center">
+	  <tr>
+	      <td colspan = "100%" style = "background-color: #ffffff">
+		<p-paginator #paginator
+			   (onPageChange) = "onPageChange($event)"
+			   [rows] = "size()"
+			   [totalRecords] = "totalElements()"
+			   [rowsPerPageOptions] = "[10, 20, 30]"/>
+	      </td>
+	  </tr>
+        </ng-template>
+    </p-table>
+</div>
