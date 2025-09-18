@@ -80,10 +80,10 @@
           "defaultConfiguration": "production"
         },
         "serve": {
-          "builder": "@angular/build:dev-server",
           "options": {
             "port": 4300
           },
+          "builder": "@angular/build:dev-server",
           "configurations": {
             "production": {
               "buildTarget": "frontend-online-store:build:production"
