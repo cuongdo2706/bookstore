@@ -1,5 +1,6 @@
-import { Component, signal } from '@angular/core';
+import {Component, inject, OnInit, signal} from '@angular/core';
 import { RouterOutlet } from '@angular/router';
+import {PrimeNG} from "primeng/config";
 
 @Component({
   selector: 'app-root',
@@ -7,6 +8,9 @@ import { RouterOutlet } from '@angular/router';
   templateUrl: './app.html',
   styleUrl: './app.css'
 })
-export class App {
-  protected readonly title = signal('frontend-management');
-}
+export class App implements OnInit{
+    private primeng = inject(PrimeNG);
+
+    ngOnInit(): void {
+        this.primeng.ripple.set(true);
+    }}

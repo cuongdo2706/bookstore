@@ -1,0 +1,10 @@
+.number-input-left{
+    .p-inputnumber-input {
+        width: 600px;
+    }
+}
+.number-input-right{
+    .p-inputnumber-input {
+        width: 450px;
+    }
+}

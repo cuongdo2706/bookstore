@@ -1,0 +1,89 @@
+<p-menu [style] = "{'overflow-y':'auto','background-color':'#f8f9fa','top':'82px','bottom':'10px','position':'fixed','border':'solid 1px lightgreen'}">
+    <ng-template #start>
+        <div class = "sidenav-header">
+	  <img src = "{{user.imgUrl?user.imgUrl:defaultImg}}" width = "80" height = "80">
+	  <div class = "header-text">
+	      <h2>{{ user.sub }}</h2>
+	      <p>{{ user.role === "ROLE_ADMIN" ? "Quản lý" : "Nhân viên" }}</p>
+	  </div>
+        </div>
+        <hr>
+        <div class = "overflow-y-auto">
+	  <ul class = "list-none p-0 pt-2 pl-2 m-0 overflow-hidden">
+	      @for (i of this.items;track $index){
+		<li>
+		    <a pRipple routerLink = "{{i.routerLink}}" routerLinkActive = "active" style = "text-decoration: none"
+		       class = "flex align-items-center cursor-pointer p-3 border-round text-700 active:surface-200 transition-duration-150 transition-colors p-ripple">
+		        <i class = "{{i.icon}} mr-2"></i>
+		        <span class = "font-medium" style = "font-size: 1rem">{{i.label}}</span>
+		    </a>
+		</li>
+	      }
+
+<!--	      <li>-->
+<!--		<a pRipple routerLink = "/ban-hang" routerLinkActive = "active" style = "text-decoration: none"-->
+<!--		   class = "flex align-items-center cursor-pointer p-3 border-round text-700 active:surface-200   transition-duration-150 transition-colors p-ripple">-->
+<!--		    <i class = "pi pi-shopping-cart mr-2"></i>-->
+<!--		    <span class = "font-medium" style = "font-size: 1rem">Bán hàng</span>-->
+<!--		</a>-->
+<!--	      </li>-->
+<!--	      <li>-->
+<!--		<a pRipple routerLink = "/san-pham" routerLinkActive = "active" style = "text-decoration: none"-->
+<!--		   class = "flex align-items-center cursor-pointer p-3 border-round text-700 active:surface-200 transition-duration-150 transition-colors p-ripple">-->
+<!--		    <i class = "pi pi-book mr-2"></i>-->
+<!--		    <span class = "font-medium" style = "font-size: 1rem">Sản phẩm</span>-->
+<!--		</a>-->
+<!--	      </li>-->
+<!--	      <li>-->
+<!--		<a pRipple routerLink = "/thuoc-tinh" routerLinkActive = "active" style = "text-decoration: none"-->
+<!--		   class = "flex align-items-center cursor-pointer p-3 border-round text-700 active:surface-200 transition-duration-150 transition-colors p-ripple">-->
+<!--		    <i class = "pi pi-bars mr-2"></i>-->
+<!--		    <span class = "font-medium" style = "font-size: 1rem">Thuộc tính</span>-->
+<!--		</a>-->
+<!--	      </li>-->
+
+<!--	      <li>-->
+<!--		<a pRipple-->
+<!--		   routerLink = "/don-hang"-->
+<!--		   routerLinkActive = "active"-->
+<!--		   style = "text-decoration: none"-->
+<!--		   class = "flex align-items-center cursor-pointer p-3 border-round text-700 active:surface-200 transition-duration-150 transition-colors p-ripple"-->
+<!--		>-->
+<!--		    <i class = "pi pi-truck mr-2"></i>-->
+<!--		    <span class = "font-medium" style = "font-size: 1rem">Đơn hàng</span>-->
+<!--		</a>-->
+<!--	      </li>-->
+<!--	      <li>-->
+<!--		<a pRipple routerLink = "/khach-hang" routerLinkActive = "active" style = "text-decoration: none"-->
+<!--		   class = "flex align-items-center cursor-pointer p-3 border-round text-700 active:surface-200 transition-duration-150 transition-colors p-ripple">-->
+<!--		    <i class = "pi pi-id-card mr-2"></i>-->
+<!--		    <span class = "font-medium" style = "font-size: 1rem">Khách hàng</span>-->
+<!--		</a>-->
+<!--	      </li>-->
+<!--	      <li>-->
+<!--		<a pRipple routerLink = "/nhan-vien" routerLinkActive = "active" style = "text-decoration: none"-->
+<!--		   class = "flex align-items-center cursor-pointer p-3 border-round text-700 active:surface-200 transition-duration-150 transition-colors p-ripple">-->
+<!--		    <i class = "pi pi-id-card mr-2"></i>-->
+<!--		    <span class = "font-medium" style = "font-size: 1rem">Nhân viên</span>-->
+<!--		</a>-->
+<!--	      </li>-->
+<!--	      <li>-->
+<!--		<a pRipple routerLink = "/khuyen-mai" routerLinkActive = "active" style = "text-decoration: none"-->
+<!--		   class = "flex align-items-center cursor-pointer p-3 border-round text-700 active:surface-200 transition-duration-150 transition-colors p-ripple">-->
+<!--		    <i class = "pi pi-percentage mr-2"></i>-->
+<!--		    <span class = "font-medium" style = "font-size: 1rem">Khuyến mại</span>-->
+<!--		</a>-->
+<!--	      </li>-->
+<!--	      <li>-->
+<!--		<a pRipple routerLink = "/ma-giam-gia" routerLinkActive = "active" style = "text-decoration: none"-->
+<!--		   class = "flex align-items-center cursor-pointer p-3 border-round text-700 active:surface-200  hover:surface-100 transition-duration-150 transition-colors p-ripple">-->
+<!--		    <i class = "pi pi-ticket mr-2"></i>-->
+<!--		    <span class = "font-medium" style = "font-size: 1rem">Mã giảm giá</span>-->
+<!--		</a>-->
+<!--	      </li>-->
+
+	  </ul>
+        </div>
+    </ng-template>
+</p-menu>
+

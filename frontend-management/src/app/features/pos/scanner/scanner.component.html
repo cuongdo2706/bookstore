@@ -1,0 +1,14 @@
+<p-dialog [visible] = "visible()" [modal] = "true" [closable] = "false">
+    <ng-template #header>
+        <p-button (click) = "onCloseScanner()" fluid rounded icon = "pi pi-times"/>
+    </ng-template>
+
+    <ng-template #content>
+        <span>{{ scanner.data.value|json }}</span>
+        <span>{{ scanner.data|async|json }}</span>
+        <ngx-scanner-qrcode #scanner></ngx-scanner-qrcode>
+    </ng-template>
+
+
+</p-dialog>
+

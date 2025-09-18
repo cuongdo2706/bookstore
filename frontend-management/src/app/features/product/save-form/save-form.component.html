@@ -1,0 +1,218 @@
+<p-dialog
+        header = "Thêm mới"
+        [modal] = "true"
+        [style] = "{width:'70rem'}"
+        [visible] = "visible()"
+        closable = "false">
+    <form [formGroup] = "saveForm" (ngSubmit) = "saveBook()">
+        <!--Phần input chính -->
+        <div class = "flex">
+	  <div class = "col-7">
+	      <p-floatlabel variant = "on" class = "mt-3 flex">
+		<input aria-describedby = "name-error"
+		       type = "text"
+		       pInputText
+		       id = "name"
+		       style = "width:600px"
+		       formControlName = "name"
+		/>
+		<label for = "name">Tên sách</label>
+	      </p-floatlabel>
+	      @if (submitted() && saveForm.get('name')?.invalid) {
+		<small class = "p-error block mt-1">
+		    Tên không được để trống
+		</small>
+	      }
+	      <p-floatlabel variant = "on" class = "mt-5 flex">
+		<input pInputText id = "publisher" style = "width:600px"
+		       formControlName = "publisher"/>
+		<label for = "publisher">Nhà xuất bản</label>
+	      </p-floatlabel>
+
+	      <p-floatlabel variant = "on" class = "mt-5 flex">
+		<input pInputText id = "translator" style = "width:600px"
+		       formControlName = "translator"/>
+		<label for = "name">Dịch giả</label>
+	      </p-floatlabel>
+	      <p-floatlabel variant = "on" class = "mt-5 flex">
+
+		<p-input-number id = "numOfPages"
+			      class = "number-input-left"
+			      formControlName = "numOfPages"></p-input-number>
+		<label for = "numOfPages">Số trang</label>
+	      </p-floatlabel>
+	      @if (submitted() && saveForm.get('numOfPages')?.invalid && saveForm.get('numOfPages')?.value != null) {
+		<small class = "p-error block mt-1">
+		    Số trang phải là số và lớn hơn 0
+		</small>
+	      }
+	      <p-floatlabel variant = "on" class = "mt-5 flex">
+		<p-select
+		        [style] = "{'width':'600px'}"
+		        formControlName = "publishedYear"
+		        [options] = "years()"
+		        [filter] = "true"
+		        [showClear] = "true"
+		/>
+		<label>Năm phát hành</label>
+	      </p-floatlabel>
+	      <div class = "mt-5 flex">
+		<p-float-label variant = "on">
+		    <p-multi-select
+			  [style] = "{'width':'600px'}"
+			  formControlName = "authors"
+			  [options] = "authors()"
+			  optionLabel = "name"
+			  optionValue = "id"
+			  [filter] = "true"
+			  filterBy = "name"
+			  showClear = "true">
+		        <ng-template #empty>
+			  <span class = "flex justify-content-center">Không có bản ghi nào</span>
+		        </ng-template>
+		        <ng-template #footer>
+			  <div class = "p-3">
+			      <p-button (onClick) = "saveAuthorForm()" label = "Thêm tác giả" fluid size = "small"
+				      icon = "pi pi-plus"/>
+			  </div>
+		        </ng-template>
+		    </p-multi-select>
+		    <label>Tác giả</label>
+		</p-float-label>
+
+		<p-dialog
+		        header = "Thêm tác giả"
+		        [modal] = "true"
+		        [(visible)] = "authorVisible"
+		        [closable] = "false">
+		    <form [formGroup] = "authorInput" (ngSubmit) = "saveAuthor(authorInput.value)">
+		        <div class = "flex align-items-center gap-3 mb-3 mt-2">
+			  <label for = "authorName" class = "font-semibold w-6rem">Tên</label>
+			  <input pInputText id = "authorName" formControlName = "name"
+			         class = "flex-auto"/>
+		        </div>
+		        <div class = "flex justify-content-end gap-2 mt-4">
+			  <p-button label = "Thêm mới" type = "submit"/>
+			  <p-button label = "Huỷ" severity = "secondary" (onClick) = "authorVisible.set(false)"/>
+		        </div>
+		    </form>
+		</p-dialog>
+	      </div>
+	      @if (submitted() && saveForm.get('author')?.invalid) {
+		<small class = "p-error block mt-1">
+		    Tác giả phải được chọn
+		</small>
+	      }
+
+	      <div class = "mt-5 flex">
+		<p-float-label variant = "on">
+		    <p-multi-select
+			  [style] = "{'width':'600px'}"
+			  formControlName = "categories"
+			  [options] = "categories()"
+			  optionLabel = "name"
+			  optionValue = "id"
+			  [filter] = "true"
+			  filterBy = "name"
+			  showClear = "true">
+		        <ng-template #empty>
+			  <span class = "flex justify-content-center">Không có bản ghi nào</span>
+		        </ng-template>
+		        <ng-template #footer>
+			  <div class = "p-3">
+			      <p-button (onClick) = "saveCategoryForm()" label = "Thêm danh mục" fluid
+				      size = "small"
+				      icon = "pi pi-plus"/>
+			  </div>
+		        </ng-template>
+		    </p-multi-select>
+		    <label>Danh mục</label>
+		</p-float-label>
+		<p-dialog
+		        header = "Thêm thể loại"
+		        [modal] = "true"
+		        [(visible)] = "categoryVisible"
+		        [closable] = "false">
+		    <form [formGroup] = "categoryInput" (ngSubmit) = "saveCategory(categoryInput.value)">
+		        <div class = "flex align-items-center gap-3 mb-3 mt-2">
+			  <label for = "categoryName" class = "font-semibold w-6rem">Tên</label>
+			  <input pInputText formControlName = "name" id = "categoryName"
+			         class = "flex-auto"/>
+		        </div>
+		        <div class = "flex justify-content-end gap-2 mt-4">
+			  <p-button label = "Thêm mới" type = "submit"/>
+			  <p-button label = "Huỷ" severity = "secondary"
+				  (onClick) = "categoryVisible.set(false)"/>
+		        </div>
+		    </form>
+		</p-dialog>
+	      </div>
+	      @if (submitted() && saveForm.get('category')?.invalid) {
+		<small class = "p-error block mt-1">
+		    Danh mục phải được chọn
+		</small>
+	      }
+	  </div>
+	  <div class = "col-5">
+	      <p-floatlabel variant = "on" class = "mt-3 flex">
+		<p-input-number id = "quantity"
+			      class = "number-input-right"
+			      formControlName = "quantity"></p-input-number>
+		<label for = "quantity">Số lượng</label>
+	      </p-floatlabel>
+	      @if (submitted() && saveForm.get('quantity')?.invalid) {
+		<small class = "p-error block mt-1">
+		    Số lượng phải là số và lớn hơn hoặc bằng 0
+		</small>
+	      }
+	      <p-floatlabel variant = "on" class = "mt-5 flex">
+		<p-input-number id = "price"
+			      class = "number-input-right"
+			      formControlName = "price"></p-input-number>
+		<label for = "price">Giá</label>
+	      </p-floatlabel>
+	      @if (submitted() && saveForm.get('price')?.invalid) {
+		<small class = "p-error block mt-1">
+		    Giá phải là số và lớn hơn 0
+		</small>
+	      }
+	      <p-floatlabel variant = "on" class = "mt-5 flex">
+          <textarea
+	        formControlName = "description"
+	        [style] = "{'width':'450px'}"
+	        id = "description"
+	        rows = "10"
+	        pTextarea
+	></textarea>
+		<label for = "description">Mô tả</label>
+	      </p-floatlabel>
+	  </div>
+        </div>
+
+        <div class = "flex">
+	  <!--Phần input file -->
+	  <div class = "col-7">
+	      <p-fileupload
+		    (onSelect) = "chooseImage($event)"
+		    (onRemove) = "removeImage()"
+		    [multiple] = "false"
+		    accept = "image/*"
+		    maxFileSize = "5242880"
+		    [showCancelButton] = "false"
+		    [showUploadButton] = "false"
+		    fileLimit = "1"
+		    chooseLabel = "Chọn ảnh">
+	      </p-fileupload>
+	  </div>
+	  <!--Phần button -->
+
+	  <div class = "flex pt-2 col-5 justify-content-end">
+	      <p-button class = "mr-3" type = "submit" label = "Thêm mới" icon = "pi pi-plus"></p-button>
+	      <p-button severity = "secondary" label = "Bỏ qua" (onClick) = "closeDialog()"
+		      icon = "pi pi-times"></p-button>
+	  </div>
+        </div>
+
+    </form>
+</p-dialog>
+<p-toast></p-toast>

@@ -1,0 +1,22 @@
+<p-toast></p-toast>
+<div class = "flex justify-content-center mt-8">
+    <p-card header = "Đăng nhập" [style] = "{width:'400px'}">
+        <form [formGroup] = "loginForm" (ngSubmit) = "onLogin()" class = "mt-3">
+	  <div>
+	      <p-floatlabel>
+		<input pInputText id = "username" [formControl] = "loginForm.controls.username">
+		<label for = "username">Tài khoản</label>
+	      </p-floatlabel>
+	  </div>
+	  <div class = "mt-5">
+	      <p-floatlabel>
+		<p-password [feedback] = "false" id = "password" [formControl] = "loginForm.controls.password"/>
+		<label for = "password">Mật khẩu</label>
+	      </p-floatlabel>
+	  </div>
+	  <div class = "mt-4">
+	      <p-button label = "Đăng nhập" type = "submit"/>
+	  </div>
+        </form>
+    </p-card>
+</div>
