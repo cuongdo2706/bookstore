@@ -6,6 +6,12 @@
 	      (onSave) = "onSaveForm($event)"
 	      (message) = "saveMessage($event)"
 	      [productStatus] = "statusSelection()"
+	      [authorIds] = "selectedAuthorIds()"
+	      [categoryIds] = "selectedAuthorIds()"
+	      [publisherIds] = "selectedAuthorIds()"
+	      [publishers] = "publishers()"
+	      [authors] = "authors()"
+	      [categories] = "categories()"
         ></app-save-form>
     }
     <p-table [value] = "products()"
@@ -45,6 +51,18 @@
 		        optionValue = "value"
 		        [(ngModel)] = "statusSelection"
 		        placeholder = "Bộ lọc"/>
+		<p-multi-select
+		        [style.margin-left.px] = "10"
+		        placeholder = "Tác giả"
+		/>
+		<p-multi-select
+		        [style.margin-left.px] = "10"
+		        placeholder = "Thể loại"
+		/>
+		<p-multi-select
+		        [style.margin-left.px] = "10"
+		        placeholder = "NXB"
+		/>
 
 	      </div>
 	      <div class = "col-6 flex justify-content-end">
@@ -111,7 +129,7 @@
 			  <div class = "grid mt-1">
 			      <div style = "font-weight: bold" class = "col-4">Nhà xuất bản:</div>
 			      <div
-				    class = "col-8">{{ product.publisher == null || product.publisher == "" ? "Đang cập nhật" : product.publisher }}
+				    class = "col-8">{{ product.publisher.name }}
 			      </div>
 			  </div>
 			  <div class = "grid mt-1">
@@ -177,6 +195,12 @@
 			      (onUpdate) = "onUpdateForm($event)"
 			      (message) = "updateMessage($event)"
 			      [productStatus] = "this.statusSelection()"
+			      [publisherIds] = "selectedAuthorIds()"
+			      [categoryIds] = "selectedAuthorIds()"
+			      [authorIds] = "selectedAuthorIds()"
+			      [publishers] = "publishers()"
+			      [authors] = "authors()"
+			      [categories] = "categories()"
 		        ></app-update-form>
 		    }
 		    <div class = "flex pt-2 justify-content-end">

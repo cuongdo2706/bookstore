@@ -21,11 +21,11 @@ public class User extends BaseEntity {
 
     String role;
 
-    @Column(columnDefinition = "default 1")
-    Boolean isActive;
+    @Builder.Default
+    Boolean isActive=true;
 
-    @Column(columnDefinition = "default 0")
-    Boolean isDeleted;
+    @Builder.Default
+    Boolean isDeleted=false;
 
     @OneToOne
     @JoinColumn(name = "customer_id", unique = true)

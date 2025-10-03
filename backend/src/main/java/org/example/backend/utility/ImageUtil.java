@@ -14,9 +14,11 @@ import java.util.Map;
 
 @Component
 public class ImageUtil {
-    @Autowired
-    private Cloudinary cloudinary;
+    private final Cloudinary cloudinary;
 
+    public ImageUtil(Cloudinary cloudinary) {
+        this.cloudinary = cloudinary;
+    }
 
     public ImageResponse upload(MultipartFile multipartFile) throws IOException {
         if (multipartFile.isEmpty()) return null;

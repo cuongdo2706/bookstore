@@ -61,7 +61,7 @@ public class ExcelUtil {
                 row.createCell(3).setCellValue(p.getImgUrl());
                 row.createCell(4).setCellValue(p.getQuantity());
                 row.createCell(5).setCellValue(String.valueOf(p.getPrice()));
-                row.createCell(6).setCellValue(p.getPublisher());
+                row.createCell(6).setCellValue(p.getPublisher().getName());
                 row.createCell(7).setCellValue(p.getTranslator());
                 row.createCell(8).setCellValue(p.getNumOfPages() == null ? null : p.getNumOfPages().toString());
                 row.createCell(9).setCellValue(p.getPublishedYear() == null ? null : p.getPublishedYear().toString());

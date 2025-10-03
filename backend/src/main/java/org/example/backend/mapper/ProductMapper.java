@@ -1,17 +1,8 @@
 package org.example.backend.mapper;
 
-import jakarta.persistence.Tuple;
-import org.example.backend.dto.request.ProductUpdatedRequest;
 import org.example.backend.dto.response.*;
-import org.example.backend.entity.Author;
-import org.example.backend.entity.Category;
 import org.example.backend.entity.Product;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
 
-import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.util.*;
 
 public class ProductMapper {
@@ -122,7 +113,6 @@ public class ProductMapper {
                 product.getImgUrl(),
                 product.getQuantity(),
                 product.getPrice(),
-                product.getPublisher(),
                 product.getTranslator(),
                 product.getNumOfPages(),
                 product.getPublishedYear(),
@@ -130,6 +120,7 @@ public class ProductMapper {
                 product.getDescription(),
                 authorResponses,
                 categoryResponses,
+                product.getPublisher() != null ? PublisherMapper.toPublisherResponse(product.getPublisher()) : null,
                 promotionResponse
         );
     }

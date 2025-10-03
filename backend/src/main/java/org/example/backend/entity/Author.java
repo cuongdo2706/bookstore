@@ -19,8 +19,8 @@ import java.util.Set;
 @NoArgsConstructor
 public class Author extends BaseEntity {
     String name;
-    @Column(columnDefinition = "default 0")
-    Boolean isDeleted;
+    @Builder.Default
+    Boolean isDeleted = false;
     @ManyToMany(mappedBy = "authors")
     Set<Product> products;
 }

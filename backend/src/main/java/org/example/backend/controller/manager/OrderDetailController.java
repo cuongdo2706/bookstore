@@ -1,4 +1,4 @@
-package org.example.backend.controller.rest;
+package org.example.backend.controller.manager;
 
 import org.example.backend.dto.response.OrderDetailResponse;
 import org.example.backend.dto.response.SuccessResponse;

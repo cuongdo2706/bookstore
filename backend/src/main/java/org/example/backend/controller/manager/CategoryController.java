@@ -1,7 +1,8 @@
-package org.example.backend.controller.rest;
+package org.example.backend.controller.manager;
 
 import jakarta.validation.Valid;
-import org.example.backend.dto.request.PropertySearchRequest;
+import org.example.backend.dto.request.CreateAttributeRequest;
+import org.example.backend.dto.request.FilterAttributeRequest;
 import org.example.backend.dto.response.CategoryResponse;
 import org.example.backend.dto.response.SuccessResponse;
 import org.example.backend.entity.Category;
@@ -29,7 +30,7 @@ public class CategoryController {
 //    }
 
     @GetMapping("/search")
-    public SuccessResponse<List<Category>> findByName(@Valid @ModelAttribute PropertySearchRequest request) {
+    public SuccessResponse<List<Category>> findByName(@Valid @ModelAttribute FilterAttributeRequest request) {
         return new SuccessResponse<>(HttpStatus.OK.value(), "Getting data success", categoryService.findByName(request.getPage(), request.getSize(), request.getName()));
     }
 
@@ -39,8 +40,8 @@ public class CategoryController {
     }
 
     @PostMapping
-    public SuccessResponse<CategoryResponse> save(@RequestParam(name = "name") String name) {
-        return new SuccessResponse<>(HttpStatus.CREATED.value(), "Adding data success", categoryService.save(name));
+    public SuccessResponse<CategoryResponse> save(@RequestBody CreateAttributeRequest request) {
+        return new SuccessResponse<>(HttpStatus.CREATED.value(), "Adding data success", categoryService.save(request));
     }
 
     @PutMapping("/{id}")

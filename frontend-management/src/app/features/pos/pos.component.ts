@@ -11,7 +11,6 @@ import {InputText} from "primeng/inputtext";
 import {firstValueFrom, lastValueFrom} from "rxjs";
 import {Toast} from "primeng/toast";
 import {Paginator, PaginatorState} from "primeng/paginator";
-import {ScannerComponent} from "./scanner/scanner.component";
 import {ToggleSwitch, ToggleSwitchChangeEvent} from "primeng/toggleswitch";
 import {ActivatedRoute} from "@angular/router";
 import {Select, SelectChangeEvent} from "primeng/select";
@@ -65,7 +64,6 @@ interface OrderDetail {
         Toast,
         NgOptimizedImage,
         Paginator,
-        ScannerComponent,
         InputText,
 
     ],
@@ -102,8 +100,6 @@ export class PosComponent implements OnInit {
     totalElements = signal(0);
     keyword = signal("");
     staffUsername: string = this.authService.getPayload().sub;
-
-    @ViewChild('scanner') scanner!: ScannerComponent;
 
     constructor() {
         effect(() => {
@@ -159,7 +155,10 @@ export class PosComponent implements OnInit {
             size: 10,
             nameOrCodeKeyword: this.keyword(),
             sortBy: "name",
-            isActive: true
+            isActive: true,
+            authorIds:[],
+            categoryIds:[],
+            publisherIds:[]
         })
             .subscribe({
                 next: res => {
@@ -647,7 +646,10 @@ export class PosComponent implements OnInit {
             size: event.rows!,
             nameOrCodeKeyword: this.keyword(),
             sortBy: "name",
-            isActive: true
+            isActive: true,
+            publisherIds:[],
+            categoryIds:[],
+            authorIds:[]
         }).subscribe({
                 next: res => {
                     this.products.set(res.data.content);

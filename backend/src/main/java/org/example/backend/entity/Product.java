@@ -28,7 +28,6 @@ public class Product extends BaseEntity {
     Integer quantity;
     @Column(precision = 19, scale = 2)
     BigDecimal price;
-    String publisher;
     String translator;
     Integer numOfPages;
     Integer publishedYear;
@@ -52,10 +51,14 @@ public class Product extends BaseEntity {
     Set<Category> categories;
 
     @ManyToOne
+    @JoinColumn(name = "publisher_id")
+    Publisher publisher;
+
+    @ManyToOne
     @JoinColumn(name = "promotion_id")
     Promotion promotion;
-    @Column(columnDefinition = "default 1")
-    Boolean isActive;
-    @Column(columnDefinition = "default 0")
-    Boolean isDeleted;
+    @Builder.Default
+    Boolean isActive=true;
+    @Builder.Default
+    Boolean isDeleted=false;
 }

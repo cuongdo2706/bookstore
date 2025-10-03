@@ -1,10 +1,10 @@
-package org.example.backend.controller.rest;
+package org.example.backend.controller.manager;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
-import org.example.backend.dto.request.ProductCreatedRequest;
-import org.example.backend.dto.request.ProductFilterRequest;
-import org.example.backend.dto.request.ProductUpdatedRequest;
+import org.example.backend.dto.request.CreateProductRequest;
+import org.example.backend.dto.request.FilterProductRequest;
+import org.example.backend.dto.request.UpdateProductRequest;
 import org.example.backend.dto.response.PageResponse;
 import org.example.backend.dto.response.ProductResponse;
 import org.example.backend.dto.response.SuccessResponse;
@@ -47,7 +47,7 @@ public class ProductController {
     }
 
     @GetMapping("/search")
-    public SuccessResponse<PageResponse<ProductResponse>> searchProduct(@Valid @ModelAttribute ProductFilterRequest request) {
+    public SuccessResponse<PageResponse<ProductResponse>> searchProduct(@Valid @ModelAttribute FilterProductRequest request) {
         return new SuccessResponse<>(HttpStatus.OK.value(), "Getting data success", productService.searchProduct(request));
     }
 
@@ -73,12 +73,12 @@ public class ProductController {
     }
 
     @PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
-    public SuccessResponse<ProductResponse> createBook(@Valid @RequestPart(value = "product") ProductCreatedRequest request, @RequestPart(required = false) MultipartFile file) throws IOException, DataNotFoundException {
+    public SuccessResponse<ProductResponse> createBook(@Valid @RequestPart(value = "product") CreateProductRequest request, @RequestPart(required = false) MultipartFile file) throws IOException, DataNotFoundException {
         return new SuccessResponse<>(HttpStatus.CREATED.value(), "Adding data success", productService.save(request, file));
     }
 
     @PutMapping(value = "/{id}", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
-    public SuccessResponse<ProductResponse> updateBook(@Valid @NotNull(message = "Id must not be null") @PathVariable(name = "id") Long id, @Valid @RequestPart(value = "product") ProductUpdatedRequest request, @RequestPart(required = false) MultipartFile file) throws IOException, DataNotFoundException {
+    public SuccessResponse<ProductResponse> updateBook(@Valid @NotNull(message = "Id must not be null") @PathVariable(name = "id") Long id, @Valid @RequestPart(value = "product") UpdateProductRequest request, @RequestPart(required = false) MultipartFile file) throws Exception {
         return new SuccessResponse<>(HttpStatus.ACCEPTED.value(), "Editing data success", productService.update(id, request, file));
     }
 

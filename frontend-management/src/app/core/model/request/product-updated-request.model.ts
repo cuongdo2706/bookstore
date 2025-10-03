@@ -2,7 +2,7 @@ export interface ProductUpdatedRequest {
     name?: string;
     quantity?: number;
     price?: number;
-    publisher?: string | null;
+    publisherId?: number | null;
     translator?: string | null;
     numOfPages?: number | null;
     publishedYear?: number | null;

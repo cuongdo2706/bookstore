@@ -1,5 +1,6 @@
 package org.example.backend.service.impl;
 
+import org.example.backend.dto.request.CreateAttributeRequest;
 import org.example.backend.dto.response.AuthorResponse;
 import org.example.backend.entity.Author;
 import org.example.backend.exception.DataNotFoundException;
@@ -7,20 +8,19 @@ import org.example.backend.exception.DataExistedException;
 import org.example.backend.mapper.AuthorMapper;
 import org.example.backend.repository.AuthorRepository;
 import org.example.backend.service.AuthorService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 @Service
 public class AuthorServiceImpl implements AuthorService {
-    @Autowired
-    private AuthorRepository authorRepository;
+    private final AuthorRepository authorRepository;
 
+    public AuthorServiceImpl(AuthorRepository authorRepository) {
+        this.authorRepository = authorRepository;
+    }
 
     @Override
     public List<AuthorResponse> findAll() {
@@ -54,13 +54,12 @@ public class AuthorServiceImpl implements AuthorService {
     }
 
     @Override
-    public AuthorResponse save(String name) {
-        if (authorRepository.existsByName(name)) {
+    public AuthorResponse save(CreateAttributeRequest request) {
+        if (authorRepository.existsByName(request.getName())) {
             throw new DataExistedException("Author is already existed");
         }
         Author author = Author.builder()
-                .name(name)
-                .isDeleted(Boolean.FALSE)
+                .name(request.getName())
                 .build();
         return AuthorMapper.toAuthorResponse(authorRepository.save(author));
     }

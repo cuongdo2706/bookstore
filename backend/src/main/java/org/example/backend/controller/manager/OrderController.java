@@ -1,10 +1,9 @@
-package org.example.backend.controller.rest;
+package org.example.backend.controller.manager;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
-import org.example.backend.dto.request.OrderCreatedRequest;
-import org.example.backend.dto.request.OrderFilterRequest;
-import org.example.backend.dto.response.OrderDetailResponse;
+import org.example.backend.dto.request.CreateOrderRequest;
+import org.example.backend.dto.request.FilterOrderRequest;
 import org.example.backend.dto.response.OrderResponse;
 import org.example.backend.dto.response.PageResponse;
 import org.example.backend.dto.response.SuccessResponse;
@@ -13,7 +12,6 @@ import org.example.backend.entity.OrderDetail;
 import org.example.backend.exception.DataNotFoundException;
 import org.example.backend.service.OrderDetailService;
 import org.example.backend.service.OrderService;
-import org.example.backend.service.impl.OrderServiceImpl;
 import org.example.backend.utility.ExcelUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
@@ -25,7 +23,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.ByteArrayInputStream;
-import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -68,14 +65,14 @@ public class OrderController {
     }
 
     @PostMapping("/search")
-    public SuccessResponse<PageResponse<OrderResponse>> searchOrder(@Valid @RequestBody OrderFilterRequest request) {
+    public SuccessResponse<PageResponse<OrderResponse>> searchOrder(@Valid @RequestBody FilterOrderRequest request) {
         return new SuccessResponse<>(HttpStatus.OK.value(),
                 "Getting data success",
                 orderService.searchOrder(request));
     }
 
     @PostMapping()
-    public SuccessResponse<OrderResponse> create(@RequestBody OrderCreatedRequest request, HttpServletRequest http) throws DataNotFoundException {
+    public SuccessResponse<OrderResponse> create(@RequestBody CreateOrderRequest request, HttpServletRequest http) throws DataNotFoundException {
         String header = http.getHeader("Authorization");
         String token = null;
         if (header != null && header.startsWith("Bearer ")) {

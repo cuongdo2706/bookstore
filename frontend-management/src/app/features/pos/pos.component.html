@@ -43,9 +43,7 @@
 	  raised = "true"
 	  text = "true"
 	  (click) = "onOpenScanner()"></p-button>
-    @if (scannerVisible()) {
-        <app-scanner #scanner [(visible)] = "scannerVisible"></app-scanner>
-    }
+
 
     @for (t of tabs(); let i = $index; track t.tabId) {
         <div [style.background-color] = "t.tabId===activeTabId()?'#10F6B6':'#10B981'"

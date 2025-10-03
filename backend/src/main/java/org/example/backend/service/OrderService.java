@@ -1,7 +1,7 @@
 package org.example.backend.service;
 
-import org.example.backend.dto.request.OrderCreatedRequest;
-import org.example.backend.dto.request.OrderFilterRequest;
+import org.example.backend.dto.request.CreateOrderRequest;
+import org.example.backend.dto.request.FilterOrderRequest;
 import org.example.backend.dto.response.OrderResponse;
 import org.example.backend.dto.response.PageResponse;
 import org.example.backend.entity.Order;
@@ -17,9 +17,9 @@ public interface OrderService {
 
     void updateOrderStatus(Short oldStatus, Short newStatus, Long orderId) throws DataNotFoundException;
 
-    OrderResponse create(OrderCreatedRequest request, String token) throws DataNotFoundException, DataConflictException;
+    OrderResponse create(CreateOrderRequest request, String token) throws DataNotFoundException, DataConflictException;
 
-    PageResponse<OrderResponse> searchOrder(OrderFilterRequest request);
+    PageResponse<OrderResponse> searchOrder(FilterOrderRequest request);
 
     OrderResponse findOrderResponseById(Long id) throws DataNotFoundException;
 

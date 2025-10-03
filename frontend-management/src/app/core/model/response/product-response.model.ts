@@ -6,7 +6,6 @@ export interface ProductResponse {
     imgUrl: string | null;
     quantity: number;
     price: number;
-    publisher: string | null;
     translator: string | null;
     numOfPages: number | null;
     publishedYear: number | null;
@@ -20,4 +19,8 @@ export interface ProductResponse {
         id: number;
         name: string;
     }[];
+    publisher:{
+        id: number;
+        name: string;
+    }
 }

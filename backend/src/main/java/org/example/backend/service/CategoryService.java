@@ -1,5 +1,6 @@
 package org.example.backend.service;
 
+import org.example.backend.dto.request.CreateAttributeRequest;
 import org.example.backend.dto.response.CategoryResponse;
 import org.example.backend.entity.Category;
 import org.example.backend.exception.DataExistedException;
@@ -20,7 +21,7 @@ public interface CategoryService {
 
     List<Category> findByName(Integer page, Integer size, String name);
 
-    CategoryResponse save(String name) throws DataExistedException;
+    CategoryResponse save(CreateAttributeRequest request) throws DataExistedException;
 
     Category update(Long id, String name) throws DataNotFoundException;
 

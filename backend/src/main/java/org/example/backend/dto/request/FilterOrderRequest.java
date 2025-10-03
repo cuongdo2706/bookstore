@@ -10,7 +10,7 @@ import java.util.Set;
 @Getter
 @Setter
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class OrderFilterRequest {
+public class FilterOrderRequest {
     @Positive(message = "Page must be greater than 0")
     Integer page = 1;
     @Positive(message = "Size must be greater than 0")

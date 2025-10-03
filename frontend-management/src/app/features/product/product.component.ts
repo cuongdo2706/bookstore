@@ -19,6 +19,13 @@ import {AppConstants} from "../../app.constants";
 import {ProductService} from "../../core/service/product.service";
 import {ProductResponse} from "../../core/model/response/product-response.model";
 import {PageResponse} from "../../core/model/response/page-response.model";
+import {MultiSelect} from "primeng/multiselect";
+import {AuthorResponse} from "../../core/model/response/author-response.model";
+import {CategoryResponse} from "../../core/model/response/category-response.model";
+import {PublisherResponse} from "../../core/model/response/publisher-response.model";
+import {CategoryService} from "../../core/service/category.service";
+import {AuthorService} from "../../core/service/author.service";
+import {PublisherService} from "../../core/service/publisher.service";
 
 @Component({
     selector: 'app-product',
@@ -37,7 +44,8 @@ import {PageResponse} from "../../core/model/response/page-response.model";
         PaginatorModule,
         TableModule,
         ConfirmDialog,
-        NgOptimizedImage
+        NgOptimizedImage,
+        MultiSelect
     ],
     templateUrl: './product.component.html',
     styleUrl: './product.component.css',
@@ -47,7 +55,13 @@ export class ProductComponent implements OnInit {
     private confirmationService = inject(ConfirmationService);
     private messageService = inject(MessageService);
     private productService = inject(ProductService);
+    private categoryService = inject(CategoryService);
+    private authorService = inject(AuthorService);
+    private publisherService = inject(PublisherService);
     products = signal<ProductResponse[]>([]);
+    authors = signal<AuthorResponse[]>([]);
+    categories = signal<CategoryResponse[]>([]);
+    publishers = signal<PublisherResponse[]>([]);
     nameOrCodeKeyword = signal("");
     filterSelection = signal("name");
     expandedRows = signal<{ [key: string]: boolean }>({});
@@ -65,7 +79,9 @@ export class ProductComponent implements OnInit {
     page = signal(0);
     size = signal(10);
     totalElements = signal(0);
-
+    selectedCategoryIds = signal<number[]>([]);
+    selectedAuthorIds = signal<number[]>([]);
+    selectedPublisherIds = signal<number[]>([]);
     paginator = viewChild<Paginator>('paginator');
     saveFormVisible = signal(false);
     updateFormVisible = signal(false);
@@ -76,6 +92,9 @@ export class ProductComponent implements OnInit {
 
     ngOnInit() {
         this.onFetchProducts();
+        this.fetchAuthors();
+        this.fetchCategories();
+        this.fetchPublisher();
     }
 
     onFetchProducts() {
@@ -84,7 +103,10 @@ export class ProductComponent implements OnInit {
             size: 10,
             sortBy: this.filterSelection(),
             nameOrCodeKeyword: "",
-            isActive: this.statusSelection()
+            isActive: this.statusSelection(),
+            authorIds: this.selectedAuthorIds(),
+            categoryIds: this.selectedCategoryIds(),
+            publisherIds: this.selectedPublisherIds()
         }).subscribe({
                 next: res => {
                     this.products.set(res.data.content);
@@ -93,6 +115,30 @@ export class ProductComponent implements OnInit {
             }
         );
 
+    }
+
+    fetchAuthors() {
+        this.authorService.fetchAuthors().subscribe({
+            next: res => {
+                this.authors.set(res.data);
+            }
+        });
+    }
+
+    fetchPublisher() {
+        this.publisherService.fetchPublishers().subscribe({
+            next: res => {
+                this.publishers.set(res.data);
+            }
+        });
+    }
+
+    fetchCategories() {
+        this.categoryService.fetchCategories().subscribe({
+            next: res => {
+                this.categories.set(res.data);
+            }
+        });
     }
 
     timeout: any;
@@ -108,7 +154,10 @@ export class ProductComponent implements OnInit {
                     size: this.size(),
                     sortBy: this.filterSelection(),
                     nameOrCodeKeyword: this.nameOrCodeKeyword(),
-                    isActive: this.statusSelection()
+                    isActive: this.statusSelection(),
+                    authorIds: this.selectedAuthorIds(),
+                    categoryIds: this.selectedCategoryIds(),
+                    publisherIds: this.selectedPublisherIds()
                 })
                     .subscribe({
                         next: res => {
@@ -162,7 +211,10 @@ export class ProductComponent implements OnInit {
             size: event.rows!,
             sortBy: this.filterSelection(),
             nameOrCodeKeyword: this.nameOrCodeKeyword(),
-            isActive: this.statusSelection()
+            isActive: this.statusSelection(),
+            authorIds: this.selectedAuthorIds(),
+            categoryIds: this.selectedCategoryIds(),
+            publisherIds: this.selectedPublisherIds()
         }).subscribe({
                 next: res => {
                     this.products.set(res.data.content);

@@ -26,10 +26,10 @@ public class Customer extends BaseEntity {
     String email;
     String publicId;
     String imgUrl;
-    @Column(columnDefinition = "default 1")
-    Boolean isActive;
-    @Column(columnDefinition = "default 0")
-    Boolean isDeleted;
+    @Builder.Default
+    Boolean isActive=true;
+    @Builder.Default
+    Boolean isDeleted=false;
     @OneToOne(mappedBy = "customer", cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH})
     User user;
 }

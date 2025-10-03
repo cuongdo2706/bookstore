@@ -13,8 +13,11 @@ import java.util.List;
 
 @Service
 public class OrderDetailServiceImpl implements OrderDetailService {
-    @Autowired
-    private OrderDetailRepository orderDetailRepository;
+    private final OrderDetailRepository orderDetailRepository;
+
+    public OrderDetailServiceImpl(OrderDetailRepository orderDetailRepository) {
+        this.orderDetailRepository = orderDetailRepository;
+    }
 
     @Override
     public List<OrderDetailResponse> findByOrderId(Long orderId) {

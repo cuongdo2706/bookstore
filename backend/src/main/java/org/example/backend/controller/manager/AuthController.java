@@ -1,4 +1,4 @@
-package org.example.backend.controller.rest;
+package org.example.backend.controller.manager;
 
 import lombok.AllArgsConstructor;
 import org.example.backend.dto.request.LoginRequest;

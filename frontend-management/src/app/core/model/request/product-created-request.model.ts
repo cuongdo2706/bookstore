@@ -2,7 +2,7 @@ export interface ProductCreatedRequest {
     name: string;
     quantity: number;
     price: number;
-    publisher?: string;
+    publisherId: number;
     translator?: string;
     numOfPages?: number;
     publishedYear?: number;

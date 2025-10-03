@@ -11,8 +11,12 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class StaffServiceImpl implements StaffService {
-    @Autowired
-    private StaffRepository staffRepository;
+
+    private final StaffRepository staffRepository;
+
+    public StaffServiceImpl(StaffRepository staffRepository) {
+        this.staffRepository = staffRepository;
+    }
 
     @Override
     public Staff findById(Long id) throws DataNotFoundException {

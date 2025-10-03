@@ -13,7 +13,7 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class ProductCreatedRequest implements Serializable {
+public class CreateProductRequest {
     @NotBlank(message = "Name must have more than 1 digit")
     @NotNull(message = "Name cannot be null")
     String name;
@@ -26,7 +26,7 @@ public class ProductCreatedRequest implements Serializable {
     @NotNull(message = "Price is required")
     BigDecimal price;
 
-    String publisher;
+    Long publisherId;
 
     String translator;
 

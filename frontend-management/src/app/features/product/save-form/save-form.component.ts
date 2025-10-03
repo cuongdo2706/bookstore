@@ -18,6 +18,8 @@ import {CategoryService} from "../../../core/service/category.service";
 import {AuthorService} from "../../../core/service/author.service";
 import {AuthorResponse} from "../../../core/model/response/author-response.model";
 import {ProductCreatedRequest} from "../../../core/model/request/product-created-request.model";
+import {PublisherService} from "../../../core/service/publisher.service";
+import {PublisherResponse} from "../../../core/model/response/publisher-response.model";
 
 @Component({
     selector: 'app-save-form',
@@ -42,13 +44,12 @@ import {ProductCreatedRequest} from "../../../core/model/request/product-created
 })
 export class SaveFormComponent implements OnInit {
     ngOnInit(): void {
-        this.fetchAuthors();
-        this.fetchCategories();
+
         this.getListYears();
         this.saveForm = this.fb.group({
             name: [null, [Validators.required]],
             imgFile: null,
-            publisher: null,
+            publisherId: null,
             translator: null,
             authors: [null, [Validators.required]],
             categories: [null, [Validators.required]],
@@ -76,31 +77,20 @@ export class SaveFormComponent implements OnInit {
     private productService = inject(ProductService);
     private categoryService = inject(CategoryService);
     private authorService = inject(AuthorService);
+    private publisherService = inject(PublisherService);
     visible = model(false);
     categoryVisible = signal(false);
     authorVisible = signal(false);
-    authors = signal<AuthorResponse[]>([]);
-    categories = signal<CategoryResponse[]>([]);
+    authors = model.required<AuthorResponse[]>();
+    categories = model.required<CategoryResponse[]>();
+    publishers = model.required<PublisherResponse[]>();
     onSave = output<any>();
     message = output<{}>();
     productStatus = input.required<boolean>();
+    categoryIds = input.required<number[]>();
+    authorIds = input.required<number[]>();
+    publisherIds = input.required<number[]>();
 
-
-    fetchAuthors() {
-        this.authorService.fetchAuthors().subscribe({
-            next: res => {
-                this.authors.set(res.data);
-            }
-        });
-    }
-
-    fetchCategories() {
-        this.categoryService.fetchCategories().subscribe({
-            next: res => {
-                this.categories.set(res.data);
-            }
-        });
-    }
 
     closeDialog() {
         this.visible.set(false);
@@ -116,6 +106,7 @@ export class SaveFormComponent implements OnInit {
     removeImage() {
         this.saveForm.patchValue({imgFile: null});
     }
+
     async saveBook() {
         this.submitted.set(true);
         if (this.saveForm.valid) {
@@ -124,7 +115,7 @@ export class SaveFormComponent implements OnInit {
                 name: this.saveForm.controls['name'].value!,
                 quantity: this.saveForm.controls['quantity'].value!,
                 price: this.saveForm.controls['price'].value!,
-                publisher: this.saveForm.controls['publisher'].value,
+                publisherId: this.saveForm.controls['publisherId'].value,
                 translator: this.saveForm.controls['translator'].value,
                 numOfPages: this.saveForm.controls['numOfPages'].value,
                 publishedYear: this.saveForm.controls['publishedYear'].value,
@@ -138,7 +129,10 @@ export class SaveFormComponent implements OnInit {
                 size: 10,
                 sortBy: "name",
                 nameOrCodeKeyword: "",
-                isActive: this.productStatus()
+                isActive: this.productStatus(),
+                authorIds: this.authorIds(),
+                categoryIds: this.categoryIds(),
+                publisherIds: this.publisherIds()
             }))
                 .then(res => {
                     this.onSave.emit(res.data);
@@ -170,15 +164,10 @@ export class SaveFormComponent implements OnInit {
     }
 
     saveCategory(input: any) {
-        console.log(input);
-        this.categoryService.postCategories(input.name).subscribe({
+        this.categoryService.saveCategories({name: input.name}).subscribe({
             next: res => {
-                console.log("Save category success");
-                this.fetchCategories();
+                this.categories.update(item => [...item, res.data]);
                 this.categoryVisible.set(false);
-            },
-            error: err => {
-                console.log(err);
             }
         });
     }
@@ -188,11 +177,9 @@ export class SaveFormComponent implements OnInit {
     }
 
     saveAuthor(input: any) {
-        let name = input.name;
-        this.authorService.postAuthors(name).subscribe({
+        this.authorService.saveAuthors(input).subscribe({
             next: res => {
-                console.log("Save author success");
-                this.fetchAuthors();
+                this.authors.update(item => [...item, res.data]);
                 this.authorVisible.set(false);
             }
         });

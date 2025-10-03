@@ -22,6 +22,8 @@ import {CategoryResponse} from "../../../core/model/response/category-response.m
 import {PageResponse} from "../../../core/model/response/page-response.model";
 import {ProductUpdatedRequest} from "../../../core/model/request/product-updated-request.model";
 import {AppConstants} from "../../../app.constants";
+import {PublisherResponse} from "../../../core/model/response/publisher-response.model";
+import {PublisherService} from "../../../core/service/publisher.service";
 
 @Component({
     selector: 'app-update-form',
@@ -49,13 +51,11 @@ export class UpdateFormComponent implements OnInit {
 
     ngOnInit() {
         this.findProductById();
-        this.fetchAuthors();
-        this.fetchCategories();
         this.getListYears();
         this.updateForm = this.fb.group({
             name: this.fb.control<string | null>(null, [Validators.required]),
             imgFile: null,
-            publisher: this.fb.control<string | null>(null),
+            publisherId: this.fb.control<number | null>(null),
             translator: this.fb.control<string | null>(null),
             authors: this.fb.control<number | null>(null, [Validators.required]),
             categories: this.fb.control<number | null>(null, [Validators.required]),
@@ -77,7 +77,7 @@ export class UpdateFormComponent implements OnInit {
     categoryInput!: FormGroup;
     authorInput!: FormGroup;
     private defaultData = signal<ProductResponse | undefined>(undefined);
-    imageUrl = signal<string|undefined>(undefined);
+    imageUrl = signal<string | undefined>(undefined);
     publicId = signal<string | null>(null);
     years = signal<number[]>([]);
     submitted = signal(false);
@@ -86,13 +86,18 @@ export class UpdateFormComponent implements OnInit {
     private productService = inject(ProductService);
     private categoryService = inject(CategoryService);
     private authorService = inject(AuthorService);
-    authors = signal<AuthorResponse[]>([]);
-    categories = signal<CategoryResponse[]>([]);
+    private publisherService = inject(PublisherService);
+    authors = model.required<AuthorResponse[]>();
+    categories = model.required<CategoryResponse[]>();
+    publishers = model.required<PublisherResponse[]>();
     categoryVisible = signal(false);
     authorVisible = signal(false);
     visible = model(false);
     message = output<{}>();
     productStatus = input.required<boolean>();
+    categoryIds = input.required<number[]>();
+    authorIds = input.required<number[]>();
+    publisherIds = input.required<number[]>();
     onUpdate = output<PageResponse<ProductResponse>>();
     updateId = input<number>();
 
@@ -104,7 +109,7 @@ export class UpdateFormComponent implements OnInit {
                 name: this.updateForm.controls['name'].value!,
                 quantity: this.updateForm.controls['quantity'].value!,
                 price: this.updateForm.controls['price'].value!,
-                publisher: this.updateForm.controls['publisher'].value,
+                publisherId: this.updateForm.controls['publisherId'].value,
                 translator: this.updateForm.controls['translator'].value,
                 numOfPages: this.updateForm.controls['numOfPages'].value,
                 publishedYear: this.updateForm.controls['publishedYear'].value,
@@ -118,7 +123,10 @@ export class UpdateFormComponent implements OnInit {
                 size: 10,
                 sortBy: "name",
                 nameOrCodeKeyword: "",
-                isActive: this.productStatus()
+                isActive: this.productStatus(),
+                authorIds: this.authorIds(),
+                categoryIds: this.categoryIds(),
+                publisherIds: this.publisherIds()
             }))
                 .then(res => {
                     this.onUpdate.emit(res.data);
@@ -162,7 +170,7 @@ export class UpdateFormComponent implements OnInit {
                 this.updateForm.patchValue({
                     name: res.data.name,
                     imgFile: null,
-                    publisher: res.data.publisher,
+                    publisherId: res.data.publisher.id,
                     translator: res.data.translator,
                     authors: authorIds,
                     categories: categoryIds,
@@ -180,21 +188,6 @@ export class UpdateFormComponent implements OnInit {
 
     }
 
-    fetchAuthors() {
-        this.authorService.fetchAuthors().subscribe({
-            next: res => {
-                this.authors.set(res.data);
-            }
-        });
-    }
-
-    fetchCategories() {
-        this.categoryService.fetchCategories().subscribe({
-            next: res => {
-                this.categories.set(res.data);
-            }
-        });
-    }
 
     saveCategoryForm() {
         this.categoryVisible.set(true);
@@ -202,11 +195,9 @@ export class UpdateFormComponent implements OnInit {
 
     saveCategory(input: any) {
         console.log(input);
-        this.categoryService.postCategories(input.name).subscribe({
+        this.categoryService.saveCategories({name: input.name}).subscribe({
             next: res => {
-                console.log(res);
-                console.log("Save category success");
-                this.fetchCategories();
+                this.categories.update(item => [...item, res.data]);
                 this.categoryVisible.set(false);
             },
             error: err => {
@@ -220,12 +211,19 @@ export class UpdateFormComponent implements OnInit {
     }
 
     saveAuthor(input: any) {
-        let name = input.name;
-        this.authorService.postAuthors(name).subscribe({
+        this.authorService.saveAuthors({name: input.name}).subscribe({
             next: res => {
-                console.log("Save author success");
-                this.fetchAuthors();
+                this.authors.update(item => [...item, res.data]);
                 this.authorVisible.set(false);
+            }
+        });
+    }
+
+    savePublisher(input: any) {
+        this.publisherService.savePublisher({name: input.name}).subscribe({
+            next: res => {
+                this.publishers.update(item => [...item, res.data]);
+                // this.publisherVisible.set(false);
             }
         });
     }

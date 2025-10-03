@@ -1,5 +1,6 @@
 package org.example.backend.service;
 
+import org.example.backend.dto.request.CreateAttributeRequest;
 import org.example.backend.dto.response.AuthorResponse;
 import org.example.backend.entity.Author;
 import org.example.backend.exception.DataExistedException;
@@ -19,7 +20,7 @@ public interface AuthorService {
 
     List<Author> findByName(Integer page, Integer size, String name);
 
-    AuthorResponse save(String name) throws DataExistedException;
+    AuthorResponse save(CreateAttributeRequest request) throws DataExistedException;
 
     Author update(Long id, String name) throws DataNotFoundException;
 

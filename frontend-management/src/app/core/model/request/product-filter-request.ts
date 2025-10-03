@@ -4,4 +4,7 @@ export interface ProductFilterRequest {
     sortBy: string;
     nameOrCodeKeyword: string;
     isActive: boolean;
+    categoryIds: number[];
+    authorIds: number[];
+    publisherIds: number[];
 }

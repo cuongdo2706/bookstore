@@ -1,7 +1,8 @@
-package org.example.backend.controller.rest;
+package org.example.backend.controller.manager;
 
 import jakarta.validation.Valid;
-import org.example.backend.dto.request.PropertySearchRequest;
+import org.example.backend.dto.request.CreateAttributeRequest;
+import org.example.backend.dto.request.FilterAttributeRequest;
 import org.example.backend.dto.response.AuthorResponse;
 import org.example.backend.dto.response.SuccessResponse;
 import org.example.backend.entity.Author;
@@ -29,7 +30,7 @@ public class AuthorController {
 //    }
 
     @GetMapping("/search")
-    public SuccessResponse<List<Author>> findByName(@Valid @ModelAttribute PropertySearchRequest request) {
+    public SuccessResponse<List<Author>> findByName(@Valid @ModelAttribute FilterAttributeRequest request) {
         return new SuccessResponse<>(HttpStatus.OK.value(), "Data getting success", authorService.findByName(request.getPage(), request.getSize(), request.getName()));
     }
 
@@ -39,8 +40,8 @@ public class AuthorController {
     }
 
     @PostMapping
-    public SuccessResponse<AuthorResponse> save(@RequestParam(name = "name") String name) {
-        return new SuccessResponse<>(HttpStatus.CREATED.value(), "Data adding success", authorService.save(name));
+    public SuccessResponse<AuthorResponse> save(@RequestBody CreateAttributeRequest request) {
+        return new SuccessResponse<>(HttpStatus.CREATED.value(), "Data adding success", authorService.save(request));
     }
 
     @PutMapping("/{id}")

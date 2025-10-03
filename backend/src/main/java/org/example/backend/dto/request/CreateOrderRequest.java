@@ -15,7 +15,7 @@ import java.util.List;
 @Getter
 @Setter
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class OrderCreatedRequest {
+public class CreateOrderRequest {
     @Min(value = 0, message = "Amount paid must be greater than or equal 0")
     @NotNull(message = "Amount paid must not be null")
     BigDecimal amountPaid;
@@ -50,13 +50,17 @@ public class OrderCreatedRequest {
         Integer quantity;
         BigDecimal price;
     }
+
+    //------------------------------------------------------------------------------
+    @Getter
+    @Setter
+    @FieldDefaults(level = AccessLevel.PRIVATE)
+    public static class DeliveryInfo {
+        String recipientName;
+        String phoneNum;
+        String address;
+    }
 }
 
-@Getter
-@Setter
-@FieldDefaults(level = AccessLevel.PRIVATE)
-class DeliveryInfo {
-    String recipientName;
-    String phoneNum;
-    String address;
-}
+
+

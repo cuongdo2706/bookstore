@@ -13,8 +13,12 @@ import java.time.LocalDate;
 
 @Service
 public class CouponServiceImpl implements org.example.backend.service.CouponService {
-    @Autowired
-    private CouponRepository couponRepository;
+
+    private final CouponRepository couponRepository;
+
+    public CouponServiceImpl(CouponRepository couponRepository) {
+        this.couponRepository = couponRepository;
+    }
 
     @Override
     public Coupon findById(Long id) throws DataNotFoundException {

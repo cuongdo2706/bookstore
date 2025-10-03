@@ -1,8 +1,8 @@
 package org.example.backend.service;
 
-import org.example.backend.dto.request.ProductCreatedRequest;
-import org.example.backend.dto.request.ProductFilterRequest;
-import org.example.backend.dto.request.ProductUpdatedRequest;
+import org.example.backend.dto.request.CreateProductRequest;
+import org.example.backend.dto.request.FilterProductRequest;
+import org.example.backend.dto.request.UpdateProductRequest;
 import org.example.backend.dto.response.PageResponse;
 import org.example.backend.dto.response.ProductResponse;
 import org.example.backend.entity.Product;
@@ -22,13 +22,13 @@ public interface ProductService {
 
     ProductResponse findProductResponseById(Long id) throws DataNotFoundException;
 
-    PageResponse<ProductResponse> searchProduct(ProductFilterRequest productFilter);
+    PageResponse<ProductResponse> searchProduct(FilterProductRequest productFilter);
 
-    ProductResponse save(ProductCreatedRequest request, MultipartFile file) throws IOException, DataNotFoundException;
+    ProductResponse save(CreateProductRequest request, MultipartFile file) throws IOException, DataNotFoundException;
 
     List<Product> saveAll(List<Product> products) throws DataNotFoundException;
 
-    ProductResponse update(Long id, ProductUpdatedRequest request, MultipartFile file) throws IOException, DataNotFoundException;
+    ProductResponse update(Long id, UpdateProductRequest request, MultipartFile file) throws Exception;
 
     void softDelete(Long id) throws DataNotFoundException;
 

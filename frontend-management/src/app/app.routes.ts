@@ -6,7 +6,7 @@ import {AuthGuard} from "./core/guard/auth.guard";
 import {DashboardComponent} from "./features/dashboard/dashboard.component";
 import {PosComponent} from "./features/pos/pos.component";
 import {ProductComponent} from "./features/product/product.component";
-import {CategoryComponent} from "./features/category/category.component";
+import {AttributeComponent} from "./features/attribute/attribute.component";
 import {OrderComponent} from "./features/order/order.component";
 import {CustomerComponent} from "./features/customer/customer.component";
 import {StaffComponent} from "./features/staff/staff.component";
@@ -53,7 +53,7 @@ export const routes: Routes = [
                 path: "thuoc-tinh",
                 title: "Thuộc tính",
                 canActivate: [AuthGuard],
-                component: CategoryComponent
+                component: AttributeComponent
             }, {
                 path: "don-hang",
                 title: "Đơn hàng",

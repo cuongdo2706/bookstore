@@ -1,5 +1,6 @@
 package org.example.backend.service.impl;
 
+import org.example.backend.dto.request.CreateAttributeRequest;
 import org.example.backend.dto.response.CategoryResponse;
 import org.example.backend.entity.Category;
 import org.example.backend.exception.DataExistedException;
@@ -16,8 +17,12 @@ import java.util.Set;
 
 @Service
 public class CategoryServiceImpl implements org.example.backend.service.CategoryService {
-    @Autowired
-    private CategoryRepository categoryRepository;
+
+    private final CategoryRepository categoryRepository;
+
+    public CategoryServiceImpl(CategoryRepository categoryRepository) {
+        this.categoryRepository = categoryRepository;
+    }
 
     @Override
     public List<CategoryResponse> findAll() {
@@ -52,13 +57,12 @@ public class CategoryServiceImpl implements org.example.backend.service.Category
 
 
     @Override
-    public CategoryResponse save(String name) {
-        if (categoryRepository.existsByName(name)) {
+    public CategoryResponse save(CreateAttributeRequest request) {
+        if (categoryRepository.existsByName(request.getName())) {
             throw new DataExistedException("Category is already existed");
         }
         Category newCategory = Category.builder()
-                .name(name)
-                .isDeleted(Boolean.FALSE)
+                .name(request.getName())
                 .build();
         return CategoryMapper.toCategoryResponse(categoryRepository.save(newCategory));
     }

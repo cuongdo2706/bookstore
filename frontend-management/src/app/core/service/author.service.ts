@@ -3,6 +3,7 @@ import {HttpClient, HttpParams} from "@angular/common/http";
 import {AuthorResponse} from "../model/response/author-response.model";
 import {ApiResponse} from "../model/response/api-response.model";
 import {AppConstants} from "../../app.constants";
+import {AttributeCreatedRequest} from "../model/request/attribute-created-request";
 
 @Injectable({
     providedIn: 'root'
@@ -15,8 +16,7 @@ export class AuthorService {
         return this.http.get<ApiResponse<AuthorResponse[]>>(this.url);
     }
 
-    postAuthors(name: string) {
-        let params = new HttpParams().set("name", name);
-        return this.http.post<ApiResponse<AuthorResponse>>(this.url, null, {params});
+    saveAuthors(value: AttributeCreatedRequest) {
+        return this.http.post<ApiResponse<AuthorResponse>>(this.url, value);
     }
 }

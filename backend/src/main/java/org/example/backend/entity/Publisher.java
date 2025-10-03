@@ -5,21 +5,21 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 import org.hibernate.annotations.SQLRestriction;
 
-import java.util.Set;
+import java.util.List;
 
 @Getter
 @Setter
 @AllArgsConstructor
-@NoArgsConstructor
 @Builder
 @Entity
-@Table(name = "tbl_category")
+@Table(name = "tbl_publisher")
 @SQLRestriction("is_deleted = 0")
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class Category extends BaseEntity {
+@NoArgsConstructor
+public class Publisher extends BaseEntity{
     String name;
     @Builder.Default
-    Boolean isDeleted=false;
-    @ManyToMany(mappedBy = "categories")
-    Set<Product> products;
+    Boolean isDeleted = false;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "publisher")
+    List<Product> products;
 }

@@ -21,7 +21,10 @@ export class ProductService {
             .set("sortBy", filter.sortBy)
             .set("page", filter.page)
             .set("size", filter.size)
-            .set("isActive", filter.isActive);
+            .set("isActive", filter.isActive)
+            .set("authorsIds",filter.authorIds.toString())
+            .set("categoryIds",filter.categoryIds.toString())
+            .set("publisherIds",filter.publisherIds.toString())
         return this.http.get<ApiResponse<PageResponse<ProductResponse>>>(`${this.url}/search`, {params});
     }
 

@@ -1,24 +1,26 @@
 package org.example.backend.service.impl;
 
-import org.example.backend.dto.request.ProductCreatedRequest;
-import org.example.backend.dto.request.ProductFilterRequest;
-import org.example.backend.dto.request.ProductUpdatedRequest;
+import jakarta.persistence.OptimisticLockException;
+import org.example.backend.dto.request.CreateProductRequest;
+import org.example.backend.dto.request.FilterProductRequest;
+import org.example.backend.dto.request.UpdateProductRequest;
 import org.example.backend.dto.response.ImageResponse;
 import org.example.backend.dto.response.PageResponse;
 import org.example.backend.dto.response.ProductResponse;
 import org.example.backend.entity.Author;
 import org.example.backend.entity.Category;
 import org.example.backend.entity.Product;
+import org.example.backend.entity.Publisher;
 import org.example.backend.exception.DataNotFoundException;
 import org.example.backend.mapper.ProductMapper;
 import org.example.backend.repository.ProductRepository;
 import org.example.backend.service.AuthorService;
 import org.example.backend.service.CategoryService;
 import org.example.backend.service.ProductService;
+import org.example.backend.service.PublisherService;
 import org.example.backend.specification.ProductSpecification;
 import org.example.backend.utility.GenerateCodeUtil;
 import org.example.backend.utility.ImageUtil;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -40,15 +42,18 @@ public class ProductServiceImpl implements ProductService {
     private final ProductRepository productRepository;
     private final CategoryService categoryService;
     private final AuthorService authorService;
+    private final PublisherService publisherService;
     private final ImageUtil imageUtil;
 
     public ProductServiceImpl(ProductRepository productRepository,
                               CategoryService categoryService,
                               AuthorService authorService,
+                              PublisherService publisherService,
                               ImageUtil imageUtil) {
         this.productRepository = productRepository;
         this.categoryService = categoryService;
         this.authorService = authorService;
+        this.publisherService = publisherService;
         this.imageUtil = imageUtil;
     }
 
@@ -75,10 +80,19 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public PageResponse<ProductResponse> searchProduct(ProductFilterRequest filter) {
+    public PageResponse<ProductResponse> searchProduct(FilterProductRequest filter) {
         Specification<Product> spec = Specification.<Product> unrestricted().and(ProductSpecification.isDeletedFalse()).and(ProductSpecification.isActive(filter.getIsActive()));
         if (!Objects.equals(filter.getNameOrCodeKeyword(), null) && !filter.getNameOrCodeKeyword().isBlank()) {
             spec = spec.and(ProductSpecification.nameOrCodeContains(filter.getNameOrCodeKeyword()));
+        }
+        if (filter.getAuthors()!=null&&!filter.getAuthors().isEmpty()){
+            spec=spec.and(ProductSpecification.authorIn(filter.getAuthors()));
+        }
+        if (filter.getCategories()!=null&&!filter.getCategories().isEmpty()){
+            spec=spec.and(ProductSpecification.categoryIn(filter.getCategories()));
+        }
+        if (filter.getPublishers()!=null&&!filter.getPublishers().isEmpty()){
+            spec=spec.and(ProductSpecification.publisherIn(filter.getPublishers()));
         }
         Sort sort = switch (filter.getSortBy()) {
             case "name" -> Sort.by(Sort.Direction.ASC, "name");
@@ -92,19 +106,21 @@ public class ProductServiceImpl implements ProductService {
         return new PageResponse<>(ProductMapper.toProductResponses(products.getContent()), products.getNumber(), products.getSize(), products.getTotalElements(), products.getTotalPages());
     }
 
+    @Transactional
     @Override
-    public ProductResponse save(ProductCreatedRequest request, MultipartFile file) throws DataNotFoundException, IOException {
+    public ProductResponse save(CreateProductRequest request, MultipartFile file) throws DataNotFoundException, IOException {
         ImageResponse imageResponse = null;
         if (file != null && !file.isEmpty()) {
             imageResponse = imageUtil.upload(file);
         }
         Set<Author> existedAuthors = new HashSet<>(authorService.findAllByIds(request.getAuthorIds()));
         Set<Category> existedCategories = new HashSet<>(categoryService.findAllByIds(request.getCategoryIds()));
+        Publisher existedPublisher = publisherService.findById(request.getPublisherId());
         String productCode = GenerateCodeUtil.generateProductCode();
         while (productRepository.existsByCode(productCode)) {
             productCode = GenerateCodeUtil.generateProductCode();
         }
-        Product product = Product.builder().code(productCode).name(request.getName()).quantity(request.getQuantity()).publicId(imageResponse == null ? null : imageResponse.publicId()).imgUrl(imageResponse == null ? null : imageResponse.imgUrl()).price(request.getPrice()).publisher(request.getPublisher()).translator(request.getTranslator()).numOfPages(request.getNumOfPages()).publishedYear(request.getPublishedYear()).description(request.getDescription()).categories(existedCategories).isDeleted(Boolean.FALSE).isActive(Boolean.TRUE).authors(existedAuthors).build();
+        Product product = Product.builder().code(productCode).name(request.getName()).quantity(request.getQuantity()).publicId(imageResponse == null ? null : imageResponse.publicId()).imgUrl(imageResponse == null ? null : imageResponse.imgUrl()).price(request.getPrice()).publisher(existedPublisher).translator(request.getTranslator()).numOfPages(request.getNumOfPages()).publishedYear(request.getPublishedYear()).description(request.getDescription()).categories(existedCategories).isDeleted(Boolean.FALSE).isActive(Boolean.TRUE).authors(existedAuthors).build();
         return ProductMapper.toProductResponse(productRepository.save(product));
 
     }
@@ -114,8 +130,9 @@ public class ProductServiceImpl implements ProductService {
         return productRepository.saveAll(products);
     }
 
+    @Transactional
     @Override
-    public ProductResponse update(Long id, ProductUpdatedRequest request, MultipartFile file) throws IOException, DataNotFoundException {
+    public ProductResponse update(Long id, UpdateProductRequest request, MultipartFile file) throws Exception {
         Product existedProduct = findById(id);
         if (request.getName() != null && !Objects.equals(request.getName(), existedProduct.getName()))
             existedProduct.setName(request.getName());
@@ -123,13 +140,15 @@ public class ProductServiceImpl implements ProductService {
             existedProduct.setQuantity(request.getQuantity());
         if (request.getPrice() != null && request.getPrice().compareTo(existedProduct.getPrice()) != 0)
             existedProduct.setPrice(request.getPrice());
-        if (!Objects.equals(request.getPublisher(), existedProduct.getPublisher()))
-            existedProduct.setPublisher(request.getPublisher());
+        if (!Objects.equals(request.getPublisher(), existedProduct.getPublisher().getId())) {
+            Publisher publisher = publisherService.findById(request.getPublisher());
+            existedProduct.setPublisher(publisher);
+        }
         if (!Objects.equals(request.getTranslator(), existedProduct.getTranslator()))
             existedProduct.setTranslator(request.getTranslator());
         if (!Objects.equals(request.getNumOfPages(), existedProduct.getNumOfPages()))
             existedProduct.setNumOfPages(request.getNumOfPages());
-        if (!Objects.equals(request.getPublisher(), existedProduct.getPublisher()))
+        if (!Objects.equals(request.getPublishedYear(), existedProduct.getPublishedYear()))
             existedProduct.setPublishedYear(request.getPublishedYear());
         if (!Objects.equals(request.getDescription(), existedProduct.getDescription()))
             existedProduct.setDescription(request.getDescription());
@@ -151,7 +170,12 @@ public class ProductServiceImpl implements ProductService {
             existedProduct.setPublicId(imageResponse.publicId());
             existedProduct.setImgUrl(imageResponse.imgUrl());
         }
-        return ProductMapper.toProductResponse(productRepository.save(existedProduct));
+        try {
+            return ProductMapper.toProductResponse(productRepository.save(existedProduct));
+        } catch (OptimisticLockException e) {
+            throw new Exception("The product was updated by another transaction. Please try again.");
+        }
+
     }
 
     @Override

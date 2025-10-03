@@ -1,4 +1,4 @@
-package org.example.backend.controller.rest;
+package org.example.backend.controller.manager;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.PositiveOrZero;

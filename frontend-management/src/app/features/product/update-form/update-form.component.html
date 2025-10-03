@@ -18,12 +18,6 @@
 		</small>
 	      }
 	      <p-floatlabel variant = "on" class = "mt-5 flex">
-		<input pInputText id = "publisher" style = "width:600px"
-		       formControlName = "publisher"/>
-		<label for = "publisher">Nhà xuất bản</label>
-	      </p-floatlabel>
-
-	      <p-floatlabel variant = "on" class = "mt-5 flex">
 		<input pInputText id = "translator" style = "width:600px"
 		       formControlName = "translator"/>
 		<label for = "name">Dịch giả</label>
@@ -49,6 +43,19 @@
 		/>
 		<label>Năm phát hành</label>
 	      </p-floatlabel>
+	      <div class = "mt-5 flex">
+		<p-floatlabel variant = "on">
+		    <p-select
+			  [style] = "{'width':'600px'}"
+			  formControlName = "publisherId"
+			  [options] = "publishers()"
+			  optionLabel="name"
+			  optionValue="id"
+			  [filter] = "true"
+			  [showClear] = "true"/>
+		    <label>Nhà xuất bản</label>
+		</p-floatlabel>
+	      </div>
 	      <div class = "mt-5 flex">
 		<p-floatlabel variant = "on">
 		    <p-multi-select

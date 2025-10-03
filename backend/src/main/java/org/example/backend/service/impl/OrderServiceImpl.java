@@ -1,7 +1,7 @@
 package org.example.backend.service.impl;
 
-import org.example.backend.dto.request.OrderCreatedRequest;
-import org.example.backend.dto.request.OrderFilterRequest;
+import org.example.backend.dto.request.CreateOrderRequest;
+import org.example.backend.dto.request.FilterOrderRequest;
 import org.example.backend.dto.response.OrderResponse;
 import org.example.backend.dto.response.PageResponse;
 import org.example.backend.entity.*;
@@ -13,7 +13,6 @@ import org.example.backend.repository.OrderRepository;
 import org.example.backend.service.*;
 import org.example.backend.specification.OrderSpecification;
 import org.example.backend.utility.GenerateCodeUtil;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -22,7 +21,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.client.RestTemplate;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -31,21 +29,30 @@ import java.util.stream.Collectors;
 
 @Service
 public class OrderServiceImpl implements OrderService {
-    private static final String createOrderUrl = "https://dev-online-gateway.ghn.vn/shiip/public-api/v2/shipping-order/create";
-    @Autowired
-    private ProductService productService;
-    @Autowired
-    private CustomerService customerService;
-    @Autowired
-    private StaffService staffService;
-    @Autowired
-    private CouponService couponService;
-    @Autowired
-    private OrderRepository orderRepository;
-    @Autowired
-    private JwtTokenProvider jwtTokenProvider;
-    @Autowired
-    private Environment env;
+    private final String createOrderUrl = "https://dev-online-gateway.ghn.vn/shiip/public-api/v2/shipping-order/create";
+    private final ProductService productService;
+    private final CustomerService customerService;
+    private final StaffService staffService;
+    private final CouponService couponService;
+    private final OrderRepository orderRepository;
+    private final JwtTokenProvider jwtTokenProvider;
+    private final Environment env;
+
+    public OrderServiceImpl(ProductService productService,
+                            CustomerService customerService,
+                            StaffService staffService,
+                            CouponService couponService,
+                            OrderRepository orderRepository,
+                            JwtTokenProvider jwtTokenProvider,
+                            Environment env) {
+        this.productService = productService;
+        this.customerService = customerService;
+        this.staffService = staffService;
+        this.couponService = couponService;
+        this.orderRepository = orderRepository;
+        this.jwtTokenProvider = jwtTokenProvider;
+        this.env = env;
+    }
 
     //    RestTemplate restTemplate = new RestTemplate();
 
@@ -68,7 +75,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Transactional
     @Override
-    public OrderResponse create(OrderCreatedRequest request, String token) throws DataNotFoundException, DataConflictException {
+    public OrderResponse create(CreateOrderRequest request, String token) throws DataNotFoundException, DataConflictException {
         LocalDateTime createdDate = LocalDateTime.now();
         //GEN CODE CHO ORDER
         String code = GenerateCodeUtil.generateOrderCode();
@@ -79,12 +86,12 @@ public class OrderServiceImpl implements OrderService {
         //LIST ĐỂ ADD CÁC ORDER DETAIL VÀO ORDER
         List<OrderDetail> newOrderDetails = new ArrayList<>();
         //LẤY RA ID[] TỪ REQUEST
-        Set<Long> productIds = request.getOrderItems().stream().map(OrderCreatedRequest.OrderItem::getProductId).collect(Collectors.toSet());
+        Set<Long> productIds = request.getOrderItems().stream().map(CreateOrderRequest.OrderItem::getProductId).collect(Collectors.toSet());
         // DÙNG MẢNG ID[] ĐỂ QUERY GET PRODUCTS
         Map<Long, Product> productMap = productService.findAllByIds(productIds).stream().collect(Collectors.toMap(Product::getId, p -> p));
         BigDecimal subTotalCount = BigDecimal.ZERO;
         //DUYỆT ORDER ITEMS TỪ REQUEST DTO, ADD ORDER DETAIL
-        for (OrderCreatedRequest.OrderItem item : request.getOrderItems()) {
+        for (CreateOrderRequest.OrderItem item : request.getOrderItems()) {
             Product existedProduct = productMap.get(item.getProductId());
             BigDecimal discount = BigDecimal.ZERO;
             if (existedProduct == null) {
@@ -158,7 +165,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public PageResponse<OrderResponse> searchOrder(OrderFilterRequest filter) {
+    public PageResponse<OrderResponse> searchOrder(FilterOrderRequest filter) {
         Specification<Order> spec = Specification.unrestricted();
         if (!Objects.equals(filter.getOrderType(), null)) {
             spec = spec.and(OrderSpecification.orderTypeEqual(filter.getOrderType()));

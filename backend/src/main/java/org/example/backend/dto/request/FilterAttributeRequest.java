@@ -9,7 +9,7 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class PropertySearchRequest {
+public class FilterAttributeRequest {
     @PositiveOrZero(message = "Size must be greater than or equal 0")
     Integer size;
     @PositiveOrZero(message = "Size must be greater than or equal 0")
