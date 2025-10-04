@@ -30,10 +30,14 @@ import java.util.Set;
 @RestController
 @RequestMapping("product")
 public class ProductController {
-    @Autowired
-    private ExcelUtil excelUtil;
-    @Autowired
-    private ProductService productService;
+    private final ExcelUtil excelUtil;
+    private final ProductService productService;
+
+    public ProductController(ExcelUtil excelUtil,
+                             ProductService productService) {
+        this.excelUtil = excelUtil;
+        this.productService = productService;
+    }
 
     @GetMapping
     public SuccessResponse<List<ProductResponse>> getAllProducts() {

@@ -11,16 +11,12 @@ import org.example.backend.entity.Author;
 import org.example.backend.entity.Category;
 import org.example.backend.entity.Product;
 import org.example.backend.entity.Publisher;
+import org.example.backend.exception.DataExistedException;
 import org.example.backend.exception.DataNotFoundException;
 import org.example.backend.mapper.ProductMapper;
 import org.example.backend.repository.ProductRepository;
-import org.example.backend.service.AuthorService;
-import org.example.backend.service.CategoryService;
-import org.example.backend.service.ProductService;
-import org.example.backend.service.PublisherService;
+import org.example.backend.service.*;
 import org.example.backend.specification.ProductSpecification;
-import org.example.backend.utility.GenerateCodeUtil;
-import org.example.backend.utility.ImageUtil;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -43,18 +39,21 @@ public class ProductServiceImpl implements ProductService {
     private final CategoryService categoryService;
     private final AuthorService authorService;
     private final PublisherService publisherService;
-    private final ImageUtil imageUtil;
+    private final SequenceService sequenceService;
+    private final ImageServiceImpl imageServiceImpl;
 
     public ProductServiceImpl(ProductRepository productRepository,
                               CategoryService categoryService,
                               AuthorService authorService,
                               PublisherService publisherService,
-                              ImageUtil imageUtil) {
+                              SequenceService sequenceService,
+                              ImageServiceImpl imageServiceImpl) {
         this.productRepository = productRepository;
         this.categoryService = categoryService;
         this.authorService = authorService;
         this.publisherService = publisherService;
-        this.imageUtil = imageUtil;
+        this.sequenceService = sequenceService;
+        this.imageServiceImpl = imageServiceImpl;
     }
 
 
@@ -81,18 +80,18 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public PageResponse<ProductResponse> searchProduct(FilterProductRequest filter) {
-        Specification<Product> spec = Specification.<Product> unrestricted().and(ProductSpecification.isDeletedFalse()).and(ProductSpecification.isActive(filter.getIsActive()));
+        Specification<Product> spec = Specification.<Product>unrestricted().and(ProductSpecification.isDeletedFalse()).and(ProductSpecification.isActive(filter.getIsActive()));
         if (!Objects.equals(filter.getNameOrCodeKeyword(), null) && !filter.getNameOrCodeKeyword().isBlank()) {
             spec = spec.and(ProductSpecification.nameOrCodeContains(filter.getNameOrCodeKeyword()));
         }
-        if (filter.getAuthors()!=null&&!filter.getAuthors().isEmpty()){
-            spec=spec.and(ProductSpecification.authorIn(filter.getAuthors()));
+        if (filter.getAuthors() != null && !filter.getAuthors().isEmpty()) {
+            spec = spec.and(ProductSpecification.authorIn(filter.getAuthors()));
         }
-        if (filter.getCategories()!=null&&!filter.getCategories().isEmpty()){
-            spec=spec.and(ProductSpecification.categoryIn(filter.getCategories()));
+        if (filter.getCategories() != null && !filter.getCategories().isEmpty()) {
+            spec = spec.and(ProductSpecification.categoryIn(filter.getCategories()));
         }
-        if (filter.getPublishers()!=null&&!filter.getPublishers().isEmpty()){
-            spec=spec.and(ProductSpecification.publisherIn(filter.getPublishers()));
+        if (filter.getPublishers() != null && !filter.getPublishers().isEmpty()) {
+            spec = spec.and(ProductSpecification.publisherIn(filter.getPublishers()));
         }
         Sort sort = switch (filter.getSortBy()) {
             case "name" -> Sort.by(Sort.Direction.ASC, "name");
@@ -111,14 +110,19 @@ public class ProductServiceImpl implements ProductService {
     public ProductResponse save(CreateProductRequest request, MultipartFile file) throws DataNotFoundException, IOException {
         ImageResponse imageResponse = null;
         if (file != null && !file.isEmpty()) {
-            imageResponse = imageUtil.upload(file);
+            imageResponse = imageServiceImpl.upload(file);
         }
         Set<Author> existedAuthors = new HashSet<>(authorService.findAllByIds(request.getAuthorIds()));
         Set<Category> existedCategories = new HashSet<>(categoryService.findAllByIds(request.getCategoryIds()));
         Publisher existedPublisher = publisherService.findById(request.getPublisherId());
-        String productCode = GenerateCodeUtil.generateProductCode();
-        while (productRepository.existsByCode(productCode)) {
-            productCode = GenerateCodeUtil.generateProductCode();
+        String productCode;
+        if (request.getCode() == null || request.getCode().isBlank())
+            productCode = sequenceService.generateProductCode();
+        else {
+            if (productRepository.existsByCode(request.getCode())) {
+                throw new DataExistedException("Mã này đã tồn tại, hãy dùng mã khác");
+            }
+            productCode = request.getCode();
         }
         Product product = Product.builder().code(productCode).name(request.getName()).quantity(request.getQuantity()).publicId(imageResponse == null ? null : imageResponse.publicId()).imgUrl(imageResponse == null ? null : imageResponse.imgUrl()).price(request.getPrice()).publisher(existedPublisher).translator(request.getTranslator()).numOfPages(request.getNumOfPages()).publishedYear(request.getPublishedYear()).description(request.getDescription()).categories(existedCategories).isDeleted(Boolean.FALSE).isActive(Boolean.TRUE).authors(existedAuthors).build();
         return ProductMapper.toProductResponse(productRepository.save(product));
@@ -134,6 +138,12 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public ProductResponse update(Long id, UpdateProductRequest request, MultipartFile file) throws Exception {
         Product existedProduct = findById(id);
+        if (request.getCode()!=null&&!Objects.equals(request.getCode(),existedProduct.getCode())){
+            if (productRepository.existsByCode(request.getCode())){
+                throw new DataExistedException("Mã này đã tồn tại, hãy dùng mã khác");
+            }
+            existedProduct.setCode(request.getCode());
+        }
         if (request.getName() != null && !Objects.equals(request.getName(), existedProduct.getName()))
             existedProduct.setName(request.getName());
         if (request.getQuantity() != null && !Objects.equals(request.getQuantity(), existedProduct.getQuantity()))
@@ -163,9 +173,9 @@ public class ProductServiceImpl implements ProductService {
         if (file != null && !file.isEmpty()) {
             ImageResponse imageResponse;
             if (existedProduct.getPublicId() != null) {
-                imageResponse = imageUtil.update(existedProduct.getPublicId(), file);
+                imageResponse = imageServiceImpl.update(existedProduct.getPublicId(), file);
             } else {
-                imageResponse = imageUtil.upload(file);
+                imageResponse = imageServiceImpl.upload(file);
             }
             existedProduct.setPublicId(imageResponse.publicId());
             existedProduct.setImgUrl(imageResponse.imgUrl());

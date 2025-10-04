@@ -15,8 +15,11 @@ import java.util.List;
 @RestController
 @RequestMapping("order-detail")
 public class OrderDetailController {
-    @Autowired
-    private OrderDetailService orderDetailService;
+    private final OrderDetailService orderDetailService;
+
+    public OrderDetailController(OrderDetailService orderDetailService){
+        this.orderDetailService=orderDetailService;
+    }
 
     @GetMapping("/{id}")
     public SuccessResponse<List<OrderDetailResponse>> get(@PathVariable Long id) {

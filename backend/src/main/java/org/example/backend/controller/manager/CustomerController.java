@@ -13,8 +13,11 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("customer")
 public class CustomerController {
-    @Autowired
-    private CustomerService customerService;
+    private final CustomerService customerService;
+
+    public CustomerController(CustomerService customerService) {
+        this.customerService = customerService;
+    }
 
     @GetMapping("/search")
     public SuccessResponse<PageResponse<CustomerResponse>> findByCodeOrPhoneNum(@Valid @RequestParam(defaultValue = "0", name = "page") @PositiveOrZero(message = "Page must be greater than or equal 0") Integer page,

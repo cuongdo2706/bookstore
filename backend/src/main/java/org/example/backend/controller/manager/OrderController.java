@@ -28,12 +28,17 @@ import java.util.List;
 @RestController
 @RequestMapping("order")
 public class OrderController {
-    @Autowired
-    private OrderService orderService;
-    @Autowired
-    private ExcelUtil excelUtil;
-    @Autowired
-    private OrderDetailService orderDetailService;
+    private final OrderService orderService;
+    private final ExcelUtil excelUtil;
+    private final OrderDetailService orderDetailService;
+
+    public OrderController(OrderService orderService,
+                           ExcelUtil excelUtil,
+                           OrderDetailService orderDetailService) {
+        this.orderService = orderService;
+        this.excelUtil = excelUtil;
+        this.orderDetailService = orderDetailService;
+    }
 
     @GetMapping("/export-all-excel")
     public ResponseEntity<Resource> exportAllExcel() {
@@ -52,7 +57,6 @@ public class OrderController {
         headers.add("Content-Disposition", "attachment; filename=Danh-sach-chi-tiet-hoa-don.xlsx");
         return ResponseEntity.ok().headers(headers).contentType(MediaType.parseMediaType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")).body(new InputStreamResource(bais));
     }
-
 
 
     @GetMapping("/export-single-excel/{id}")

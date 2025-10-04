@@ -16,6 +16,7 @@ import java.util.Set;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class UpdateProductRequest {
+    String code;
     String name;
     @PositiveOrZero(message = "Quantity must be greater than or equal 0")
     Integer quantity;

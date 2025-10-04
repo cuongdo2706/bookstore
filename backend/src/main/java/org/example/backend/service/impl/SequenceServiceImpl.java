@@ -26,4 +26,11 @@ public class SequenceServiceImpl implements SequenceService {
         Long seg = getNextValue("customer");
         return String.format("KH%010d", seg);
     }
+
+    @Transactional
+    @Override
+    public String generateProductCode() {
+        Long seg = getNextValue("product");
+        return String.format("S%010d", seg);
+    }
 }

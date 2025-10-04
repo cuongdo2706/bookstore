@@ -17,9 +17,11 @@ import java.util.List;
 @RestController
 @RequestMapping("author")
 public class AuthorController {
-    @Autowired
-    private AuthorService authorService;
+    private final AuthorService authorService;
 
+    public AuthorController(AuthorService authorService) {
+        this.authorService = authorService;
+    }
 
     @GetMapping
     public SuccessResponse<List<AuthorResponse>> findAll() {

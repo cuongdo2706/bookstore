@@ -3,6 +3,7 @@ package org.example.backend.controller.manager;
 import org.example.backend.dto.response.SuccessResponse;
 import org.example.backend.entity.Staff;
 import org.example.backend.exception.DataNotFoundException;
+import org.example.backend.service.StaffService;
 import org.example.backend.service.impl.StaffServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -14,8 +15,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("staff")
 public class StaffController {
-    @Autowired
-    private StaffServiceImpl staffService;
+    private final StaffService staffService;
+
+    public StaffController(StaffService staffService){
+        this.staffService=staffService;
+    }
 
     @GetMapping("/{id}")
     public SuccessResponse<Staff> findById(@PathVariable Long id) throws DataNotFoundException {

@@ -13,13 +13,14 @@ import java.util.List;
 @RequestMapping("publisher")
 public class PublisherController {
     private final PublisherService publisherService;
-    public PublisherController (PublisherService publisherService) {
+
+    public PublisherController(PublisherService publisherService) {
         this.publisherService = publisherService;
     }
 
     @GetMapping
-    public SuccessResponse<List<PublisherResponse>> findAll(){
-        return new SuccessResponse<>(HttpStatus.OK.value(),"Get publishers success",publisherService.findAll());
+    public SuccessResponse<List<PublisherResponse>> findAll() {
+        return new SuccessResponse<>(HttpStatus.OK.value(), "Get publishers success", publisherService.findAll());
     }
 
     @PostMapping

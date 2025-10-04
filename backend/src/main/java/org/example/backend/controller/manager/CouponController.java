@@ -13,8 +13,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("coupon")
 public class CouponController {
-    @Autowired
-    private CouponService couponService;
+    private final CouponService couponService;
+
+    public CouponController(CouponService couponService){
+        this.couponService=couponService;
+    }
 
     @GetMapping("/{code}")
     public SuccessResponse<Coupon> findValidVoucherByCode(@PathVariable String code) {

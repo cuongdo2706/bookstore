@@ -18,8 +18,11 @@ import java.util.List;
 @RequestMapping("category")
 //@PreAuthorize("hasAnyRole('MANAGER','STAFF')")
 public class CategoryController {
-    @Autowired
-    private CategoryService categoryService;
+    private final CategoryService categoryService;
+
+    public CategoryController(CategoryService categoryService) {
+        this.categoryService = categoryService;
+    }
 
     @GetMapping
     public SuccessResponse<List<CategoryResponse>> findAll() {

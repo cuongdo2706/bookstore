@@ -1,22 +1,20 @@
-package org.example.backend.utility;
+package org.example.backend.service.impl;
 
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
 import org.example.backend.dto.response.ImageResponse;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.example.backend.service.ImageService;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.Map;
 
 @Component
-public class ImageUtil {
+public class ImageServiceImpl implements ImageService {
     private final Cloudinary cloudinary;
 
-    public ImageUtil(Cloudinary cloudinary) {
+    public ImageServiceImpl(Cloudinary cloudinary) {
         this.cloudinary = cloudinary;
     }
 

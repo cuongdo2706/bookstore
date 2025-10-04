@@ -3,8 +3,6 @@ package org.example.backend.dto.request;
 import jakarta.validation.constraints.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-
-import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Set;
 
@@ -14,6 +12,8 @@ import java.util.Set;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class CreateProductRequest {
+    String code;
+
     @NotBlank(message = "Name must have more than 1 digit")
     @NotNull(message = "Name cannot be null")
     String name;
