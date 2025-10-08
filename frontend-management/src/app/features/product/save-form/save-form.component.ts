@@ -123,8 +123,8 @@ export class SaveFormComponent implements OnInit {
                 authorIds: this.saveForm.controls['authors'].value!,
                 categoryIds: this.saveForm.controls['categories'].value!
             };
-            await firstValueFrom(this.productService.saveProduct(bookReq, fileReq));
-            await firstValueFrom(this.productService.searchProducts({
+            await firstValueFrom(this.productService.save(bookReq, fileReq));
+            await firstValueFrom(this.productService.search({
                 page: 1,
                 size: 10,
                 sortBy: "name",
@@ -164,7 +164,7 @@ export class SaveFormComponent implements OnInit {
     }
 
     saveCategory(input: any) {
-        this.categoryService.saveCategories({name: input.name}).subscribe({
+        this.categoryService.save({name: input.name}).subscribe({
             next: res => {
                 this.categories.update(item => [...item, res.data]);
                 this.categoryVisible.set(false);
@@ -177,7 +177,7 @@ export class SaveFormComponent implements OnInit {
     }
 
     saveAuthor(input: any) {
-        this.authorService.saveAuthors(input).subscribe({
+        this.authorService.save(input).subscribe({
             next: res => {
                 this.authors.update(item => [...item, res.data]);
                 this.authorVisible.set(false);

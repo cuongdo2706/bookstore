@@ -19,14 +19,17 @@ import java.util.Set;
 public class CategoryServiceImpl implements org.example.backend.service.CategoryService {
 
     private final CategoryRepository categoryRepository;
+    private final CategoryMapper categoryMapper;
 
-    public CategoryServiceImpl(CategoryRepository categoryRepository) {
+    public CategoryServiceImpl(CategoryRepository categoryRepository,
+                               CategoryMapper categoryMapper) {
         this.categoryRepository = categoryRepository;
+        this.categoryMapper=categoryMapper;
     }
 
     @Override
     public List<CategoryResponse> findAll() {
-        return CategoryMapper.toCategoryResponses(categoryRepository.findAllByOrderByNameAsc());
+        return categoryMapper.toCategoryResponses(categoryRepository.findAllByOrderByNameAsc());
     }
 
     @Override
@@ -44,7 +47,7 @@ public class CategoryServiceImpl implements org.example.backend.service.Category
 
     @Override
     public CategoryResponse findCategoryResponseById(Long id) throws DataNotFoundException {
-        return CategoryMapper.toCategoryResponse(findById(id));
+        return categoryMapper.toCategoryResponse(findById(id));
     }
 
     @Override
@@ -64,7 +67,7 @@ public class CategoryServiceImpl implements org.example.backend.service.Category
         Category newCategory = Category.builder()
                 .name(request.getName())
                 .build();
-        return CategoryMapper.toCategoryResponse(categoryRepository.save(newCategory));
+        return categoryMapper.toCategoryResponse(categoryRepository.save(newCategory));
     }
 
     @Override

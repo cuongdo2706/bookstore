@@ -3,7 +3,6 @@ package org.example.backend.entity;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-import org.example.backend.dto.response.ProductResponse;
 import org.hibernate.annotations.SQLRestriction;
 
 import java.math.BigDecimal;

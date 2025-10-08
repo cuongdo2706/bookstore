@@ -12,7 +12,7 @@ export class CustomerService {
     private http = inject(HttpClient);
     private readonly url: string = AppConstants.API_BASE_URL + "customer";
 
-    searchCustomer(page: number, size: number, keyword: string, sort: string) {
+    search(page: number, size: number, keyword: string, sort: string) {
         let params = new HttpParams()
             .set("keyword", keyword)
             .set("sort", sort)

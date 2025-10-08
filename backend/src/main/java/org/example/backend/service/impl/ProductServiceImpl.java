@@ -41,19 +41,21 @@ public class ProductServiceImpl implements ProductService {
     private final PublisherService publisherService;
     private final SequenceService sequenceService;
     private final ImageServiceImpl imageServiceImpl;
+    private final ProductMapper productMapper;
 
     public ProductServiceImpl(ProductRepository productRepository,
                               CategoryService categoryService,
                               AuthorService authorService,
                               PublisherService publisherService,
                               SequenceService sequenceService,
-                              ImageServiceImpl imageServiceImpl) {
+                              ImageServiceImpl imageServiceImpl, ProductMapper productMapper) {
         this.productRepository = productRepository;
         this.categoryService = categoryService;
         this.authorService = authorService;
         this.publisherService = publisherService;
         this.sequenceService = sequenceService;
         this.imageServiceImpl = imageServiceImpl;
+        this.productMapper = productMapper;
     }
 
 
@@ -64,7 +66,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public List<ProductResponse> findAllProductResponse() {
-        return ProductMapper.toProductResponses(findAll());
+        return productMapper.toProductResponses(findAll());
     }
 
 
@@ -75,7 +77,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public ProductResponse findProductResponseById(Long id) throws DataNotFoundException {
-        return ProductMapper.toProductResponse(findById(id));
+        return productMapper.toProductResponse(findById(id));
     }
 
     @Override
@@ -84,14 +86,14 @@ public class ProductServiceImpl implements ProductService {
         if (!Objects.equals(filter.getNameOrCodeKeyword(), null) && !filter.getNameOrCodeKeyword().isBlank()) {
             spec = spec.and(ProductSpecification.nameOrCodeContains(filter.getNameOrCodeKeyword()));
         }
-        if (filter.getAuthors() != null && !filter.getAuthors().isEmpty()) {
-            spec = spec.and(ProductSpecification.authorIn(filter.getAuthors()));
+        if (filter.getAuthorIds() != null && !filter.getAuthorIds().isEmpty()) {
+            spec = spec.and(ProductSpecification.authorIn(filter.getAuthorIds()));
         }
-        if (filter.getCategories() != null && !filter.getCategories().isEmpty()) {
-            spec = spec.and(ProductSpecification.categoryIn(filter.getCategories()));
+        if (filter.getCategoryIds() != null && !filter.getCategoryIds().isEmpty()) {
+            spec = spec.and(ProductSpecification.categoryIn(filter.getCategoryIds()));
         }
-        if (filter.getPublishers() != null && !filter.getPublishers().isEmpty()) {
-            spec = spec.and(ProductSpecification.publisherIn(filter.getPublishers()));
+        if (filter.getPublisherIds() != null && !filter.getPublisherIds().isEmpty()) {
+            spec = spec.and(ProductSpecification.publisherIn(filter.getPublisherIds()));
         }
         Sort sort = switch (filter.getSortBy()) {
             case "name" -> Sort.by(Sort.Direction.ASC, "name");
@@ -102,7 +104,7 @@ public class ProductServiceImpl implements ProductService {
         };
         Pageable pageable = PageRequest.of(filter.getPage() - 1, filter.getSize(), sort);
         Page<Product> products = productRepository.findAll(spec, pageable);
-        return new PageResponse<>(ProductMapper.toProductResponses(products.getContent()), products.getNumber(), products.getSize(), products.getTotalElements(), products.getTotalPages());
+        return new PageResponse<>(productMapper.toProductResponses(products.getContent()), products.getNumber(), products.getSize(), products.getTotalElements(), products.getTotalPages());
     }
 
     @Transactional
@@ -125,7 +127,7 @@ public class ProductServiceImpl implements ProductService {
             productCode = request.getCode();
         }
         Product product = Product.builder().code(productCode).name(request.getName()).quantity(request.getQuantity()).publicId(imageResponse == null ? null : imageResponse.publicId()).imgUrl(imageResponse == null ? null : imageResponse.imgUrl()).price(request.getPrice()).publisher(existedPublisher).translator(request.getTranslator()).numOfPages(request.getNumOfPages()).publishedYear(request.getPublishedYear()).description(request.getDescription()).categories(existedCategories).isDeleted(Boolean.FALSE).isActive(Boolean.TRUE).authors(existedAuthors).build();
-        return ProductMapper.toProductResponse(productRepository.save(product));
+        return productMapper.toProductResponse(productRepository.save(product));
 
     }
 
@@ -138,8 +140,8 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public ProductResponse update(Long id, UpdateProductRequest request, MultipartFile file) throws Exception {
         Product existedProduct = findById(id);
-        if (request.getCode()!=null&&!Objects.equals(request.getCode(),existedProduct.getCode())){
-            if (productRepository.existsByCode(request.getCode())){
+        if (request.getCode() != null && !Objects.equals(request.getCode(), existedProduct.getCode())) {
+            if (productRepository.existsByCode(request.getCode())) {
                 throw new DataExistedException("Mã này đã tồn tại, hãy dùng mã khác");
             }
             existedProduct.setCode(request.getCode());
@@ -150,7 +152,7 @@ public class ProductServiceImpl implements ProductService {
             existedProduct.setQuantity(request.getQuantity());
         if (request.getPrice() != null && request.getPrice().compareTo(existedProduct.getPrice()) != 0)
             existedProduct.setPrice(request.getPrice());
-        if (!Objects.equals(request.getPublisher(), existedProduct.getPublisher().getId())) {
+        if (request.getPublisher() != null && !Objects.equals(request.getPublisher(), existedProduct.getPublisher().getId())) {
             Publisher publisher = publisherService.findById(request.getPublisher());
             existedProduct.setPublisher(publisher);
         }
@@ -181,9 +183,9 @@ public class ProductServiceImpl implements ProductService {
             existedProduct.setImgUrl(imageResponse.imgUrl());
         }
         try {
-            return ProductMapper.toProductResponse(productRepository.save(existedProduct));
+            return productMapper.toProductResponse(productRepository.save(existedProduct));
         } catch (OptimisticLockException e) {
-            throw new Exception("The product was updated by another transaction. Please try again.");
+            throw new OptimisticLockException("The product was updated by another transaction. Please try again.");
         }
 
     }
@@ -202,7 +204,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public List<ProductResponse> findAllProductResponseByIds(Set<Long> ids) {
-        return ProductMapper.toProductResponses(productRepository.findAllById(ids));
+        return productMapper.toProductResponses(productRepository.findAllById(ids));
     }
 
     @Override
@@ -215,5 +217,14 @@ public class ProductServiceImpl implements ProductService {
         return productRepository.existsById(id);
     }
 
-
+    @Override
+    public void changeStatus(Long id) throws DataNotFoundException {
+        Product existedProduct = findById(id);
+        existedProduct.setIsActive(!existedProduct.getIsActive());
+        try {
+            productRepository.save(existedProduct);
+        } catch (OptimisticLockException e) {
+            throw new OptimisticLockException("The product was updated by another transaction. Please try again.");
+        }
+    }
 }

@@ -9,66 +9,57 @@ import {AppConstants} from "../../app.constants";
 import {ProductFilterRequest} from "../model/request/product-filter-request";
 
 @Injectable({
-    providedIn: 'root'
+  providedIn: 'root'
 })
 export class ProductService {
-    private http = inject(HttpClient);
-    private readonly url: string = AppConstants.API_BASE_URL + "product";
+  private http = inject(HttpClient);
+  private readonly url: string = AppConstants.API_BASE_URL + "product";
 
-    searchProducts(filter: ProductFilterRequest) {
-        let params = new HttpParams()
-            .set("nameOrCodeKeyword", filter.nameOrCodeKeyword)
-            .set("sortBy", filter.sortBy)
-            .set("page", filter.page)
-            .set("size", filter.size)
-            .set("isActive", filter.isActive)
-            .set("authorsIds",filter.authorIds.toString())
-            .set("categoryIds",filter.categoryIds.toString())
-            .set("publisherIds",filter.publisherIds.toString())
-        return this.http.get<ApiResponse<PageResponse<ProductResponse>>>(`${this.url}/search`, {params});
+  search(filter: ProductFilterRequest) {
+    return this.http.post<ApiResponse<PageResponse<ProductResponse>>>(`${this.url}/search`, filter);
+  }
+
+  findById(id: number) {
+    return this.http.get<ApiResponse<ProductResponse>>(`${this.url}/${id}`);
+  }
+
+  findAllById(ids: number[]) {
+    let params = new HttpParams()
+      .set("ids", ids.toString());
+    return this.http.get<ApiResponse<ProductResponse[]>>(`${this.url}/by-ids`, {params});
+  }
+
+  exportExcel() {
+    return this.http.get(`${this.url}/export-excel`, {
+      responseType: "blob"
+    });
+  }
+
+  save(product: ProductCreatedRequest, file: File | null) {
+    const formData = new FormData();
+    const productBlob = new Blob([JSON.stringify(product)], {type: 'application/json'});
+    formData.append('product', productBlob);
+    if (file) {
+      formData.append('file', file);
     }
+    return this.http.post<ApiResponse<ProductResponse>>(this.url, formData);
+  }
 
-    findProductById(id: number) {
-        return this.http.get<ApiResponse<ProductResponse>>(`${this.url}/${id}`);
+  update(id: number, product: ProductUpdatedRequest, file: File | null) {
+    const formData = new FormData();
+    const productBlob = new Blob([JSON.stringify(product)], {type: 'application/json'});
+    formData.append('product', productBlob);
+    if (file) {
+      formData.append('file', file);
     }
+    return this.http.put<ApiResponse<ProductResponse>>(`${this.url}/${id}`, formData);
+  }
 
-    findAllProductById(ids: number[]) {
-        let params = new HttpParams()
-            .set("ids", ids.toString());
-        return this.http.get<ApiResponse<ProductResponse[]>>(`${this.url}/by-ids`, {params});
-    }
+  delete(id: number) {
+    return this.http.delete<ApiResponse<any>>(`${this.url}/${id}`);
+  }
 
-    exportExcel() {
-        return this.http.get(`${this.url}/export-excel`, {
-            responseType: "blob"
-        });
-    }
-
-    saveProduct(product: ProductCreatedRequest, file: File | null) {
-        const formData = new FormData();
-        const productBlob = new Blob([JSON.stringify(product)], {type: 'application/json'});
-        formData.append('product', productBlob);
-        if (file) {
-            formData.append('file', file);
-        }
-        return this.http.post<ApiResponse<ProductResponse>>(this.url, formData);
-    }
-
-    updateProduct(id: number, product: ProductUpdatedRequest, file: File | null) {
-        const formData = new FormData();
-        const productBlob = new Blob([JSON.stringify(product)], {type: 'application/json'});
-        formData.append('product', productBlob);
-        if (file) {
-            formData.append('file', file);
-        }
-        return this.http.put<ApiResponse<ProductResponse>>(`${this.url}/${id}`, formData);
-    }
-
-    deleteProduct(id: number) {
-        return this.http.delete<ApiResponse<any>>(`${this.url}/${id}`);
-    }
-
-    getProductStock(id: number) {
-        return this.http.get<ApiResponse<number>>(`${this.url}/stock/${id}`);
-    };
+  changeStatus(id: number) {
+    return this.http.patch<ApiResponse<ProductResponse>>(`${this.url}/${id}/change-status`, null);
+  }
 }

@@ -2,26 +2,15 @@ package org.example.backend.mapper;
 
 import org.example.backend.dto.response.OrderDetailResponse;
 import org.example.backend.entity.OrderDetail;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 
 import java.util.List;
 
-public class OrderDetailMapper {
-    public static OrderDetailResponse toOrderDetailResponse(OrderDetail orderDetail) {
-        return new OrderDetailResponse(
-                orderDetail.getId(),
-                orderDetail.getProduct().getId(),
-                orderDetail.getProductCode(),
-                orderDetail.getProductName(),
-                orderDetail.getPrice(),
-                orderDetail.getQuantity(),
-                orderDetail.getDiscount(),
-                orderDetail.getTotalPrice()
-        );
-    }
+@Mapper(componentModel = "spring")
+public interface OrderDetailMapper {
+    @Mapping(target = "productId", source = "product.id")
+    OrderDetailResponse toOrderDetailResponse(OrderDetail orderDetail);
 
-    public static List<OrderDetailResponse> toOrderDetailResponses(List<OrderDetail> orderDetails) {
-        return orderDetails.stream()
-                .map(OrderDetailMapper::toOrderDetailResponse)
-                .toList();
-    }
+    List<OrderDetailResponse> toOrderDetailResponses(List<OrderDetail> orderDetails);
 }

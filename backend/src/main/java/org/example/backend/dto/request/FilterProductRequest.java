@@ -23,8 +23,8 @@ public class FilterProductRequest {
     String sortBy = "name";
     Boolean isActive = true;
     String nameOrCodeKeyword = null;
-    List<Long>publishers=new ArrayList<>();
-    List<Long>authors=new ArrayList<>();
-    List<Long>categories=new ArrayList<>();
+    List<Long>publisherIds=new ArrayList<>();
+    List<Long>authorIds=new ArrayList<>();
+    List<Long>categoryIds=new ArrayList<>();
 
 }

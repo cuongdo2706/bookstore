@@ -11,7 +11,7 @@ export class OrderDetailService {
     private http = inject(HttpClient);
     private readonly url: string = AppConstants.API_BASE_URL + "order-detail";
 
-    findOrderDetailsByOrderId(id: number) {
+    findByOrderId(id: number) {
         return this.http.get<ApiResponse<OrderDetailResponse[]>>(`${this.url}/${id}`);
     }
 }

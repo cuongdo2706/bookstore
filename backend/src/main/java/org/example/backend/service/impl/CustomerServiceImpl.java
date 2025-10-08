@@ -19,9 +19,12 @@ import org.springframework.stereotype.Service;
 @Service
 public class CustomerServiceImpl implements CustomerService {
     private final CustomerRepository customerRepository;
+    private final CustomerMapper customerMapper;
 
-    public CustomerServiceImpl(CustomerRepository customerRepository) {
+    public CustomerServiceImpl(CustomerRepository customerRepository,
+                               CustomerMapper customerMapper) {
         this.customerRepository = customerRepository;
+        this.customerMapper=customerMapper;
     }
 
     @Override
@@ -49,7 +52,7 @@ public class CustomerServiceImpl implements CustomerService {
             customers = customerRepository.findAll(spec, pageable);
         }
         return new PageResponse<>(
-                CustomerMapper.toCustomerResponses(customers.getContent()),
+                customerMapper.toCustomerResponses(customers.getContent()),
                 customers.getNumber(),
                 customers.getSize(),
                 customers.getTotalElements(),

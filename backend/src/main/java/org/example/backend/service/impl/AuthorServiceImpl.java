@@ -11,20 +11,24 @@ import org.example.backend.service.AuthorService;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+
 import java.util.List;
 import java.util.Set;
 
 @Service
 public class AuthorServiceImpl implements AuthorService {
     private final AuthorRepository authorRepository;
+    private final AuthorMapper authorMapper;
 
-    public AuthorServiceImpl(AuthorRepository authorRepository) {
+    public AuthorServiceImpl(AuthorRepository authorRepository,
+                             AuthorMapper authorMapper) {
         this.authorRepository = authorRepository;
+        this.authorMapper = authorMapper;
     }
 
     @Override
     public List<AuthorResponse> findAll() {
-        return AuthorMapper.toAuthorResponses(authorRepository.findAllByOrderByNameAsc());
+        return authorMapper.toAuthorResponses(authorRepository.findAllByOrderByNameAsc());
     }
 
     @Override
@@ -42,7 +46,7 @@ public class AuthorServiceImpl implements AuthorService {
 
     @Override
     public AuthorResponse findAuthorResponseById(Long id) throws DataNotFoundException {
-        return AuthorMapper.toAuthorResponse(findById(id));
+        return authorMapper.toAuthorResponse(findById(id));
     }
 
     @Override
@@ -61,7 +65,7 @@ public class AuthorServiceImpl implements AuthorService {
         Author author = Author.builder()
                 .name(request.getName())
                 .build();
-        return AuthorMapper.toAuthorResponse(authorRepository.save(author));
+        return authorMapper.toAuthorResponse(authorRepository.save(author));
     }
 
     @Override

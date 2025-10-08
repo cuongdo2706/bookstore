@@ -11,7 +11,7 @@ export class CouponService {
     private http = inject(HttpClient);
     private readonly url: string = AppConstants.API_BASE_URL + "coupon";
 
-    findCouponByCode(code: string) {
+    findByCode(code: string) {
         return this.http.get<ApiResponse<CouponResponse>>(`${this.url}/${code}`);
     }
 }

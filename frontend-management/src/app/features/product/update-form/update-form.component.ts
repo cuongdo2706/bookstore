@@ -117,8 +117,8 @@ export class UpdateFormComponent implements OnInit {
                 authorIds: this.updateForm.controls['authors'].value!,
                 categoryIds: this.updateForm.controls['categories'].value!
             };
-            await firstValueFrom(this.productService.updateProduct(this.updateId()!, bookReq, fileReq));
-            await firstValueFrom(this.productService.searchProducts({
+            await firstValueFrom(this.productService.update(this.updateId()!, bookReq, fileReq));
+            await firstValueFrom(this.productService.search({
                 page: 1,
                 size: 10,
                 sortBy: "name",
@@ -163,7 +163,7 @@ export class UpdateFormComponent implements OnInit {
 
     findProductById() {
         const id: number = this.updateId()!;
-        this.productService.findProductById(id).subscribe({
+        this.productService.findById(id).subscribe({
             next: res => {
                 let authorIds: number[] = res.data.authors.map(author => author.id);
                 let categoryIds: number[] = res.data.categories.map(category => category.id);
@@ -195,7 +195,7 @@ export class UpdateFormComponent implements OnInit {
 
     saveCategory(input: any) {
         console.log(input);
-        this.categoryService.saveCategories({name: input.name}).subscribe({
+        this.categoryService.save({name: input.name}).subscribe({
             next: res => {
                 this.categories.update(item => [...item, res.data]);
                 this.categoryVisible.set(false);
@@ -211,7 +211,7 @@ export class UpdateFormComponent implements OnInit {
     }
 
     saveAuthor(input: any) {
-        this.authorService.saveAuthors({name: input.name}).subscribe({
+        this.authorService.save({name: input.name}).subscribe({
             next: res => {
                 this.authors.update(item => [...item, res.data]);
                 this.authorVisible.set(false);
@@ -220,7 +220,7 @@ export class UpdateFormComponent implements OnInit {
     }
 
     savePublisher(input: any) {
-        this.publisherService.savePublisher({name: input.name}).subscribe({
+        this.publisherService.save({name: input.name}).subscribe({
             next: res => {
                 this.publishers.update(item => [...item, res.data]);
                 // this.publisherVisible.set(false);

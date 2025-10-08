@@ -13,11 +13,11 @@ export class CategoryService {
     private http = inject(HttpClient);
     private readonly url: string = AppConstants.API_BASE_URL + "category";
 
-    fetchCategories() {
+    fetch() {
         return this.http.get<ApiResponse<CategoryResponse[]>>(this.url);
     }
 
-    saveCategories(value: AttributeCreatedRequest) {
+    save(value: AttributeCreatedRequest) {
         return this.http.post<ApiResponse<CategoryResponse>>(this.url, value);
     }
 }

@@ -94,7 +94,6 @@ export class PosComponent implements OnInit {
     couponNotFoundError = signal<string | null>(null);
     orderDetailsValues = signal<any[]>([]);
     scannerVisible = signal(false);
-    readonly provinces = signal<{}[]>(new Address().provinces);
     communes = signal<{}[]>([]);
     size = signal(10);
     totalElements = signal(0);
@@ -141,7 +140,7 @@ export class PosComponent implements OnInit {
     async findCouponById(value: string) {
         setTimeout(async () => {
             if (value != "") {
-                const result = await firstValueFrom(this.couponService.findCouponByCode(value));
+                const result = await firstValueFrom(this.couponService.findByCode(value));
                 this.coupon.set(result.data === undefined ? null : result.data);
                 this.couponNotFoundError.set(this.coupon() === null ? "Coupon không hợp lệ" : null);
             }
@@ -150,7 +149,7 @@ export class PosComponent implements OnInit {
     }
 
     searchProduct() {
-        this.productService.searchProducts({
+        this.productService.search({
             page: 1,
             size: 10,
             nameOrCodeKeyword: this.keyword(),
@@ -507,7 +506,7 @@ export class PosComponent implements OnInit {
     }
 
     searchCustomer(event: AutoCompleteCompleteEvent) {
-        this.customerService.searchCustomer(0, 10, event.query, "created-at-desc").subscribe({
+        this.customerService.search(0, 10, event.query, "created-at-desc").subscribe({
             next: res => {
                 this.customers.set(res.data.content);
             }
@@ -551,7 +550,7 @@ export class PosComponent implements OnInit {
         if (ids.length < 1) {
             return isChanged;
         }
-        products = (await lastValueFrom(this.productService.findAllProductById(ids))).data;
+        products = (await lastValueFrom(this.productService.findAllById(ids))).data;
         this.tabs.update(tabs => {
             let newTabs = [...tabs];
             let tab = newTabs.find(tab => tab.tabId === this.activeTabId());
@@ -641,7 +640,7 @@ export class PosComponent implements OnInit {
 
 
     onProductPageChange(event: PaginatorState) {
-        this.productService.searchProducts({
+        this.productService.search({
             page: event.page!,
             size: event.rows!,
             nameOrCodeKeyword: this.keyword(),

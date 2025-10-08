@@ -12,11 +12,11 @@ export class AuthorService {
 
     private http = inject(HttpClient);
     private readonly url: string = AppConstants.API_BASE_URL + "author";
-    fetchAuthors() {
+    fetch() {
         return this.http.get<ApiResponse<AuthorResponse[]>>(this.url);
     }
 
-    saveAuthors(value: AttributeCreatedRequest) {
+    save(value: AttributeCreatedRequest) {
         return this.http.post<ApiResponse<AuthorResponse>>(this.url, value);
     }
 }

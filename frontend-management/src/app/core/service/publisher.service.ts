@@ -12,11 +12,11 @@ import {AuthorResponse} from "../model/response/author-response.model";
 export class PublisherService {
     private http=inject(HttpClient);
     private readonly url: string = AppConstants.API_BASE_URL + "publisher";
-    fetchPublishers() {
+    fetch() {
         return this.http.get<ApiResponse<PublisherResponse[]>>(this.url);
     }
 
-    savePublisher(value: AttributeCreatedRequest) {
+    save(value: AttributeCreatedRequest) {
         return this.http.post<ApiResponse<PublisherResponse>>(this.url, value);
     }
 }

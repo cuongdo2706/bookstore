@@ -105,7 +105,7 @@ export class OrderComponent implements OnInit {
     }
 
     onFetchOrder() {
-        this.orderService.searchOrder({
+        this.orderService.search({
             page: 1,
             size: 10,
             sortBy: this.sortBySelection(),
@@ -128,7 +128,7 @@ export class OrderComponent implements OnInit {
             if (this.orderCodeKeyword() !== null) {
                 this.isFilter.set(true);
                 const paginator = this.paginator();
-                this.orderService.searchOrder({
+                this.orderService.search({
                     page: 1,
                     size: this.size(),
                     sortBy: this.sortBySelection(),
@@ -153,7 +153,7 @@ export class OrderComponent implements OnInit {
 
     onPageChange(event: PaginatorState) {
         if (this.isFilter()) return;
-        this.orderService.searchOrder({
+        this.orderService.search({
             page: event.page! + 1,
             size: event.rows!,
             sortBy: this.sortBySelection(),
@@ -170,7 +170,7 @@ export class OrderComponent implements OnInit {
 
     onRowExpand(event: TableRowExpandEvent<OrderResponse>) {
         const orderId = event.data.id;
-        this.orderDetailService.findOrderDetailsByOrderId(orderId).subscribe({
+        this.orderDetailService.findByOrderId(orderId).subscribe({
             next: res => {
                 this.orders.update(orders => {
                     return orders.map(order =>

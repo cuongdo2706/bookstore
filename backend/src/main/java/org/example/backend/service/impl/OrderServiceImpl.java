@@ -36,7 +36,7 @@ public class OrderServiceImpl implements OrderService {
     private final CouponService couponService;
     private final OrderRepository orderRepository;
     private final JwtTokenProvider jwtTokenProvider;
-    private final Environment env;
+    private final OrderMapper orderMapper;
 
     public OrderServiceImpl(ProductService productService,
                             CustomerService customerService,
@@ -44,14 +44,14 @@ public class OrderServiceImpl implements OrderService {
                             CouponService couponService,
                             OrderRepository orderRepository,
                             JwtTokenProvider jwtTokenProvider,
-                            Environment env) {
+                            OrderMapper orderMapper) {
         this.productService = productService;
         this.customerService = customerService;
         this.staffService = staffService;
         this.couponService = couponService;
         this.orderRepository = orderRepository;
         this.jwtTokenProvider = jwtTokenProvider;
-        this.env = env;
+        this.orderMapper = orderMapper;
     }
 
     //    RestTemplate restTemplate = new RestTemplate();
@@ -63,7 +63,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public List<OrderResponse> findAllOrderResponse() {
-        return OrderMapper.toOrderResponses(findAll());
+        return orderMapper.toOrderResponses(findAll());
     }
 
     @Override
@@ -161,7 +161,7 @@ public class OrderServiceImpl implements OrderService {
         }
         productService.saveAll(new ArrayList<>(productMap.values()));
         newOrder.setOrderDetails(newOrderDetails);
-        return OrderMapper.toOrderResponse(orderRepository.save(newOrder));
+        return orderMapper.toOrderResponse(orderRepository.save(newOrder));
     }
 
     @Override
@@ -183,12 +183,12 @@ public class OrderServiceImpl implements OrderService {
         };
         Pageable pageable = PageRequest.of(filter.getPage() - 1, filter.getSize(), sort);
         Page<Order> orders = orderRepository.findAll(spec, pageable);
-        return new PageResponse<>(OrderMapper.toOrderResponses(orders.getContent()), orders.getNumber(), orders.getSize(), orders.getTotalElements(), orders.getTotalPages());
+        return new PageResponse<>(orderMapper.toOrderResponses(orders.getContent()), orders.getNumber(), orders.getSize(), orders.getTotalElements(), orders.getTotalPages());
     }
 
     @Override
     public OrderResponse findOrderResponseById(Long id) throws DataNotFoundException {
-        return OrderMapper.toOrderResponse(findById(id));
+        return orderMapper.toOrderResponse(findById(id));
     }
 
     @Override

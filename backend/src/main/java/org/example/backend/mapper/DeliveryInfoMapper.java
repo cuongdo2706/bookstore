@@ -2,13 +2,9 @@ package org.example.backend.mapper;
 
 import org.example.backend.dto.response.DeliveryInfoResponse;
 import org.example.backend.entity.DeliveryInfo;
+import org.mapstruct.Mapper;
 
-public class DeliveryInfoMapper {
-    public static DeliveryInfoResponse toDeliveryInfoResponse(DeliveryInfo deliveryInfo) {
-        return new DeliveryInfoResponse(
-                deliveryInfo.getRecipientName(),
-                deliveryInfo.getEmail(),
-                deliveryInfo.getPhoneNum(),
-                deliveryInfo.getAddress());
-    }
+@Mapper(componentModel = "spring")
+public interface DeliveryInfoMapper {
+    DeliveryInfoResponse toDeliveryInfoResponse(DeliveryInfo deliveryInfo);
 }

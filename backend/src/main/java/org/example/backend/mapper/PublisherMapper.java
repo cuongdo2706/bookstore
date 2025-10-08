@@ -2,15 +2,11 @@ package org.example.backend.mapper;
 
 import org.example.backend.dto.response.PublisherResponse;
 import org.example.backend.entity.Publisher;
+import org.mapstruct.Mapper;
 
 import java.util.List;
-
-public class PublisherMapper {
-    public static PublisherResponse toPublisherResponse(Publisher publisher) {
-        return new PublisherResponse(publisher.getId(), publisher.getName());
-    }
-
-    public static List<PublisherResponse> toPublisherResponses(List<Publisher> publishers) {
-        return publishers.stream().map(PublisherMapper::toPublisherResponse).toList();
-    }
+@Mapper(componentModel = "spring")
+public interface PublisherMapper {
+    PublisherResponse toPublisherResponse(Publisher publisher);
+    List<PublisherResponse> toPublisherResponses(List<Publisher> publishers);
 }

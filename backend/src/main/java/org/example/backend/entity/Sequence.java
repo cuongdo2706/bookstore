@@ -6,9 +6,10 @@ import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+import org.hibernate.annotations.ColumnDefault;
 
 @Entity
-@Table(name="tbl_sequence")
+@Table(name = "tbl_sequence")
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @NoArgsConstructor
 @Getter
@@ -18,5 +19,6 @@ public class Sequence {
     @Id
     String name;
     @NotNull
+    @ColumnDefault("0")
     Long value;
 }

@@ -39,4 +39,6 @@ public interface ProductService {
     List<ProductResponse> findAllProductResponseByIds(Set<Long> ids);
 
     Boolean existedByIdNotDeleted(Long id);
+
+    void changeStatus(Long id) throws DataNotFoundException;
 }

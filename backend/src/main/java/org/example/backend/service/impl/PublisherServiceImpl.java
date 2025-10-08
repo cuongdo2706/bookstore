@@ -15,14 +15,16 @@ import java.util.List;
 @Service
 public class PublisherServiceImpl implements PublisherService {
     private final PublisherRepository publisherRepository;
+    private final PublisherMapper publisherMapper;
 
-    public PublisherServiceImpl(PublisherRepository publisherRepository) {
+    public PublisherServiceImpl(PublisherRepository publisherRepository, PublisherMapper publisherMapper) {
         this.publisherRepository = publisherRepository;
+        this.publisherMapper = publisherMapper;
     }
 
     @Override
     public List<PublisherResponse> findAll() {
-        return PublisherMapper.toPublisherResponses(publisherRepository.findAll());
+        return publisherMapper.toPublisherResponses(publisherRepository.findAll());
     }
 
     @Override
@@ -38,7 +40,7 @@ public class PublisherServiceImpl implements PublisherService {
         Publisher publisher = Publisher.builder()
                 .name(request.getName())
                 .build();
-        return PublisherMapper.toPublisherResponse(publisherRepository.save(publisher));
+        return publisherMapper.toPublisherResponse(publisherRepository.save(publisher));
     }
 
     @Override

@@ -14,14 +14,17 @@ import java.util.List;
 @Service
 public class OrderDetailServiceImpl implements OrderDetailService {
     private final OrderDetailRepository orderDetailRepository;
+    private final OrderDetailMapper orderDetailMapper;
 
-    public OrderDetailServiceImpl(OrderDetailRepository orderDetailRepository) {
+    public OrderDetailServiceImpl(OrderDetailRepository orderDetailRepository,
+                                  OrderDetailMapper orderDetailMapper) {
         this.orderDetailRepository = orderDetailRepository;
+        this.orderDetailMapper = orderDetailMapper;
     }
 
     @Override
     public List<OrderDetailResponse> findByOrderId(Long orderId) {
-        return OrderDetailMapper.toOrderDetailResponses(orderDetailRepository.findByOrderId(orderId));
+        return orderDetailMapper.toOrderDetailResponses(orderDetailRepository.findByOrderId(orderId));
     }
 
     @Override

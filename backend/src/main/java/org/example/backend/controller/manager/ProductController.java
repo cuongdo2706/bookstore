@@ -50,8 +50,8 @@ public class ProductController {
         return new SuccessResponse<>(HttpStatus.OK.value(), "Getting data success", productService.getStockQuantity(id));
     }
 
-    @GetMapping("/search")
-    public SuccessResponse<PageResponse<ProductResponse>> searchProduct(@Valid @ModelAttribute FilterProductRequest request) {
+    @PostMapping("/search")
+    public SuccessResponse<PageResponse<ProductResponse>> searchProduct(@Valid @RequestBody FilterProductRequest request) {
         return new SuccessResponse<>(HttpStatus.OK.value(), "Getting data success", productService.searchProduct(request));
     }
 
@@ -90,5 +90,11 @@ public class ProductController {
     public SuccessResponse<?> deleteById(@Valid @NotNull(message = "Id must not be null") @PathVariable Long id) throws DataNotFoundException {
         productService.softDelete(id);
         return new SuccessResponse<>(HttpStatus.NO_CONTENT.value(), "Deleting data success", null);
+    }
+
+    @PatchMapping("/{id}/change-status")
+    public SuccessResponse<?>changeStatus(@Valid @NotNull(message = "Id must not be null") @PathVariable Long id) throws DataNotFoundException{
+        productService.changeStatus(id);
+        return new SuccessResponse<>(HttpStatus.NO_CONTENT.value(), "Change status success", null);
     }
 }

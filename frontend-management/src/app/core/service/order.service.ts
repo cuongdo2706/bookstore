@@ -18,7 +18,7 @@ export class OrderService {
         return this.http.post<ApiResponse<OrderResponse>>(this.url, request);
     }
 
-    searchOrder(request: OrderFilterRequest) {
+    search(request: OrderFilterRequest) {
         return this.http.post<ApiResponse<PageResponse<OrderResponse>>>(`${this.url}/search`, request);
     }
 
