@@ -1,4 +1,5 @@
 export interface ProductCreatedRequest {
+    code: string|null;
     name: string;
     quantity: number;
     price: number;

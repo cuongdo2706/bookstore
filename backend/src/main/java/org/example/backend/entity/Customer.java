@@ -21,8 +21,10 @@ public class Customer extends BaseEntity {
     String name;
     LocalDate dob;
     Boolean gender;
+    @Column(unique = true,columnDefinition = "varchar(10)")
     String phoneNum;
     String address;
+    @Column(unique = true)
     String email;
     String publicId;
     String imgUrl;

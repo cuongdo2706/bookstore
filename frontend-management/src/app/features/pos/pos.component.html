@@ -1,76 +1,76 @@
 <p-toast/>
-<div class = "nav-tabs">
-    <p-auto-complete
-	  (completeMethod) = "searchProduct()"
-	  (onSelect) = "selectProduct($event)"
-	  [(ngModel)] = "keyword"
-	  [suggestions] = "products()"
-	  [lazy] = "true"
-	  delay = "500"
-	  [inputStyle] = "{'width':'400px'}"
-	  [panelStyle] = "{'width':'500px'}"
-	  optionLabel = "code"
-	  placeholder = "Tìm sản phẩm theo tên hoặc mã"
-	  showClear = "true"
-    >
-        <ng-template #item let-product>
-	  <div class = "flex align-items-center gap-2">
-	      <img ngSrc = "{{product.imgUrl}}" width = "30" height = "44">
-	      <span>{{ product.name }}</span>
-	  </div>
-        </ng-template>
-        <ng-template #footer>
-	  @if (products().length > 0) {
-	      <p-paginator #paginator
-		         (onPageChange) = "onProductPageChange($event)"
-		         [rows] = "size()"
-		         [totalRecords] = "totalElements()"
-		         [rowsPerPageOptions] = "[10, 20, 30]"/>
-	  }
-	  <div class = "p-3">
-	      <p-button fluid icon = "pi pi-plus" label = "Thêm sản phẩm" size = "small"/>
-	  </div>
-        </ng-template>
-        <ng-template #empty>
-	  <span class = "flex justify-content-center">Không có bản ghi nào</span>
-        </ng-template>
-    </p-auto-complete>
+<div class="nav-tabs">
+  <p-auto-complete
+    (completeMethod)="searchProduct()"
+    (onSelect)="selectProduct($event)"
+    [(ngModel)]="keyword"
+    [suggestions]="products()"
+    [lazy]="true"
+    delay="500"
+    [inputStyle]="{'width':'400px'}"
+    [panelStyle]="{'width':'500px'}"
+    optionLabel="code"
+    placeholder="Tìm sản phẩm theo tên hoặc mã"
+    showClear="true"
+  >
+    <ng-template #item let-product>
+      <div class="flex align-items-center gap-2">
+        <img ngSrc="{{product.imgUrl}}" width="30" height="44">
+        <span>{{ product.name }}</span>
+      </div>
+    </ng-template>
+    <ng-template #footer>
+      @if (products().length > 0) {
+        <p-paginator #paginator
+                     (onPageChange)="onProductPageChange($event)"
+                     [rows]="size()"
+                     [totalRecords]="totalElements()"
+                     [rowsPerPageOptions]="[10, 20, 30]"/>
+      }
+      <div class="p-3">
+        <p-button fluid icon="pi pi-plus" label="Thêm sản phẩm" size="small"/>
+      </div>
+    </ng-template>
+    <ng-template #empty>
+      <span class="flex justify-content-center">Không có bản ghi nào</span>
+    </ng-template>
+  </p-auto-complete>
 
 
-    <p-button
-	  [style] = "{'height':'2rem','width':'2rem','margin-left':'10px'}"
-	  icon = "pi pi-barcode"
-	  raised = "true"
-	  text = "true"
-	  (click) = "onOpenScanner()"></p-button>
+  <p-button
+    [style]="{'height':'2rem','width':'2rem','margin-left':'10px'}"
+    icon="pi pi-barcode"
+    raised="true"
+    text="true"
+    (click)="onOpenScanner()"></p-button>
 
 
-    @for (t of tabs(); let i = $index; track t.tabId) {
-        <div [style.background-color] = "t.tabId===activeTabId()?'#10F6B6':'#10B981'"
-	   (click) = "chooseTab(t.tabId)"
-	   class = "select-tab-button ml-3">
-	  <span>Đơn hàng {{ i + 1 }}</span>
-	  <i class = "pi pi-times ml-2"
-	     (click) = "deleteTab(t.tabId);$event.stopPropagation()">
-	  </i>
-        </div>
+  @for (t of tabs(); let i = $index; track t.tabId) {
+    <div [style.background-color]="t.tabId===activeTabId()?'#10F6B6':'#10B981'"
+         (click)="chooseTab(t.tabId)"
+         class="select-tab-button ml-3">
+      <span>Đơn hàng {{ i + 1 }}</span>
+      <i class="pi pi-times ml-2"
+         (click)="deleteTab(t.tabId);$event.stopPropagation()">
+      </i>
+    </div>
 
-    }
-    <p-button
-	  (onClick) = "createNewTab()"
-	  [disabled] = "tabs().length >= MAX_TABS"
-	  [rounded] = "true"
-	  [style] = "{'height':'2rem','width':'2rem','margin-left':'10px'}"
-	  class = "ml-2"
-	  icon = "pi pi-plus"
-	  raised = "true"
-	  severity = "success"
-	  text = "true"></p-button>
+  }
+  <p-button
+    (onClick)="createNewTab()"
+    [disabled]="tabs().length >= MAX_TABS"
+    [rounded]="true"
+    [style]="{'height':'2rem','width':'2rem','margin-left':'10px'}"
+    class="ml-2"
+    icon="pi pi-plus"
+    raised="true"
+    severity="success"
+    text="true"></p-button>
 </div>
-<form (ngSubmit) = "placeOrder(posForm.value)" [formGroup] = "posForm" style = "margin-top: 20px">
-    <div style = "display: flex; column-gap: 10px">
-        <div formArrayName = "orderDetails"
-	   style = "
+<form (ngSubmit)="placeOrder(posForm.value)" [formGroup]="posForm" style="margin-top: 20px">
+  <div style="display: flex; column-gap: 10px">
+    <div formArrayName="orderDetails"
+         style="
 	   height: calc(100vh - 190px);
 	   width: 70%;
 	   flex-shrink: 0;
@@ -78,209 +78,210 @@
 	   display: flex;
 	   flex-direction: column;
 	   overflow: auto">
-	  @for (item of orderDetailsFormArray.controls; let i = $index; track item.get('bookId')!.value) {
+      @for (item of orderDetailsFormArray.controls; let i = $index; track item.get('bookId')!.value) {
 
-	      <p-card class = "item" [formGroupName] = "i">
-		<div class = "flex align-items-center justify-content-between">
-		    <div class = "flex align-items-center" style = "width: 50%">
-		        <span>{{ orderDetailsFormArray.length - i }}</span>
-		        <i (click) = "removeItem(i,item.get('bookId')?.value)" style = "cursor: pointer"
-			 class = "pi pi-trash ml-3"></i>
-		        <span class = "ml-3">{{ item.get('bookCode')?.value }}</span>
-		        <div class = "ml-5"
-			   style = "max-width: 300px; overflow: hidden; text-overflow: ellipsis; white-space: normal">
-			  {{ item.get('bookName')?.value }}
-		        </div>
-		    </div>
-		    <div class = "flex align-items-center">
-		        <p-button
-			      class = "mr-1"
-			      [style] = "{'width':'1.5rem','height':'1.5rem'}"
-			      severity = "secondary"
-			      styleClass = "tab-index-custom"
-			      rounded = "true"
-			      raised = "true"
-			      icon = "pi pi-minus"
-			      (click) = "decreaseItemQuantity(orderDetailsFormArray.controls[i])"></p-button>
-		        <p-input-number
-			      [min] = "1"
-			      (onBlur) = "checkEmptyItemQuantity($event,orderDetailsFormArray.controls[i])"
-			      formControlName = "quantity"
-			      class = "quantity-input"/>
-		        <p-button
-			      class = "ml-1"
-			      [style] = "{'width':'1.5rem','height':'1.5rem'}"
-			      styleClass = "tab-index-custom"
-			      rounded = "true"
-			      severity = "secondary"
-			      raised = "true"
-			      icon = "pi pi-plus"
-			      (click) = "increaseItemQuantity(orderDetailsFormArray.controls[i])"></p-button>
-		    </div>
-		    <div class = "flex align-items-center gap-4">
-		        <button
-			      class = "itemPrice"
-			      type = "button">
-			  {{ item.get('price')?.value|number:'1.0-0' }}
-		        </button>
-		        <b style = "width: 100px;text-align: right">{{ calculateItemTotalPrice(item)|number:'1.0-0' }}</b>
-		    </div>
-		</div>
-	      </p-card>
-	  }
-        </div>
-        <div style = "width: 30%;flex-shrink: 0">
-	  <p-card [style] = "{'height':'calc(100vh - 190px)','overflow-y':'auto'}" class = "order-info">
-<!--	      <div class = "flex">-->
-<!--		<b class = "mr-3">Giao hàng</b>-->
-<!--		<p-toggleswitch-->
-<!--		        formControlName = "orderType"-->
-<!--		        (onChange) = "onSelectOrderType($event)">-->
-
-<!--		</p-toggleswitch>-->
-<!--	      </div>-->
-	      <div class = "flex mt-3">
-		<p-auto-complete
-		        [inputStyle] = "{'width':'300px'}"
-		        (completeMethod) = "searchCustomer($event)"
-		        (onClear) = "clearCustomer()"
-		        (onSelect) = "selectCustomer($event)"
-		        [suggestions] = "customers()"
-		        delay = "500"
-		        [lazy] = "true"
-		        [showClear] = "true"
-		        [style] = "{'height':'35px','align-items': 'center','width':'300px'}"
-		        optionLabel = "name"
-		        formControlName = "customer"
-		        placeholder = "Tìm khách hàng"
-		        [virtualScroll] = "true">
-		    <ng-template #item let-user>
-		        <div class = "flex align-items-center gap-2">
-			  <span>{{ user.name }}</span>
-		        </div>
-		    </ng-template>
-		    <ng-template #footer>
-		        @if (customers().length > 0) {
-			  <p-paginator #paginator
-				     (onPageChange) = "onProductPageChange($event)"
-				     [rows] = "size()"
-				     [totalRecords] = "totalElements()"
-				     [rowsPerPageOptions] = "[10, 20, 30]"/>
-		        }
-		        <div class = "p-3">
-			  <p-button fluid icon = "pi pi-plus" label = "Thêm khách hàng" size = "small"/>
-		        </div>
-		    </ng-template>
-		    <ng-template #empty>
-		        <span class = "flex justify-content-center">Không có bản ghi nào</span>
-		    </ng-template>
-		</p-auto-complete>
-	      </div>
-	      <div class = "flex mt-3">
-		<div class = "col-6 pl-0"><b>Tổng tiền hàng</b></div>
-		<div class = "col-6"
-		     style = "text-align: end">{{ totalAmount()|number:'1.0-0' }}
-		</div>
-	      </div>
-	      <div class = "flex mt-3">
-		<div class = "col-5 pl-0"><b>Voucher</b></div>
-		<div class = "col-7 flex flex-row justify-content-end" style = "position: relative;padding: 0">
-		    <input #voucherInput (input) = "findCouponById(voucherInput.value)"
-			 [style] = "{'height':'35px','width':'220px'}"
-			 type = "text" pInputText/>
-		    @if (couponNotFoundError() != null && voucherInput.value != "") {
-		        <span style = "color: red">{{ couponNotFoundError() }}</span>
-		    }
-		</div>
-	      </div>
-	      <div class = "flex mt-3">
-		<div class = "col-6 pl-0"><b>Giảm giá</b></div>
-		<div class = "col-6"
-		     style = "text-align: end">{{ discount() |number:'1.0-0' }}
-		</div>
-	      </div>
-	      <div class = "flex mt-3">
-		<div class = "col-6 pl-0"><b>Khách cần trả</b></div>
-		<div class = "col-6"
-		     style = "text-align: end;font-weight: bold;font-size: 18px;color: green">{{ amountDue()|number:'1.0-0' }}
-		</div>
-	      </div>
-	      @if (orderDetailsFormArray.length > 0) {
-		<div class = "flex mt-3">
-		    <div class = "col-5 pl-0"><b>Khách thanh toán</b></div>
-		    <div class = "col-7 flex flex-row justify-content-end" style = "position: relative;padding:0">
-		        <p-input-number
-			      (onInput) = "fillAmountPaid($event)"
-			      (onBlur) = "validateAmountPaid()"
-			      formControlName = "amountPaid"
-			      class = "amount-paid-input"
-			      [minFractionDigits] = "0"
-			      mode = "decimal"
-			      locale = "en-US"
-			      inputId = "locale-us"
-			      [style] = "{'position': 'absolute'}"/>
-
-		    </div>
-		</div>
-		<div class = "flex mt-3">
-		    <div class = "col-6 pl-0"><b>Tiền thừa</b></div>
-		    <div class = "col-6"
-		         style = "text-align: end">{{ changeAmount()|number:'1.0-0' }}
-		    </div>
-		</div>
-	      }
-<!--	      @if (this.posForm.get('orderType')?.value === true) {-->
-
-<!--		<hr>-->
-<!--		<div class = "flex mt-3">-->
-<!--		    <div class = "col-5 pl-0"><b>Tên người nhận</b></div>-->
-<!--		    <div class = "col-7 flex flex-row justify-content-end" style = "position: relative;padding: 0">-->
-<!--		        <input [style] = "{'height':'35px','width':'220px'}" type = "text" pInputText/>-->
-<!--		    </div>-->
-<!--		</div>-->
-<!--		<div class = "flex mt-3">-->
-<!--		    <div class = "col-5 pl-0"><b>Số điện thoại</b></div>-->
-<!--		    <div class = "col-7 flex flex-row justify-content-end" style = "position: relative;padding: 0">-->
-<!--		        <input [style] = "{'height':'35px','width':'220px'}" type = "text" pInputText/>-->
-<!--		    </div>-->
-<!--		</div>-->
-<!--		<div class = "flex mt-3">-->
-<!--		    <div class = "col-5 pl-0"><b>Tỉnh/Thành phố</b></div>-->
-<!--		    <div class = "col-7 flex flex-row justify-content-end" style = "position: relative;padding: 0">-->
-<!--		        <p-select [showClear] = "true" formControlName = "province"-->
-<!--			        (onChange) = "onSelectProvince($event)"-->
-<!--			        [options] = "provinces()" optionLabel = "name"-->
-<!--			        [style] = "{'height':'35px','width':'220px'}"-->
-<!--			        (onClear) = "onClearProvince()"></p-select>-->
-<!--		    </div>-->
-<!--		</div>-->
-<!--		<div class = "flex mt-3">-->
-<!--		    <div class = "col-5 pl-0"><b>Phường/Xã</b></div>-->
-<!--		    <div class = "col-7 flex flex-row justify-content-end" style = "position: relative;padding: 0">-->
-<!--		        <p-select formControlName = "commune"-->
-<!--			        [options] = "communes()" optionLabel = "name"-->
-<!--			        [style] = "{'height':'35px','width':'220px'}"-->
-<!--			        [showClear]="true"-->
-<!--			        (onClear) = "onClearCommune()"></p-select>-->
-<!--		    </div>-->
-<!--		</div>-->
-<!--		<div class = "flex mt-3">-->
-<!--		    <div class = "col-5 pl-0"><b>Địa chỉ</b></div>-->
-<!--		    <div class = "col-7 flex flex-row justify-content-end" style = "position: relative;padding: 0">-->
-<!--		        <input [style] = "{'height':'35px','width':'220px'}" type = "text" pInputText/>-->
-<!--		    </div>-->
-<!--		</div>-->
-<!--	      }-->
-
-	      <p-button [disabled] = "orderDetailsFormArray.length < 1" type = "submit"
-		      [style] = "{'width':'100%','margin-top':'20px'}"
-		      label = "Thanh toán"></p-button>
-
-
-	  </p-card>
-        </div>
-
+        <p-card class="item" [formGroupName]="i">
+          <div class="flex align-items-center justify-content-between">
+            <div class="flex align-items-center" style="width: 50%">
+              <span>{{ orderDetailsFormArray.length - i }}</span>
+              <i (click)="removeItem(i,item.get('bookId')?.value)" style="cursor: pointer"
+                 class="pi pi-trash ml-3"></i>
+              <span class="ml-3">{{ item.get('bookCode')?.value }}</span>
+              <div class="ml-5"
+                   style="max-width: 300px; overflow: hidden; text-overflow: ellipsis; white-space: normal">
+                {{ item.get('bookName')?.value }}
+              </div>
+            </div>
+            <div class="flex align-items-center">
+              <p-button
+                class="mr-1"
+                [style]="{'width':'1.5rem','height':'1.5rem'}"
+                severity="secondary"
+                styleClass="tab-index-custom"
+                rounded="true"
+                raised="true"
+                icon="pi pi-minus"
+                (click)="decreaseItemQuantity(orderDetailsFormArray.controls[i])"></p-button>
+              <p-input-number
+                [min]="1"
+                (onBlur)="checkEmptyItemQuantity($event,orderDetailsFormArray.controls[i])"
+                formControlName="quantity"
+                class="quantity-input"/>
+              <p-button
+                class="ml-1"
+                [style]="{'width':'1.5rem','height':'1.5rem'}"
+                styleClass="tab-index-custom"
+                rounded="true"
+                severity="secondary"
+                raised="true"
+                icon="pi pi-plus"
+                (click)="increaseItemQuantity(orderDetailsFormArray.controls[i])"></p-button>
+            </div>
+            <div class="flex align-items-center gap-4">
+              <button
+                class="itemPrice"
+                type="button">
+                {{ item.get('price')?.value|number:'1.0-0' }}
+              </button>
+              <b style="width: 100px;text-align: right">{{ calculateItemTotalPrice(item)|number:'1.0-0' }}</b>
+            </div>
+          </div>
+        </p-card>
+      }
     </div>
+    <div style="width: 30%;flex-shrink: 0">
+      <p-card [style]="{'height':'calc(100vh - 190px)','overflow-y':'auto'}" class="order-info">
+        <!--	      <div class = "flex">-->
+        <!--		<b class = "mr-3">Giao hàng</b>-->
+        <!--		<p-toggleswitch-->
+        <!--		        formControlName = "orderType"-->
+        <!--		        (onChange) = "onSelectOrderType($event)">-->
+
+        <!--		</p-toggleswitch>-->
+        <!--	      </div>-->
+        <div class="flex mt-3">
+          <p-auto-complete
+            [inputStyle]="{'width':'300px'}"
+            (completeMethod)="searchCustomer($event)"
+            (onClear)="clearCustomer()"
+            (onSelect)="selectCustomer($event)"
+            [suggestions]="customers()"
+            delay="500"
+            [lazy]="true"
+            [showClear]="true"
+            [style]="{'height':'35px','align-items': 'center','width':'300px'}"
+            optionLabel="name"
+            formControlName="customer"
+            placeholder="Tìm khách hàng"
+            [virtualScroll]="true">
+            <ng-template #item let-user>
+              <div class="flex align-items-center gap-2">
+                <span>{{ user.name }}</span>
+              </div>
+            </ng-template>
+            <ng-template #footer>
+              @if (customers().length > 0) {
+                <p-paginator #paginator
+                             (onPageChange)="onProductPageChange($event)"
+                             [rows]="size()"
+                             [totalRecords]="totalElements()"
+                             [rowsPerPageOptions]="[10, 20, 30]"/>
+              }
+            </ng-template>
+            <ng-template #empty>
+              <span class="flex justify-content-center">Không có bản ghi nào</span>
+            </ng-template>
+          </p-auto-complete>
+            <p-button (onClick)="customerSaveFormVisible.set(true)" class="ml-1" icon="pi pi-plus" [rounded]="true" [text]="true" />
+        </div>
+        <div class="flex mt-3">
+          <div class="col-6 pl-0"><b>Tổng tiền hàng</b></div>
+          <div class="col-6"
+               style="text-align: end">{{ totalAmount()|number:'1.0-0' }}
+          </div>
+        </div>
+        <div class="flex mt-3">
+          <div class="col-5 pl-0"><b>Voucher</b></div>
+          <div class="col-7 flex flex-row justify-content-end" style="position: relative;padding: 0">
+            <input #voucherInput (input)="findCouponById(voucherInput.value)"
+                   [style]="{'height':'35px','width':'220px'}"
+                   type="text" pInputText/>
+            @if (couponNotFoundError() != null && voucherInput.value != "") {
+              <span style="color: red">{{ couponNotFoundError() }}</span>
+            }
+          </div>
+        </div>
+        <div class="flex mt-3">
+          <div class="col-6 pl-0"><b>Giảm giá</b></div>
+          <div class="col-6"
+               style="text-align: end">{{ discount() |number:'1.0-0' }}
+          </div>
+        </div>
+        <div class="flex mt-3">
+          <div class="col-6 pl-0"><b>Khách cần trả</b></div>
+          <div class="col-6"
+               style="text-align: end;font-weight: bold;font-size: 18px;color: green">{{ amountDue()|number:'1.0-0' }}
+          </div>
+        </div>
+        @if (orderDetailsFormArray.length > 0) {
+          <div class="flex mt-3">
+            <div class="col-5 pl-0"><b>Khách thanh toán</b></div>
+            <div class="col-7 flex flex-row justify-content-end" style="position: relative;padding:0">
+              <p-input-number
+                (onInput)="fillAmountPaid($event)"
+                (onBlur)="validateAmountPaid()"
+                formControlName="amountPaid"
+                class="amount-paid-input"
+                [minFractionDigits]="0"
+                mode="decimal"
+                locale="en-US"
+                inputId="locale-us"
+                [style]="{'position': 'absolute'}"/>
+
+            </div>
+          </div>
+          <div class="flex mt-3">
+            <div class="col-6 pl-0"><b>Tiền thừa</b></div>
+            <div class="col-6"
+                 style="text-align: end">{{ changeAmount()|number:'1.0-0' }}
+            </div>
+          </div>
+        }
+        <!--	      @if (this.posForm.get('orderType')?.value === true) {-->
+
+        <!--		<hr>-->
+        <!--		<div class = "flex mt-3">-->
+        <!--		    <div class = "col-5 pl-0"><b>Tên người nhận</b></div>-->
+        <!--		    <div class = "col-7 flex flex-row justify-content-end" style = "position: relative;padding: 0">-->
+        <!--		        <input [style] = "{'height':'35px','width':'220px'}" type = "text" pInputText/>-->
+        <!--		    </div>-->
+        <!--		</div>-->
+        <!--		<div class = "flex mt-3">-->
+        <!--		    <div class = "col-5 pl-0"><b>Số điện thoại</b></div>-->
+        <!--		    <div class = "col-7 flex flex-row justify-content-end" style = "position: relative;padding: 0">-->
+        <!--		        <input [style] = "{'height':'35px','width':'220px'}" type = "text" pInputText/>-->
+        <!--		    </div>-->
+        <!--		</div>-->
+        <!--		<div class = "flex mt-3">-->
+        <!--		    <div class = "col-5 pl-0"><b>Tỉnh/Thành phố</b></div>-->
+        <!--		    <div class = "col-7 flex flex-row justify-content-end" style = "position: relative;padding: 0">-->
+        <!--		        <p-select [showClear] = "true" formControlName = "province"-->
+        <!--			        (onChange) = "onSelectProvince($event)"-->
+        <!--			        [options] = "provinces()" optionLabel = "name"-->
+        <!--			        [style] = "{'height':'35px','width':'220px'}"-->
+        <!--			        (onClear) = "onClearProvince()"></p-select>-->
+        <!--		    </div>-->
+        <!--		</div>-->
+        <!--		<div class = "flex mt-3">-->
+        <!--		    <div class = "col-5 pl-0"><b>Phường/Xã</b></div>-->
+        <!--		    <div class = "col-7 flex flex-row justify-content-end" style = "position: relative;padding: 0">-->
+        <!--		        <p-select formControlName = "commune"-->
+        <!--			        [options] = "communes()" optionLabel = "name"-->
+        <!--			        [style] = "{'height':'35px','width':'220px'}"-->
+        <!--			        [showClear]="true"-->
+        <!--			        (onClear) = "onClearCommune()"></p-select>-->
+        <!--		    </div>-->
+        <!--		</div>-->
+        <!--		<div class = "flex mt-3">-->
+        <!--		    <div class = "col-5 pl-0"><b>Địa chỉ</b></div>-->
+        <!--		    <div class = "col-7 flex flex-row justify-content-end" style = "position: relative;padding: 0">-->
+        <!--		        <input [style] = "{'height':'35px','width':'220px'}" type = "text" pInputText/>-->
+        <!--		    </div>-->
+        <!--		</div>-->
+        <!--	      }-->
+
+        <p-button [disabled]="orderDetailsFormArray.length < 1" type="submit"
+                  [style]="{'width':'100%','margin-top':'20px'}"
+                  label="Thanh toán"></p-button>
+
+
+      </p-card>
+    </div>
+
+  </div>
 </form>
-
-
+@if (customerSaveFormVisible()) {
+  <app-customer-save-form
+    [(visible)]="customerSaveFormVisible">
+  </app-customer-save-form>
+}

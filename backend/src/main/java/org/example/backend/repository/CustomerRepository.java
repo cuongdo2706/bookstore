@@ -32,4 +32,6 @@ public interface CustomerRepository extends JpaRepository<Customer, Long>, JpaSp
             ORDER BY created_at DESC 
             """)
     Page<Customer> findAllPage(Pageable pageable);
+
+    boolean existsByCode(String code);
 }

@@ -7,7 +7,12 @@
     <form [formGroup] = "updateForm" (ngSubmit) = "updateBook()">
         <div class = "flex">
 	  <div class = "col-7">
-	      <p-floatlabel variant = "on" class = "mt-3 flex">
+          <p-floatlabel variant = "on" class = "mt-3 flex">
+              <input aria-describedby = "code-error" type = "text" pInputText id = "code" style = "width:600px"
+                     formControlName = "code"/>
+              <label for = "code">Mã sách</label>
+          </p-floatlabel>
+	      <p-floatlabel variant = "on" class = "mt-5 flex">
 		<input aria-describedby = "name-error" type = "text" pInputText id = "name" style = "width:600px"
 		       formControlName = "name"/>
 		<label for = "name">Tên sách</label>

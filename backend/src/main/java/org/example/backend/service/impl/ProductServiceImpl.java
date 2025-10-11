@@ -40,7 +40,7 @@ public class ProductServiceImpl implements ProductService {
     private final AuthorService authorService;
     private final PublisherService publisherService;
     private final SequenceService sequenceService;
-    private final ImageServiceImpl imageServiceImpl;
+    private final ImageService imageService;
     private final ProductMapper productMapper;
 
     public ProductServiceImpl(ProductRepository productRepository,
@@ -48,13 +48,14 @@ public class ProductServiceImpl implements ProductService {
                               AuthorService authorService,
                               PublisherService publisherService,
                               SequenceService sequenceService,
-                              ImageServiceImpl imageServiceImpl, ProductMapper productMapper) {
+                              ImageService imageService,
+                              ProductMapper productMapper) {
         this.productRepository = productRepository;
         this.categoryService = categoryService;
         this.authorService = authorService;
         this.publisherService = publisherService;
         this.sequenceService = sequenceService;
-        this.imageServiceImpl = imageServiceImpl;
+        this.imageService = imageService;
         this.productMapper = productMapper;
     }
 
@@ -112,7 +113,7 @@ public class ProductServiceImpl implements ProductService {
     public ProductResponse save(CreateProductRequest request, MultipartFile file) throws DataNotFoundException, IOException {
         ImageResponse imageResponse = null;
         if (file != null && !file.isEmpty()) {
-            imageResponse = imageServiceImpl.upload(file);
+            imageResponse = imageService.upload(file);
         }
         Set<Author> existedAuthors = new HashSet<>(authorService.findAllByIds(request.getAuthorIds()));
         Set<Category> existedCategories = new HashSet<>(categoryService.findAllByIds(request.getCategoryIds()));
@@ -175,9 +176,9 @@ public class ProductServiceImpl implements ProductService {
         if (file != null && !file.isEmpty()) {
             ImageResponse imageResponse;
             if (existedProduct.getPublicId() != null) {
-                imageResponse = imageServiceImpl.update(existedProduct.getPublicId(), file);
+                imageResponse = imageService.update(existedProduct.getPublicId(), file);
             } else {
-                imageResponse = imageServiceImpl.upload(file);
+                imageResponse = imageService.upload(file);
             }
             existedProduct.setPublicId(imageResponse.publicId());
             existedProduct.setImgUrl(imageResponse.imgUrl());

@@ -21,10 +21,10 @@ public class Staff extends BaseEntity {
     String name;
     LocalDate dob;
     Boolean gender;
-    @Column(unique = true)
+    @Column(unique = true,columnDefinition = "varchar(10)")
     String phoneNum;
-    @Column(unique = true)
     String address;
+    @Column(unique = true)
     String email;
     String identityNum;
     String publicId;

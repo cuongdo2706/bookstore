@@ -47,6 +47,7 @@ export class SaveFormComponent implements OnInit {
 
         this.getListYears();
         this.saveForm = this.fb.group({
+            code: null,
             name: [null, [Validators.required]],
             imgFile: null,
             publisherId: null,
@@ -95,7 +96,6 @@ export class SaveFormComponent implements OnInit {
     closeDialog() {
         this.visible.set(false);
         this.saveForm.reset();
-        this.saveForm.patchValue({isActive: true});
     }
 
     chooseImage(event: any) {
@@ -112,6 +112,7 @@ export class SaveFormComponent implements OnInit {
         if (this.saveForm.valid) {
             let fileReq: File | null = this.saveForm.controls['imgFile'].value;
             let bookReq: ProductCreatedRequest = {
+                code:this.saveForm.controls['code'].value,
                 name: this.saveForm.controls['name'].value!,
                 quantity: this.saveForm.controls['quantity'].value!,
                 price: this.saveForm.controls['price'].value!,
@@ -134,18 +135,17 @@ export class SaveFormComponent implements OnInit {
                 categoryIds: this.categoryIds(),
                 publisherIds: this.publisherIds()
             }))
-                .then(res => {
-                    this.onSave.emit(res.data);
-                    this.message.emit(
+            .then(res => {
+                this.onSave.emit(res.data);
+                this.message.emit(
                         {
                             severity: "success",
                             summary: "Thành công",
                             detail: "Thêm sản phẩm mới thành công!!!"
                         }
-                    );
-                });
+                );
+            });
             this.saveForm.reset();
-            this.saveForm.patchValue({isActive: true});
             this.submitted.set(true);
             this.visible.set(false);
         } else {

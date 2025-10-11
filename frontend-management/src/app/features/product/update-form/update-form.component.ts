@@ -53,6 +53,7 @@ export class UpdateFormComponent implements OnInit {
         this.findProductById();
         this.getListYears();
         this.updateForm = this.fb.group({
+            code:this.fb.control<string | null>(null),
             name: this.fb.control<string | null>(null, [Validators.required]),
             imgFile: null,
             publisherId: this.fb.control<number | null>(null),
@@ -106,6 +107,7 @@ export class UpdateFormComponent implements OnInit {
         if (this.updateForm.valid) {
             let fileReq: File | null = this.updateForm.controls['imgFile'].value;
             let bookReq: ProductUpdatedRequest = {
+                code:this.updateForm.controls['code'].value!,
                 name: this.updateForm.controls['name'].value!,
                 quantity: this.updateForm.controls['quantity'].value!,
                 price: this.updateForm.controls['price'].value!,
@@ -168,6 +170,7 @@ export class UpdateFormComponent implements OnInit {
                 let authorIds: number[] = res.data.authors.map(author => author.id);
                 let categoryIds: number[] = res.data.categories.map(category => category.id);
                 this.updateForm.patchValue({
+                    code:res.data.code,
                     name: res.data.name,
                     imgFile: null,
                     publisherId: res.data.publisher.id,
