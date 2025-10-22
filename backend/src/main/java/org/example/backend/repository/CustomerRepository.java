@@ -15,17 +15,6 @@ import java.util.Optional;
 public interface CustomerRepository extends JpaRepository<Customer, Long>, JpaSpecificationExecutor<Customer> {
 
     @Query(nativeQuery = true, value = """
-            SELECT * FROM tbl_customer 
-            WHERE (unaccent(name) ILIKE unaccent(concat('%',:keyword,'%'))
-            OR phone_num LIKE concat('%',:keyword,'%'))
-            AND is_active = TRUE
-            AND is_deleted = FALSE
-            ORDER BY name
-            """
-    )
-    Optional<Customer> findAllByNameOrPhoneNum(@Param("keyword") String keyword);
-
-    @Query(nativeQuery = true, value = """
             SELECT * FROM tbl_customer
             WHERE is_active = TRUE
             AND is_deleted = FALSE

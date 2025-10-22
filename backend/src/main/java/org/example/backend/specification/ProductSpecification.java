@@ -11,21 +11,14 @@ import java.util.List;
 
 public class ProductSpecification {
     public static Specification<Product> isActive(Boolean isActive) {
-        return (root, query, criteriaBuilder) ->
-                isActive == Boolean.TRUE || isActive == null ?
-                        criteriaBuilder.isTrue(root.get("isActive")) :
-                        criteriaBuilder.isFalse(root.get("isActive"));
-    }
-
-    public static Specification<Product> isDeletedFalse() {
-        return (root, query, criteriaBuilder) -> criteriaBuilder.isFalse(root.get("isDeleted"));
+        return (root, query, criteriaBuilder) -> criteriaBuilder.equal(root.get("isActive"), isActive);
     }
 
     public static Specification<Product> nameOrCodeContains(String keyword) {
         return (root, query, criteriaBuilder) -> {
-            String searchPattern = "%" + keyword.toLowerCase() + "%";
-            Predicate name = criteriaBuilder.like(criteriaBuilder.lower(root.get("name")), searchPattern);
-            Predicate code = criteriaBuilder.like(criteriaBuilder.lower(root.get("code")), searchPattern);
+            String searchPattern = "%" + keyword + "%";
+            Predicate name = criteriaBuilder.like(root.get("name"), searchPattern);
+            Predicate code = criteriaBuilder.like(root.get("code"), searchPattern);
             return criteriaBuilder.or(name, code);
         };
     }

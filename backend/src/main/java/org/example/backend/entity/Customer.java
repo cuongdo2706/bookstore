@@ -21,17 +21,26 @@ public class Customer extends BaseEntity {
     String name;
     LocalDate dob;
     Boolean gender;
-    @Column(unique = true,columnDefinition = "varchar(10)")
+    @Column(unique = true, columnDefinition = "varchar(10)")
     String phoneNum;
+
+    @ManyToOne
+    @JoinColumn(name = "province_id", referencedColumnName = "code")
+    Province province;
+
+    @ManyToOne
+    @JoinColumn(name = "commune_id", referencedColumnName = "code")
+    Commune commune;
+
     String address;
     @Column(unique = true)
     String email;
     String publicId;
     String imgUrl;
     @Builder.Default
-    Boolean isActive=true;
+    Boolean isActive = true;
     @Builder.Default
-    Boolean isDeleted=false;
+    Boolean isDeleted = false;
     @OneToOne(mappedBy = "customer", cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH})
     User user;
 }

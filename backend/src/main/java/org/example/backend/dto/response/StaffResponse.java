@@ -1,6 +1,7 @@
 package org.example.backend.dto.response;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 public record StaffResponse(
         Long id,
@@ -13,6 +14,8 @@ public record StaffResponse(
         String email,
         String identityNum,
         String imgUrl,
-        Boolean isActive
+        Boolean isActive,
+        LocalDateTime createdAt,
+        LocalDateTime updatedAt
 ) {
 }

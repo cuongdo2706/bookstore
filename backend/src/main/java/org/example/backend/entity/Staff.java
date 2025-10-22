@@ -23,6 +23,13 @@ public class Staff extends BaseEntity {
     Boolean gender;
     @Column(unique = true,columnDefinition = "varchar(10)")
     String phoneNum;
+    @ManyToOne
+    @JoinColumn(name = "province_id", referencedColumnName = "code")
+    Province province;
+
+    @ManyToOne
+    @JoinColumn(name = "commune_id", referencedColumnName = "code")
+    Commune commune;
     String address;
     @Column(unique = true)
     String email;

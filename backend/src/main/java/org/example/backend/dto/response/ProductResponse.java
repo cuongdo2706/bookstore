@@ -1,5 +1,6 @@
 package org.example.backend.dto.response;
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.Set;
 
 public record ProductResponse(
@@ -18,7 +19,9 @@ public record ProductResponse(
         Set<AuthorResponse> authors,
         Set<CategoryResponse> categories,
         PublisherResponse publisher,
-        PromotionResponse promotion) {
+        PromotionResponse promotion,
+        LocalDateTime createdAt,
+        LocalDateTime updatedAt) {
 
 }
 

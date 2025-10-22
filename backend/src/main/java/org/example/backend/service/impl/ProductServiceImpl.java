@@ -83,25 +83,23 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public PageResponse<ProductResponse> searchProduct(FilterProductRequest filter) {
-        Specification<Product> spec = Specification.<Product>unrestricted().and(ProductSpecification.isDeletedFalse()).and(ProductSpecification.isActive(filter.getIsActive()));
-        if (!Objects.equals(filter.getNameOrCodeKeyword(), null) && !filter.getNameOrCodeKeyword().isBlank()) {
+        Specification<Product> spec = Specification.unrestricted();
+        if (!Objects.equals(filter.getNameOrCodeKeyword(), null) && !filter.getNameOrCodeKeyword().isBlank())
             spec = spec.and(ProductSpecification.nameOrCodeContains(filter.getNameOrCodeKeyword()));
-        }
-        if (filter.getAuthorIds() != null && !filter.getAuthorIds().isEmpty()) {
+        if (filter.getAuthorIds() != null && !filter.getAuthorIds().isEmpty())
             spec = spec.and(ProductSpecification.authorIn(filter.getAuthorIds()));
-        }
-        if (filter.getCategoryIds() != null && !filter.getCategoryIds().isEmpty()) {
+        if (filter.getCategoryIds() != null && !filter.getCategoryIds().isEmpty())
             spec = spec.and(ProductSpecification.categoryIn(filter.getCategoryIds()));
-        }
-        if (filter.getPublisherIds() != null && !filter.getPublisherIds().isEmpty()) {
+        if (filter.getPublisherIds() != null && !filter.getPublisherIds().isEmpty())
             spec = spec.and(ProductSpecification.publisherIn(filter.getPublisherIds()));
-        }
+        if (!Objects.equals(filter.getIsActive(), null))
+            spec = spec.and(ProductSpecification.isActive(filter.getIsActive()));
         Sort sort = switch (filter.getSortBy()) {
             case "name" -> Sort.by(Sort.Direction.ASC, "name");
             case "name-d" -> Sort.by(Sort.Direction.DESC, "name");
             case "price" -> Sort.by(Sort.Direction.ASC, "price");
             case "price-d" -> Sort.by(Sort.Direction.DESC, "price");
-            default -> throw new RuntimeException("Sort pattern not valid: " + filter.getSortBy());
+            default -> throw new RuntimeException("Mục sắp xếp không hợp lệ: " + filter.getSortBy());
         };
         Pageable pageable = PageRequest.of(filter.getPage() - 1, filter.getSize(), sort);
         Page<Product> products = productRepository.findAll(spec, pageable);

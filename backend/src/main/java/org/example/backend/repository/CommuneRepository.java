@@ -13,4 +13,13 @@ public interface CommuneRepository extends JpaRepository<Commune, Integer> {
                     WHERE c.province_id = :code
             """)
     List<Commune> findAllByProvinceCode(@Param("code") Short code);
+
+    @Query(nativeQuery = true, value = """
+                                SELECT EXISTS(
+                                    SELECT 1 FROM tbl_commune c 
+                                    WHERE c.code = :code AND c.province_id = :provinceCode
+                                )
+            """)
+    short existsByCommuneCodeAndProvinceCode(@Param("code") Integer code,
+                                               @Param("provinceCode") Short provinceCode);
 }

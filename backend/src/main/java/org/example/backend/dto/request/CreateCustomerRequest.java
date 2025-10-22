@@ -24,8 +24,8 @@ public class CreateCustomerRequest {
     @PastOrPresent(message = "Date of birth must before or today")
     LocalDate dob;
     Boolean gender;
-    String province;
-    String commune;
+    Short provinceCode;
+    Integer communeCode;
     String address;
     @Email(message = "Email format is invalid")
     String email;

@@ -22,5 +22,7 @@ public record OrderResponse(Long id,
                             Short paymentStatus,
                             Short orderStatus,//online
                             Short saleChannel,
-                            Boolean orderType) {
+                            Boolean orderType,
+                            LocalDateTime createdAt,
+                            LocalDateTime updatedAt) {
 }

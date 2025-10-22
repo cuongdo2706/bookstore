@@ -1,6 +1,7 @@
 package org.example.backend.dto.response;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 public record OrderDetailResponse(Long id,
                                   Long productId,
@@ -9,5 +10,7 @@ public record OrderDetailResponse(Long id,
                                   BigDecimal price,
                                   Integer quantity,
                                   BigDecimal discount,
-                                  BigDecimal totalPrice) {
+                                  BigDecimal totalPrice,
+                                  LocalDateTime createdAt,
+                                  LocalDateTime updatedAt) {
 }

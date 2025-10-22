@@ -35,7 +35,7 @@ export class ProductService {
     });
   }
 
-  save(product: ProductCreatedRequest, file: File | null) {
+  save(product: ProductCreatedRequest, file: File|null) {
     const formData = new FormData();
     const productBlob = new Blob([JSON.stringify(product)], {type: 'application/json'});
     formData.append('product', productBlob);

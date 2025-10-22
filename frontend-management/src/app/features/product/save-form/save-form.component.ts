@@ -154,7 +154,6 @@ export class SaveFormComponent implements OnInit {
                 summary: "Lỗi",
                 detail: "Dữ liệu nhập vào không đúng yêu cầu, hãy nhập lại!!!"
             });
-            this.visible.set(false);
         }
     }
 

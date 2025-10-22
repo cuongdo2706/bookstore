@@ -1,4 +1,10 @@
 package org.example.backend.dto.response;
 
-public record AuthorResponse(Long id, String name) {
+import java.time.LocalDateTime;
+
+public record AuthorResponse(
+        Long id,
+        String name,
+        LocalDateTime createdAt,
+        LocalDateTime updatedAt) {
 }

@@ -1,4 +1,9 @@
 package org.example.backend.dto.response;
 
-public record CategoryResponse(Long id, String name) {
+import java.time.LocalDateTime;
+
+public record CategoryResponse(Long id,
+                               String name,
+                               LocalDateTime createdAt,
+                               LocalDateTime updatedAt) {
 }

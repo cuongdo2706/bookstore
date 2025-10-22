@@ -19,4 +19,14 @@ public class ProvinceServiceImpl implements ProvinceService {
     public List<Province> findAll() {
         return provinceRepository.findAll();
     }
+
+    @Override
+    public boolean existsByCode(Short code) {
+        return provinceRepository.existsByCode(code);
+    }
+
+    @Override
+    public Province getReferenceById(Short code) {
+        return provinceRepository.getReferenceById(code);
+    }
 }

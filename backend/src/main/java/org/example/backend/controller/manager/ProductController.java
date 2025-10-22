@@ -77,7 +77,8 @@ public class ProductController {
     }
 
     @PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
-    public SuccessResponse<ProductResponse> createBook(@Valid @RequestPart(value = "product") CreateProductRequest request, @RequestPart(required = false) MultipartFile file) throws IOException, DataNotFoundException {
+    public SuccessResponse<ProductResponse> createBook(@Valid @RequestPart(value = "product") CreateProductRequest request,
+                                                       @RequestPart(required = false) MultipartFile file) throws IOException, DataNotFoundException {
         return new SuccessResponse<>(HttpStatus.CREATED.value(), "Adding data success", productService.save(request, file));
     }
 
