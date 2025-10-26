@@ -1,5 +1,6 @@
 package org.example.backend.controller.manager;
 
+import lombok.RequiredArgsConstructor;
 import org.example.backend.dto.response.SuccessResponse;
 import org.example.backend.entity.Staff;
 import org.example.backend.exception.DataNotFoundException;
@@ -14,12 +15,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("staff")
+@RequiredArgsConstructor
 public class StaffController {
     private final StaffService staffService;
-
-    public StaffController(StaffService staffService){
-        this.staffService=staffService;
-    }
 
     @GetMapping("/{id}")
     public SuccessResponse<Staff> findById(@PathVariable Long id) throws DataNotFoundException {

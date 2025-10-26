@@ -1,5 +1,6 @@
 package org.example.backend.service.impl;
 
+import lombok.RequiredArgsConstructor;
 import org.example.backend.entity.Commune;
 import org.example.backend.repository.CommuneRepository;
 import org.example.backend.service.CommuneService;
@@ -8,12 +9,9 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class CommuneServiceImpl implements CommuneService {
     private final CommuneRepository communeRepository;
-
-    public CommuneServiceImpl(CommuneRepository communeRepository) {
-        this.communeRepository = communeRepository;
-    }
 
     @Override
     public List<Commune> findByProvinceCode(Short code) {

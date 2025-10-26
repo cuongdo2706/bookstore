@@ -1,5 +1,5 @@
 import {inject, Injectable} from '@angular/core';
-import {AppConstants} from "../../app.constants";
+import {ENV} from "../../environment";
 import {HttpClient} from "@angular/common/http";
 
 @Injectable({
@@ -7,5 +7,5 @@ import {HttpClient} from "@angular/common/http";
 })
 export class StaffService {
     private http = inject(HttpClient);
-    private readonly url: string = AppConstants.API_BASE_URL + "staff";
+    private readonly url: string = ENV.API_BASE_URL + "staff";
 }

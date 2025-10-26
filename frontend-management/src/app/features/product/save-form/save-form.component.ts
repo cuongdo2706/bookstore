@@ -125,7 +125,7 @@ export class SaveFormComponent implements OnInit {
                 categoryIds: this.saveForm.controls['categories'].value!
             };
             await firstValueFrom(this.productService.save(bookReq, fileReq));
-            await firstValueFrom(this.productService.search({
+            const res = await firstValueFrom(this.productService.search({
                 page: 1,
                 size: 10,
                 sortBy: "name",
@@ -134,19 +134,17 @@ export class SaveFormComponent implements OnInit {
                 authorIds: this.authorIds(),
                 categoryIds: this.categoryIds(),
                 publisherIds: this.publisherIds()
-            }))
-            .then(res => {
-                this.onSave.emit(res.data);
-                this.message.emit(
-                        {
-                            severity: "success",
-                            summary: "Thành công",
-                            detail: "Thêm sản phẩm mới thành công!!!"
-                        }
-                );
+            }));
+            
+            // xử lý kết quả
+            this.onSave.emit(res.data);
+            this.message.emit({
+                severity: "success",
+                summary: "Thành công",
+                detail: "Thêm sản phẩm mới thành công!!!"
             });
             this.saveForm.reset();
-            this.submitted.set(true);
+            this.submitted.set(false);
             this.visible.set(false);
         } else {
             this.messageService.add({

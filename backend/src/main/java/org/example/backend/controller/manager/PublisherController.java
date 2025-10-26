@@ -1,5 +1,6 @@
 package org.example.backend.controller.manager;
 
+import lombok.RequiredArgsConstructor;
 import org.example.backend.dto.request.CreateAttributeRequest;
 import org.example.backend.dto.response.PublisherResponse;
 import org.example.backend.dto.response.SuccessResponse;
@@ -11,12 +12,9 @@ import java.util.List;
 
 @RestController
 @RequestMapping("publisher")
+@RequiredArgsConstructor
 public class PublisherController {
     private final PublisherService publisherService;
-
-    public PublisherController(PublisherService publisherService) {
-        this.publisherService = publisherService;
-    }
 
     @GetMapping
     public SuccessResponse<List<PublisherResponse>> findAll() {

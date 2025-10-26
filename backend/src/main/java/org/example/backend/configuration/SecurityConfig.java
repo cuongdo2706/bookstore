@@ -23,7 +23,7 @@ import org.springframework.stereotype.Component;
 @AllArgsConstructor
 public class SecurityConfig {
     @Autowired
-    private CustomCorsConfig customCorsConfig;
+    private final CustomCorsConfig customCorsConfig;
 
     private UserDetailsService userDetailsService;
 

@@ -1,6 +1,7 @@
 package org.example.backend.configuration;
 
 import lombok.Data;
+import lombok.RequiredArgsConstructor;
 import org.example.backend.entity.Staff;
 import org.example.backend.entity.User;
 import org.example.backend.repository.StaffRepository;
@@ -17,9 +18,10 @@ import java.util.Collections;
 
 @Service
 @Data
+@RequiredArgsConstructor
 public class CustomUserDetailsService implements UserDetailsService {
-    @Autowired
-    private UserRepository userRepository;
+
+    private final UserRepository userRepository;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {

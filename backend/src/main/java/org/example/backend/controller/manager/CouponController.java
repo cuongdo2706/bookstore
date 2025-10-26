@@ -1,5 +1,6 @@
 package org.example.backend.controller.manager;
 
+import lombok.RequiredArgsConstructor;
 import org.example.backend.dto.response.SuccessResponse;
 import org.example.backend.entity.Coupon;
 import org.example.backend.service.CouponService;
@@ -12,12 +13,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("coupon")
+@RequiredArgsConstructor
 public class CouponController {
     private final CouponService couponService;
-
-    public CouponController(CouponService couponService){
-        this.couponService=couponService;
-    }
 
     @GetMapping("/{code}")
     public SuccessResponse<Coupon> findValidVoucherByCode(@PathVariable String code) {

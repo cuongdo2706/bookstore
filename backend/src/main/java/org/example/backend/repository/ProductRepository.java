@@ -30,13 +30,13 @@ public interface ProductRepository extends
     boolean existsById(Long id);
 
     @Modifying
-    @Query(nativeQuery = true, value = "UPDATE tbl_product SET is_deleted = 1 WHERE id = :id")
+    @Query(nativeQuery = true, value = "UPDATE tbl_product SET is_deleted = true WHERE id = :id")
     void softDelete(@Param("id") Long id);
 
 
     boolean existsByCode(String code);
 
-    @Query(nativeQuery = true, value = "SELECT quantity FROM tbl_product WHERE id = :id AND is_deleted = 0")
+    @Query(nativeQuery = true, value = "SELECT quantity FROM tbl_product WHERE id = :id AND is_deleted =false")
     Integer getStockQuantity(@Param("id") Long id);
 
 }

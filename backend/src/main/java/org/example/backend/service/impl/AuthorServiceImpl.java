@@ -1,5 +1,6 @@
 package org.example.backend.service.impl;
 
+import lombok.RequiredArgsConstructor;
 import org.example.backend.dto.request.CreateAttributeRequest;
 import org.example.backend.dto.response.AuthorResponse;
 import org.example.backend.entity.Author;
@@ -16,15 +17,10 @@ import java.util.List;
 import java.util.Set;
 
 @Service
+@RequiredArgsConstructor
 public class AuthorServiceImpl implements AuthorService {
     private final AuthorRepository authorRepository;
     private final AuthorMapper authorMapper;
-
-    public AuthorServiceImpl(AuthorRepository authorRepository,
-                             AuthorMapper authorMapper) {
-        this.authorRepository = authorRepository;
-        this.authorMapper = authorMapper;
-    }
 
     @Override
     public List<AuthorResponse> findAll() {

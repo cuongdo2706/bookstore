@@ -1,6 +1,7 @@
 package org.example.backend.service.impl;
 
 import jakarta.persistence.OptimisticLockException;
+import lombok.RequiredArgsConstructor;
 import org.example.backend.dto.request.CreateProductRequest;
 import org.example.backend.dto.request.FilterProductRequest;
 import org.example.backend.dto.request.UpdateProductRequest;
@@ -34,31 +35,15 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class ProductServiceImpl implements ProductService {
     private final ProductRepository productRepository;
     private final CategoryService categoryService;
     private final AuthorService authorService;
     private final PublisherService publisherService;
     private final SequenceService sequenceService;
-    private final ImageService imageService;
+    private final ImageService2 imageService2;
     private final ProductMapper productMapper;
-
-    public ProductServiceImpl(ProductRepository productRepository,
-                              CategoryService categoryService,
-                              AuthorService authorService,
-                              PublisherService publisherService,
-                              SequenceService sequenceService,
-                              ImageService imageService,
-                              ProductMapper productMapper) {
-        this.productRepository = productRepository;
-        this.categoryService = categoryService;
-        this.authorService = authorService;
-        this.publisherService = publisherService;
-        this.sequenceService = sequenceService;
-        this.imageService = imageService;
-        this.productMapper = productMapper;
-    }
-
 
     @Override
     public List<Product> findAll() {
@@ -111,7 +96,7 @@ public class ProductServiceImpl implements ProductService {
     public ProductResponse save(CreateProductRequest request, MultipartFile file) throws DataNotFoundException, IOException {
         ImageResponse imageResponse = null;
         if (file != null && !file.isEmpty()) {
-            imageResponse = imageService.upload(file);
+            imageResponse = imageService2.upload(file);
         }
         Set<Author> existedAuthors = new HashSet<>(authorService.findAllByIds(request.getAuthorIds()));
         Set<Category> existedCategories = new HashSet<>(categoryService.findAllByIds(request.getCategoryIds()));
@@ -174,9 +159,9 @@ public class ProductServiceImpl implements ProductService {
         if (file != null && !file.isEmpty()) {
             ImageResponse imageResponse;
             if (existedProduct.getPublicId() != null) {
-                imageResponse = imageService.update(existedProduct.getPublicId(), file);
+                imageResponse = imageService2.update(existedProduct.getPublicId(), file);
             } else {
-                imageResponse = imageService.upload(file);
+                imageResponse = imageService2.upload(file);
             }
             existedProduct.setPublicId(imageResponse.publicId());
             existedProduct.setImgUrl(imageResponse.imgUrl());

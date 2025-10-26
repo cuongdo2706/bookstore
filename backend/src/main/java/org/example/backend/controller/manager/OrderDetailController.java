@@ -1,5 +1,6 @@
 package org.example.backend.controller.manager;
 
+import lombok.RequiredArgsConstructor;
 import org.example.backend.dto.response.OrderDetailResponse;
 import org.example.backend.dto.response.SuccessResponse;
 import org.example.backend.service.OrderDetailService;
@@ -14,12 +15,9 @@ import java.util.List;
 
 @RestController
 @RequestMapping("order-detail")
+@RequiredArgsConstructor
 public class OrderDetailController {
     private final OrderDetailService orderDetailService;
-
-    public OrderDetailController(OrderDetailService orderDetailService){
-        this.orderDetailService=orderDetailService;
-    }
 
     @GetMapping("/{id}")
     public SuccessResponse<List<OrderDetailResponse>> get(@PathVariable Long id) {

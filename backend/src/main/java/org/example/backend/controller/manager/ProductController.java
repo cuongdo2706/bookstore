@@ -2,6 +2,7 @@ package org.example.backend.controller.manager;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
+import lombok.RequiredArgsConstructor;
 import org.example.backend.dto.request.CreateProductRequest;
 import org.example.backend.dto.request.FilterProductRequest;
 import org.example.backend.dto.request.UpdateProductRequest;
@@ -29,15 +30,10 @@ import java.util.Set;
 
 @RestController
 @RequestMapping("product")
+@RequiredArgsConstructor
 public class ProductController {
     private final ExcelUtil excelUtil;
     private final ProductService productService;
-
-    public ProductController(ExcelUtil excelUtil,
-                             ProductService productService) {
-        this.excelUtil = excelUtil;
-        this.productService = productService;
-    }
 
     @GetMapping
     public SuccessResponse<List<ProductResponse>> getAllProducts() {

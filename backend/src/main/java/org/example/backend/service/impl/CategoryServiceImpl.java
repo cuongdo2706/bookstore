@@ -1,5 +1,6 @@
 package org.example.backend.service.impl;
 
+import lombok.RequiredArgsConstructor;
 import org.example.backend.dto.request.CreateAttributeRequest;
 import org.example.backend.dto.response.CategoryResponse;
 import org.example.backend.entity.Category;
@@ -16,16 +17,11 @@ import java.util.List;
 import java.util.Set;
 
 @Service
+@RequiredArgsConstructor
 public class CategoryServiceImpl implements org.example.backend.service.CategoryService {
 
     private final CategoryRepository categoryRepository;
     private final CategoryMapper categoryMapper;
-
-    public CategoryServiceImpl(CategoryRepository categoryRepository,
-                               CategoryMapper categoryMapper) {
-        this.categoryRepository = categoryRepository;
-        this.categoryMapper=categoryMapper;
-    }
 
     @Override
     public List<CategoryResponse> findAll() {

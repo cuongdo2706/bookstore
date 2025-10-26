@@ -1,0 +1,66 @@
+spring:
+  application:
+    name: backend
+  datasource:
+    url: jdbc:postgresql://localhost:5432/bookstore
+    username: conan09040
+    password: conan14121
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        jdbc:
+          batch_size: 20
+        order_inserts: true
+        order_updates: true
+      jakarta:
+        persistence:
+          query:
+            timeout: 3000
+          lock:
+            timeout: 5000
+    hibernate:
+      ddl-auto: update
+    open-in-view: false
+  servlet:
+    multipart:
+      max-file-size: 3MB
+      max-request-size: 3MB
+
+logging:
+  level:
+    org:
+      hibernate:
+        orm:
+          connections:
+            pooling: WARN
+        type:
+          descriptor:
+            sql:
+              BasicBinder: TRACE
+
+server:
+  servlet:
+    context-path: /api/v1/
+
+jwt:
+  secret-key: 68de5dc58f6bb6ee4df3593972dc28cc35d0225b96edf1ab2eb79a418bf0feae22c0bfa8ed558f5e42a39ae14e23e18e3d62b3e25a166af1937e4f7f9ad0ef1f82da2c53428c47662e655561eb56d2cfa677c4543ca5c8267a8c5f77829c3b0a66428b00e4a50a5bfc730606dbb854c7ca164b389df39ad3b6be278a19e325e97f312752cce444102ad2072ae9ac77a5cfb7ba59a9729b6ae9393cba48d974bb08038d8064f08a3e40525dc37818497754aa4bdca885d1db5bc49ad1868394024f5e3931c7f4a4365eb27e585b84443c48d7f27c350674fe6397438dfa465b0c39ef71d141537b13382c0b5fe9502cc9bd61f7447b7514bc80a51ee5329974c4d108097f4a1c50b466883f38bf559452c952aead7446510236e371b7e28f40fb2d3c4c48416a30cd421045c25af91784aeb90e6c92afd1160bfe384685e122dc4a3250ce093fddc5846333773b24f0ab091913ad741133cc2918a94664da62c22d65d4bcfed1fe8ba149b124d1ba81b0b3ad8214f3a46b05897663b5430e5be2d9ef0ece76e988b07ea987eb24ba26ed513727b69edd6bf8c94c356f497f4c9e4cd4cc5f32bc468ac0fc291edb5f6f643ca90842f8db57e16bb889c95fcceb1bba66b84ff00cf1a88729b91240f8e6ee6a7c4d2d43025e0c501589fb5ad17dbd2b26a69885873a3a74407943f9173d800879972ef2a2f791658677505b79d6e5
+  token:
+    expiration: 604800000
+
+cloudinary:
+  cloud-name: dwhyfa80s
+  api-key: 668643833117639
+  api-secret: W1EsHlyKdr2266oY5OgkAlUtu-o
+
+file:
+  upload:
+    base-dir: /home/conan09040/images
+    max-size: 10485760
+    allowed-extensions: jpg,jpeg,png,gif,webp,bmp,svg
+
+#spring.cloud.appId=ssm-database
+#spring.cloud.gcp.sql.instance-connection-name=crested-plexus-415208:asia-southeast1:ssm-database
+#spring.cloud.gcp.sql.database-name=ShoesSellingManagement

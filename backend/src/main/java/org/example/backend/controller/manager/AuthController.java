@@ -1,5 +1,6 @@
 package org.example.backend.controller.manager;
 
+import lombok.RequiredArgsConstructor;
 import org.example.backend.dto.request.LoginRequest;
 import org.example.backend.dto.response.AuthResponse;
 import org.example.backend.dto.response.SuccessResponse;
@@ -9,12 +10,9 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("auth")
+@RequiredArgsConstructor
 public class AuthController {
     private final AuthService authService;
-
-    public AuthController(AuthService authService){
-        this.authService=authService;
-    }
 
     @PostMapping
     public SuccessResponse<AuthResponse> login(@RequestBody LoginRequest loginRequest) {

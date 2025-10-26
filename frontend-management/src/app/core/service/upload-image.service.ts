@@ -1,14 +1,14 @@
 import {inject, Injectable} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {ImageResponse} from "../model/response/image-response.model";
-import {AppConstants} from "../../app.constants";
+import {ENV} from "../../environment";
 
 @Injectable({
     providedIn: 'root'
 })
 export class UploadImageService {
     private http = inject(HttpClient);
-    private readonly url: string = AppConstants.API_BASE_URL + "upload";
+    private readonly url: string = ENV.API_BASE_URL + "upload";
 
     uploadImage(file: File) {
         const formData = new FormData();

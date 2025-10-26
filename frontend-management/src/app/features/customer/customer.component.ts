@@ -4,7 +4,7 @@ import {ConfirmationService, MessageService} from "primeng/api";
 import {CustomerService} from "../../core/service/customer.service";
 import {CustomerResponse} from "../../core/model/response/customer-response.model";
 import {Paginator, PaginatorState} from "primeng/paginator";
-import {AppConstants} from "../../app.constants";
+import {ENV} from "../../environment";
 import {TableModule, TableRowExpandEvent} from "primeng/table";
 import {PageResponse} from "../../core/model/response/page-response.model";
 import {CustomerSaveForm} from "../../shared/components/customer-save-form/customer-save-form";
@@ -16,6 +16,7 @@ import {Select} from "primeng/select";
 import {Button} from "primeng/button";
 import {Toast} from "primeng/toast";
 import {Image} from "primeng/image";
+import {DatePipe} from "@angular/common";
 
 @Component({
     selector: 'app-customer',
@@ -31,7 +32,8 @@ import {Image} from "primeng/image";
         Button,
         Paginator,
         Toast,
-        Image
+        Image,
+        DatePipe
     ],
     templateUrl: './customer.component.html',
     styleUrl: './customer.component.css',
@@ -67,7 +69,7 @@ export class CustomerComponent implements OnInit {
     saveFormVisible = signal(false);
     updateFormVisible = signal(false);
     updateId!: number;
-    readonly baseImg = AppConstants.BASE_IMAGE;
+    readonly baseImg = ENV.BASE_IMAGE;
     isFilter = signal(false);
     timeout: any;
     

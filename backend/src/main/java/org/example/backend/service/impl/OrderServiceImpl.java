@@ -1,5 +1,6 @@
 package org.example.backend.service.impl;
 
+import lombok.RequiredArgsConstructor;
 import org.example.backend.dto.request.CreateOrderRequest;
 import org.example.backend.dto.request.FilterOrderRequest;
 import org.example.backend.dto.response.OrderResponse;
@@ -28,8 +29,8 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class OrderServiceImpl implements OrderService {
-    private final String createOrderUrl = "https://dev-online-gateway.ghn.vn/shiip/public-api/v2/shipping-order/create";
     private final ProductService productService;
     private final CustomerService customerService;
     private final StaffService staffService;
@@ -37,24 +38,6 @@ public class OrderServiceImpl implements OrderService {
     private final OrderRepository orderRepository;
     private final JwtTokenProvider jwtTokenProvider;
     private final OrderMapper orderMapper;
-
-    public OrderServiceImpl(ProductService productService,
-                            CustomerService customerService,
-                            StaffService staffService,
-                            CouponService couponService,
-                            OrderRepository orderRepository,
-                            JwtTokenProvider jwtTokenProvider,
-                            OrderMapper orderMapper) {
-        this.productService = productService;
-        this.customerService = customerService;
-        this.staffService = staffService;
-        this.couponService = couponService;
-        this.orderRepository = orderRepository;
-        this.jwtTokenProvider = jwtTokenProvider;
-        this.orderMapper = orderMapper;
-    }
-
-    //    RestTemplate restTemplate = new RestTemplate();
 
     @Override
     public List<Order> findAll() {

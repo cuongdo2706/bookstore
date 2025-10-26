@@ -1,6 +1,7 @@
 package org.example.backend.controller.manager;
 
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.example.backend.dto.request.CreateCustomerRequest;
 import org.example.backend.dto.request.FilterCustomerRequest;
 import org.example.backend.dto.response.PageResponse;
@@ -17,12 +18,9 @@ import java.io.IOException;
 
 @RestController
 @RequestMapping("customer")
+@RequiredArgsConstructor
 public class CustomerController {
     private final CustomerService customerService;
-
-    public CustomerController(CustomerService customerService) {
-        this.customerService = customerService;
-    }
 
     @PostMapping("/search")
     public SuccessResponse<PageResponse<CustomerResponse>> findByCodeOrPhoneNum(@Valid @RequestBody FilterCustomerRequest request) {

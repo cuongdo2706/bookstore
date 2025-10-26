@@ -1,5 +1,6 @@
 package org.example.backend.controller.manager;
 
+import lombok.RequiredArgsConstructor;
 import org.example.backend.dto.response.SuccessResponse;
 import org.example.backend.entity.Commune;
 import org.example.backend.entity.Province;
@@ -12,15 +13,10 @@ import java.util.List;
 
 @RestController
 @RequestMapping("address")
+@RequiredArgsConstructor
 public class AddressController {
     private final ProvinceService provinceService;
     private final CommuneService communeService;
-
-    public AddressController(ProvinceService provinceService,
-                             CommuneService communeService) {
-        this.provinceService = provinceService;
-        this.communeService = communeService;
-    }
 
     @GetMapping("/province")
     public SuccessResponse<List<Province>> findAllProvinces() {

@@ -1,5 +1,6 @@
 package org.example.backend.service.impl;
 
+import lombok.RequiredArgsConstructor;
 import org.example.backend.dto.request.CreateAttributeRequest;
 import org.example.backend.dto.response.PublisherResponse;
 import org.example.backend.entity.Publisher;
@@ -13,14 +14,10 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class PublisherServiceImpl implements PublisherService {
     private final PublisherRepository publisherRepository;
     private final PublisherMapper publisherMapper;
-
-    public PublisherServiceImpl(PublisherRepository publisherRepository, PublisherMapper publisherMapper) {
-        this.publisherRepository = publisherRepository;
-        this.publisherMapper = publisherMapper;
-    }
 
     @Override
     public List<PublisherResponse> findAll() {

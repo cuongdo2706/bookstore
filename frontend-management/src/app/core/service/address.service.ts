@@ -1,6 +1,6 @@
 import {inject, Injectable} from "@angular/core";
 import {HttpClient} from "@angular/common/http";
-import {AppConstants} from "../../app.constants";
+import {ENV} from "../../environment";
 import {ApiResponse} from "../model/response/api-response.model";
 import {Province} from "../model/response/province-response.model";
 import {Commune} from "../model/response/commune-response.model";
@@ -10,7 +10,7 @@ import {Commune} from "../model/response/commune-response.model";
 })
 export class AddressService{
     private http = inject(HttpClient);
-    private readonly url: string = AppConstants.API_BASE_URL + "address";
+    private readonly url: string = ENV.API_BASE_URL + "address";
     
     fetchProvinces(){
         return this.http.get<ApiResponse<Province[]>>(`${this.url}/province`)

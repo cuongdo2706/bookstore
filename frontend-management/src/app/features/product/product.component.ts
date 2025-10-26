@@ -15,7 +15,7 @@ import {ConfirmationService, MessageService} from "primeng/api";
 import {firstValueFrom} from "rxjs";
 import {UpdateFormComponent} from "./update-form/update-form.component";
 import {Select} from "primeng/select";
-import {AppConstants} from "../../app.constants";
+import {ENV} from "../../environment";
 import {ProductService} from "../../core/service/product.service";
 import {ProductResponse} from "../../core/model/response/product-response.model";
 import {PageResponse} from "../../core/model/response/page-response.model";
@@ -86,7 +86,7 @@ export class ProductComponent implements OnInit {
     saveFormVisible = signal(false);
     updateFormVisible = signal(false);
     updateId!: number;
-    readonly baseImg = AppConstants.BASE_IMAGE;
+    readonly baseImg = ENV.BASE_IMAGE;
     isFilter = signal(false);
     timeout: any;
     

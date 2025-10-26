@@ -5,12 +5,10 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.transaction.annotation.Transactional;
 
 public interface SequenceRepository extends JpaRepository<Sequence, String> {
-    @Modifying
-    @Query(value = "update tbl_sequence set value=LAST_INSERT_ID(value + 1) where name=:name", nativeQuery = true)
-    void increment(@Param("name") String name);
-
-    @Query(value = "SELECT LAST_INSERT_ID()", nativeQuery = true)
-    Long getLastInsertId();
+    @Transactional
+    @Query(value = "UPDATE tbl_sequence SET value = value + 1 WHERE name = :name RETURNING value", nativeQuery = true)
+    Long incrementAndGet(@Param("name") String name);
 }

@@ -1,5 +1,6 @@
 package org.example.backend.service.impl;
 
+import lombok.RequiredArgsConstructor;
 import org.example.backend.entity.Coupon;
 import org.example.backend.exception.DataNotFoundException;
 import org.example.backend.exception.VoucherException;
@@ -12,13 +13,10 @@ import java.math.RoundingMode;
 import java.time.LocalDate;
 
 @Service
+@RequiredArgsConstructor
 public class CouponServiceImpl implements org.example.backend.service.CouponService {
 
     private final CouponRepository couponRepository;
-
-    public CouponServiceImpl(CouponRepository couponRepository) {
-        this.couponRepository = couponRepository;
-    }
 
     @Override
     public Coupon findById(Long id) throws DataNotFoundException {

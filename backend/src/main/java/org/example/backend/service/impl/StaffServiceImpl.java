@@ -1,5 +1,6 @@
 package org.example.backend.service.impl;
 
+import lombok.RequiredArgsConstructor;
 import org.example.backend.entity.Staff;
 import org.example.backend.exception.DataNotFoundException;
 import org.example.backend.repository.StaffRepository;
@@ -10,13 +11,9 @@ import org.springframework.stereotype.Service;
 
 
 @Service
+@RequiredArgsConstructor
 public class StaffServiceImpl implements StaffService {
-
     private final StaffRepository staffRepository;
-
-    public StaffServiceImpl(StaffRepository staffRepository) {
-        this.staffRepository = staffRepository;
-    }
 
     @Override
     public Staff findById(Long id) throws DataNotFoundException {

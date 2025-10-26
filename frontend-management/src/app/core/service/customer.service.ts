@@ -1,5 +1,5 @@
 import {inject, Injectable} from '@angular/core';
-import {AppConstants} from "../../app.constants";
+import {ENV} from "../../environment";
 import {HttpClient, HttpParams} from "@angular/common/http";
 import {ApiResponse} from "../model/response/api-response.model";
 import {PageResponse} from "../model/response/page-response.model";
@@ -13,7 +13,7 @@ import {CustomerFilterRequest} from "../model/request/customer-filter-request";
 })
 export class CustomerService {
     private http = inject(HttpClient);
-    private readonly url: string = AppConstants.API_BASE_URL + "customer";
+    private readonly url: string = ENV.API_BASE_URL + "customer";
 
     search(body: CustomerFilterRequest) {
         return this.http.post<ApiResponse<PageResponse<CustomerResponse>>>(`${this.url}/search`, body);

@@ -2,6 +2,7 @@ package org.example.backend.controller.manager;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.example.backend.dto.request.CreateOrderRequest;
 import org.example.backend.dto.request.FilterOrderRequest;
 import org.example.backend.dto.response.OrderResponse;
@@ -27,18 +28,11 @@ import java.util.List;
 
 @RestController
 @RequestMapping("order")
+@RequiredArgsConstructor
 public class OrderController {
     private final OrderService orderService;
     private final ExcelUtil excelUtil;
     private final OrderDetailService orderDetailService;
-
-    public OrderController(OrderService orderService,
-                           ExcelUtil excelUtil,
-                           OrderDetailService orderDetailService) {
-        this.orderService = orderService;
-        this.excelUtil = excelUtil;
-        this.orderDetailService = orderDetailService;
-    }
 
     @GetMapping("/export-all-excel")
     public ResponseEntity<Resource> exportAllExcel() {

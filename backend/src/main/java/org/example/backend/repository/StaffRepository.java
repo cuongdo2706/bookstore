@@ -9,16 +9,6 @@ import java.util.Optional;
 
 
 public interface StaffRepository extends JpaRepository<Staff, Long> {
-    @Query(nativeQuery = true, value = """
-            SELECT * FROM tbl_staff
-            WHERE (unaccent(name) ILIKE unaccent(concat('%',:keyword,'%'))) 
-            OR (phone_num LIKE concat('%',:keyword,'%'))
-            AND is_active = TRUE
-            AND is_deleted = FALSE
-            """
-    )
-    Staff findByNameOrPhoneNumContains(@Param("keyword") String keyword);
-
     @Query(value = """
                         SELECT s FROM Staff s
                         WHERE s.user.username = :username

@@ -4,16 +4,16 @@ import {catchError, Observable, of, tap} from "rxjs";
 import {Router} from "@angular/router";
 import {Login} from "../model/request/login-request.model";
 import {JwtHelperService} from "@auth0/angular-jwt";
-import {AppConstants} from "../../app.constants";
 import {TokenResponse} from "../model/response/token-response.model";
 import {ApiResponse} from "../model/response/api-response.model";
+import {ENV} from "../../environment";
 
 
 @Injectable({
     providedIn: 'root'
 })
 export class AuthService {
-    private readonly url = AppConstants.API_BASE_URL + "auth";
+    private readonly url = ENV.API_BASE_URL + "auth";
     private http = inject(HttpClient);
     private router = inject(Router);
     private jwtHelper = inject(JwtHelperService);

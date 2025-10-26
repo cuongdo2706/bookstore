@@ -5,7 +5,7 @@ import {ProductResponse} from "../model/response/product-response.model";
 import {ApiResponse} from "../model/response/api-response.model";
 import {ProductUpdatedRequest} from "../model/request/product-updated-request.model";
 import {ProductCreatedRequest} from "../model/request/product-created-request.model";
-import {AppConstants} from "../../app.constants";
+import {ENV} from "../../environment";
 import {ProductFilterRequest} from "../model/request/product-filter-request";
 
 @Injectable({
@@ -13,7 +13,7 @@ import {ProductFilterRequest} from "../model/request/product-filter-request";
 })
 export class ProductService {
   private http = inject(HttpClient);
-  private readonly url: string = AppConstants.API_BASE_URL + "product";
+  private readonly url: string = ENV.API_BASE_URL + "product";
 
   search(filter: ProductFilterRequest) {
     return this.http.post<ApiResponse<PageResponse<ProductResponse>>>(`${this.url}/search`, filter);

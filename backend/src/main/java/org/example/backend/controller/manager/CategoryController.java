@@ -1,6 +1,7 @@
 package org.example.backend.controller.manager;
 
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.example.backend.dto.request.CreateAttributeRequest;
 import org.example.backend.dto.request.FilterAttributeRequest;
 import org.example.backend.dto.response.CategoryResponse;
@@ -17,12 +18,9 @@ import java.util.List;
 @RestController
 @RequestMapping("category")
 //@PreAuthorize("hasAnyRole('MANAGER','STAFF')")
+@RequiredArgsConstructor
 public class CategoryController {
     private final CategoryService categoryService;
-
-    public CategoryController(CategoryService categoryService) {
-        this.categoryService = categoryService;
-    }
 
     @GetMapping
     public SuccessResponse<List<CategoryResponse>> findAll() {

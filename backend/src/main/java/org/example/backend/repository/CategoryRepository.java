@@ -18,7 +18,10 @@ public interface CategoryRepository extends JpaRepository<Category, Long> {
     @Query(value = "SELECT * FROM tbl_category WHERE is_deleted = FALSE ORDER BY name DESC ", nativeQuery = true)
     Page<Category> findAllPage(Pageable pageable);
 
-    @Query(value = "SELECT * FROM tbl_category WHERE LOWER(name) LIKE LOWER(CONCAT('%', :name, '%')) AND is_deleted = FALSE ORDER BY name DESC", nativeQuery = true)
+    @Query(value = """
+        SELECT * FROM tbl_category 
+        WHERE aici(name) LIKE aici(CONCAT('%', :name, '%')) AND is_deleted = FALSE ORDER BY name DESC
+""", nativeQuery = true)
     Page<Category> findByName(Pageable pageable, @Param("name") String name);
 
     Boolean existsByName(String name);

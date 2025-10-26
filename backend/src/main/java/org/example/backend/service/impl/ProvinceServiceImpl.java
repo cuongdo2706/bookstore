@@ -1,5 +1,6 @@
 package org.example.backend.service.impl;
 
+import lombok.RequiredArgsConstructor;
 import org.example.backend.entity.Province;
 import org.example.backend.repository.ProvinceRepository;
 import org.example.backend.service.ProvinceService;
@@ -8,12 +9,9 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class ProvinceServiceImpl implements ProvinceService {
     private final ProvinceRepository provinceRepository;
-
-    public ProvinceServiceImpl(ProvinceRepository provinceRepository) {
-        this.provinceRepository = provinceRepository;
-    }
 
     @Override
     public List<Province> findAll() {

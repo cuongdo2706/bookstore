@@ -1,6 +1,7 @@
 package org.example.backend.specification;
 
 
+import jakarta.persistence.criteria.Expression;
 import jakarta.persistence.criteria.JoinType;
 import jakarta.persistence.criteria.Predicate;
 import org.example.backend.entity.Product;
@@ -11,15 +12,19 @@ import java.util.List;
 
 public class ProductSpecification {
     public static Specification<Product> isActive(Boolean isActive) {
-        return (root, query, criteriaBuilder) -> criteriaBuilder.equal(root.get("isActive"), isActive);
+        return (root, query, cb) -> cb.equal(root.get("isActive"), isActive);
     }
 
     public static Specification<Product> nameOrCodeContains(String keyword) {
-        return (root, query, criteriaBuilder) -> {
-            String searchPattern = "%" + keyword + "%";
-            Predicate name = criteriaBuilder.like(root.get("name"), searchPattern);
-            Predicate code = criteriaBuilder.like(root.get("code"), searchPattern);
-            return criteriaBuilder.or(name, code);
+        return (root, query, cb) -> {
+            Expression<String> searchPtnLowUnac = cb.function("aici", String.class, cb.literal("%" + keyword + "%"));
+            Predicate name = cb.like(
+                    cb.function("aici",String.class,root.get("name")),
+                    searchPtnLowUnac);
+            Predicate code = cb.like(
+                    cb.function("aici",String.class,root.get("code")),
+                    searchPtnLowUnac);
+            return cb.or(name, code);
         };
     }
 
@@ -27,7 +32,7 @@ public class ProductSpecification {
         return (root, query, criteriaBuilder) -> {
             assert query != null;
             query.distinct(true);
-            return root.join("publisher",JoinType.INNER).get("id").in(publisherIds);
+            return root.join("publisher", JoinType.INNER).get("id").in(publisherIds);
         };
     }
 
@@ -35,7 +40,7 @@ public class ProductSpecification {
         return (root, query, criteriaBuilder) -> {
             assert query != null;
             query.distinct(true);
-            return root.join("authors",JoinType.INNER).get("id").in(authorIds);
+            return root.join("authors", JoinType.INNER).get("id").in(authorIds);
         };
     }
 
@@ -43,7 +48,7 @@ public class ProductSpecification {
         return (root, query, criteriaBuilder) -> {
             assert query != null;
             query.distinct(true);
-            return root.join("categories",JoinType.INNER).get("id").in(categoryIds);
+            return root.join("categories", JoinType.INNER).get("id").in(categoryIds);
         };
     }
 

@@ -1,6 +1,6 @@
 import {inject, Injectable} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
-import {AppConstants} from "../../app.constants";
+import {ENV} from "../../environment";
 import {ApiResponse} from "../model/response/api-response.model";
 import {CouponResponse} from "../model/response/coupon-response.model";
 
@@ -9,7 +9,7 @@ import {CouponResponse} from "../model/response/coupon-response.model";
 })
 export class CouponService {
     private http = inject(HttpClient);
-    private readonly url: string = AppConstants.API_BASE_URL + "coupon";
+    private readonly url: string = ENV.API_BASE_URL + "coupon";
 
     findByCode(code: string) {
         return this.http.get<ApiResponse<CouponResponse>>(`${this.url}/${code}`);

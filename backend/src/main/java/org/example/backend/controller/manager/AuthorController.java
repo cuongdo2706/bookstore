@@ -1,6 +1,7 @@
 package org.example.backend.controller.manager;
 
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.example.backend.dto.request.CreateAttributeRequest;
 import org.example.backend.dto.request.FilterAttributeRequest;
 import org.example.backend.dto.response.AuthorResponse;
@@ -16,12 +17,9 @@ import java.util.List;
 
 @RestController
 @RequestMapping("author")
+@RequiredArgsConstructor
 public class AuthorController {
     private final AuthorService authorService;
-
-    public AuthorController(AuthorService authorService) {
-        this.authorService = authorService;
-    }
 
     @GetMapping
     public SuccessResponse<List<AuthorResponse>> findAll() {

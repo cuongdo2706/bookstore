@@ -21,9 +21,9 @@ import {AuthorResponse} from "../../../core/model/response/author-response.model
 import {CategoryResponse} from "../../../core/model/response/category-response.model";
 import {PageResponse} from "../../../core/model/response/page-response.model";
 import {ProductUpdatedRequest} from "../../../core/model/request/product-updated-request.model";
-import {AppConstants} from "../../../app.constants";
 import {PublisherResponse} from "../../../core/model/response/publisher-response.model";
 import {PublisherService} from "../../../core/service/publisher.service";
+import {ENV} from "../../../environment";
 
 @Component({
     selector: 'app-update-form',
@@ -183,7 +183,7 @@ export class UpdateFormComponent implements OnInit {
                     publishedYear: res.data?.publishedYear,
                     description: res.data.description,
                 });
-                this.imageUrl.set(res.data.imgUrl || AppConstants.BASE_IMAGE);
+                this.imageUrl.set(res.data.imgUrl || ENV.BASE_IMAGE);
                 this.publicId.set(res.data.publicId);
                 this.defaultData.set(res.data);
             }

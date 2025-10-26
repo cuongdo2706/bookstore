@@ -70,10 +70,10 @@
                         <div class="grid mt-3">
                             <div class="col-3 flex justify-content-center">
                                 <p-image
-                                src="{{cus.imgUrl||baseImg}}"
-                                alt="Image"
-                                width="250"
-                                [preview]="true"/>
+                                        src="{{cus.imgUrl||baseImg}}"
+                                        alt="Image"
+                                        width="250"
+                                        [preview]="true"/>
                             </div>
                             <div class="col-4">
                                 <div class="grid">
@@ -87,6 +87,29 @@
                                 <div class="grid mt-1">
                                     <div style="font-weight: bold" class="col-4">Số điện thoai:</div>
                                     <div class="col-8">{{ cus.phoneNum }}</div>
+                                </div>
+                                <div class="grid mt-1">
+                                    <div style="font-weight: bold" class="col-4">Ngày sinh:</div>
+                                    <div class="col-8">{{ cus.dob | date:'dd/MM/yyyy' }}</div>
+                                </div>
+                                <div class="grid mt-1">
+                                    <div style="font-weight: bold" class="col-4">Giới tính:</div>
+                                    <div class="col-8">{{ cus.gender === true ? "Nam" : cus.gender === false ? "Nữ" : null }}</div>
+                                </div>
+                            </div>
+                            <div class="col-4">
+
+                                <div class="grid">
+                                    <div style="font-weight: bold" class="col-4">Tỉnh thành:</div>
+                                    <div class="col-8">{{ cus.province }}</div>
+                                </div>
+                                <div class="grid mt-1">
+                                    <div style="font-weight: bold" class="col-4">Phường xã:</div>
+                                    <div class="col-8">{{ cus.commune }}</div>
+                                </div>
+                                <div class="grid mt-1">
+                                    <div style="font-weight: bold" class="col-4">Địa chỉ:</div>
+                                    <div class="col-8">{{ cus.address }}</div>
                                 </div>
                             </div>
                         </div>

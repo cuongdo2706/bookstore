@@ -1,5 +1,6 @@
 package org.example.backend.service.impl;
 
+import lombok.RequiredArgsConstructor;
 import org.example.backend.dto.request.CreateCustomerRequest;
 import org.example.backend.dto.request.FilterCustomerRequest;
 import org.example.backend.dto.response.ImageResponse;
@@ -24,27 +25,14 @@ import java.io.IOException;
 import java.util.Objects;
 
 @Service
+@RequiredArgsConstructor
 public class CustomerServiceImpl implements CustomerService {
     private final CustomerRepository customerRepository;
     private final CustomerMapper customerMapper;
-    private final ImageService imageService;
+    private final ImageService2 imageService2;
     private final SequenceService sequenceService;
     private final CommuneService communeService;
     private final ProvinceService provinceService;
-
-    public CustomerServiceImpl(CustomerRepository customerRepository,
-                               CustomerMapper customerMapper,
-                               ImageService imageService,
-                               SequenceService sequenceService,
-                               CommuneService communeService,
-                               ProvinceService provinceService) {
-        this.customerRepository = customerRepository;
-        this.customerMapper = customerMapper;
-        this.imageService = imageService;
-        this.sequenceService = sequenceService;
-        this.communeService = communeService;
-        this.provinceService = provinceService;
-    }
 
     @Override
     public Customer findById(Long id) throws DataNotFoundException {
@@ -80,7 +68,7 @@ public class CustomerServiceImpl implements CustomerService {
     public CustomerResponse save(CreateCustomerRequest request, MultipartFile file) throws IOException, DataNotFoundException {
         ImageResponse imageResponse = null;
         if (file != null && !file.isEmpty()) {
-            imageResponse = imageService.upload(file);
+            imageResponse = imageService2.upload(file);
         }
         String customerCode = null;
         if (request.getCode() == null || request.getCode().isBlank())

@@ -18,7 +18,9 @@ public interface AuthorRepository extends JpaRepository<Author, Long> {
     @Query(value = "SELECT * FROM tbl_author WHERE is_deleted = FALSE ORDER BY name DESC ", nativeQuery = true)
     Page<Author> findAllPage(Pageable pageable);
 
-    @Query(nativeQuery = true, value = "SELECT * FROM tbl_author WHERE unaccent(name) ILIKE  unaccent(CONCAT('%', :name, '%')) AND is_deleted = FALSE ORDER BY name DESC ")
+    @Query(nativeQuery = true, value = """
+SELECT * FROM tbl_author WHERE aici(name) like  aici(CONCAT('%', :name, '%')) AND is_deleted = FALSE ORDER BY name DESC 
+""")
     Page<Author> findByName(Pageable pageable, @Param("name") String name);
 
     Boolean existsByName(String name);

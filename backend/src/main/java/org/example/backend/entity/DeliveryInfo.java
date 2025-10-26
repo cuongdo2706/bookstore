@@ -20,7 +20,7 @@ public class DeliveryInfo {
     @OneToOne
     @MapsId
     @JoinColumn(name = "id")
-    private Order order;
+    Order order;
 
     String recipientName;
 

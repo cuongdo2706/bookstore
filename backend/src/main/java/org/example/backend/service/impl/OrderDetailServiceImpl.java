@@ -1,5 +1,6 @@
 package org.example.backend.service.impl;
 
+import lombok.RequiredArgsConstructor;
 import org.example.backend.dto.response.OrderDetailResponse;
 import org.example.backend.entity.OrderDetail;
 import org.example.backend.mapper.OrderDetailMapper;
@@ -12,15 +13,10 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class OrderDetailServiceImpl implements OrderDetailService {
     private final OrderDetailRepository orderDetailRepository;
     private final OrderDetailMapper orderDetailMapper;
-
-    public OrderDetailServiceImpl(OrderDetailRepository orderDetailRepository,
-                                  OrderDetailMapper orderDetailMapper) {
-        this.orderDetailRepository = orderDetailRepository;
-        this.orderDetailMapper = orderDetailMapper;
-    }
 
     @Override
     public List<OrderDetailResponse> findByOrderId(Long orderId) {

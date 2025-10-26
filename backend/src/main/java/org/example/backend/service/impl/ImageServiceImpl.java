@@ -1,44 +1,53 @@
 package org.example.backend.service.impl;
 
-import com.cloudinary.Cloudinary;
-import com.cloudinary.utils.ObjectUtils;
+import lombok.RequiredArgsConstructor;
 import org.example.backend.dto.response.ImageResponse;
+import org.example.backend.entity.Image;
 import org.example.backend.service.ImageService;
-import org.springframework.stereotype.Component;
+import org.springframework.core.io.Resource;
+import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
-import java.util.Map;
+import java.util.UUID;
 
-@Component
+@Service
+@RequiredArgsConstructor
 public class ImageServiceImpl implements ImageService {
-    private final Cloudinary cloudinary;
-
-    public ImageServiceImpl(Cloudinary cloudinary) {
-        this.cloudinary = cloudinary;
+    @Override
+    public ImageResponse upload(MultipartFile file) {
+        return null;
     }
 
-    public ImageResponse upload(MultipartFile multipartFile) throws IOException {
-        if (multipartFile.isEmpty()) return null;
-        Map result = cloudinary.uploader().upload(multipartFile.getBytes(), ObjectUtils.emptyMap());
-        String url = (String) result.get("url");
-        String publicId = (String) result.get("public_id");
-        return new ImageResponse(publicId, url);
+    @Override
+    public Resource loadImageAsResource(String publicId) {
+        return null;
     }
 
-    public ImageResponse update(String publicIdExisted, MultipartFile multipartFile) throws IOException {
-        if (multipartFile.isEmpty()) return null;
-        Map result = cloudinary.uploader().upload(multipartFile.getBytes(), ObjectUtils.asMap(
-                "public_id", publicIdExisted,
-                "overwrite", true
-        ));
-        String url = (String) result.get("url");
-        String publicId = (String) result.get("public_id");
-        return new ImageResponse(publicId, url);
+    @Override
+    public Image findImageByPublicId(String publicId) {
+        return null;
     }
 
+    @Override
+    public void deleteImage() {
 
-    public void delete(String publicId) throws IOException {
-        cloudinary.uploader().destroy(publicId, ObjectUtils.emptyMap());
+    }
+
+    @Override
+    public void validateFile() {
+
+    }
+
+    @Override
+    public String getFileExtension(String filename) {
+        if (filename == null || !filename.contains(".")) {
+            return "";
+        }
+        return filename.substring(filename.lastIndexOf(".") + 1);
+    }
+
+    @Override
+    public String generatePublicId() {
+        return UUID.randomUUID().toString().replace("-", "");
     }
 }

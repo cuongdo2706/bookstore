@@ -15,7 +15,7 @@ import java.util.Set;
 @Builder
 @Entity
 @Table(name = "tbl_product")
-@SQLRestriction("is_deleted = 0")
+@SQLRestriction("is_deleted = false")
 @FieldDefaults(level = AccessLevel.PRIVATE)
 
 public class Product extends BaseEntity {
@@ -32,6 +32,10 @@ public class Product extends BaseEntity {
     Integer publishedYear;
     @Column(columnDefinition = "TEXT")
     String description;
+
+    @OneToOne
+    @JoinColumn(name = "image_id",referencedColumnName = "id")
+    Image image;
 
     @ManyToMany(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH})
     @JoinTable(
