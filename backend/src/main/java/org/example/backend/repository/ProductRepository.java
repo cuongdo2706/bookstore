@@ -18,10 +18,10 @@ public interface ProductRepository extends
     @EntityGraph(attributePaths = {"authors", "categories", "promotion","publisher"})
     List<Product> findAll();
 
-    @EntityGraph(attributePaths = {"authors", "categories", "promotion","publisher"})
+    @EntityGraph(attributePaths = {"authors", "categories", "promotion","publisher","image"})
     Page<Product> findAll(Specification<Product> spec, Pageable pageable);
 
-    @EntityGraph(attributePaths = {"authors", "categories", "promotion","publisher"})
+    @EntityGraph(attributePaths = {"authors", "categories", "promotion","publisher","image"})
     Optional<Product> findById(Long id);
 
     @EntityGraph(attributePaths = {"authors", "categories", "promotion","publisher"})

@@ -22,8 +22,6 @@ public class Product extends BaseEntity {
     @Column(nullable = false, unique = true)
     String code;
     String name;
-    String publicId;
-    String imgUrl;
     Integer quantity;
     @Column(precision = 19, scale = 2)
     BigDecimal price;
@@ -33,7 +31,7 @@ public class Product extends BaseEntity {
     @Column(columnDefinition = "TEXT")
     String description;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "image_id",referencedColumnName = "id")
     Image image;
 

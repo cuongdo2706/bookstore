@@ -19,7 +19,7 @@ public abstract class BaseEntity {
     Long id;
 
     @Version
-    @ColumnDefault("1")
+    @ColumnDefault("0")
     Long version;
 
     @CreationTimestamp

@@ -1,9 +1,10 @@
+import {ImageResponse} from "./image-response.model";
+
 export interface ProductResponse {
     id: number;
     code: string;
     name: string;
-    publicId: string | null;
-    imgUrl: string | null;
+    image: ImageResponse | null;
     quantity: number;
     price: number;
     translator: string | null;
@@ -19,8 +20,8 @@ export interface ProductResponse {
         id: number;
         name: string;
     }[];
-    publisher:{
+    publisher: {
         id: number;
         name: string;
-    }
+    };
 }

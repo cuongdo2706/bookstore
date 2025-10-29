@@ -57,7 +57,7 @@ cloudinary:
 
 file:
   upload:
-    base-dir: /home/conan09040/images
+    base-dir: ${user.home}/images
     max-size: 10485760
     allowed-extensions: jpg,jpeg,png,gif,webp,bmp,svg
 

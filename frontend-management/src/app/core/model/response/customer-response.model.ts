@@ -1,3 +1,5 @@
+import {ImageResponse} from "./image-response.model";
+
 export interface CustomerResponse {
     id: number;
     code: string;
@@ -15,7 +17,7 @@ export interface CustomerResponse {
         name:string
     }
     address: string;
-    imgUrl: string;
+    image:ImageResponse|null;
     isActive: boolean;
     createdAt:Date;
     updatedAt:Date

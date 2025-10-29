@@ -96,7 +96,7 @@
                     <!--		        src = "{{product.imgUrl||baseImg}}"-->
                     <!--		        width = "50"-->
                     <!--		/>-->
-                    <img ngSrc="{{product.imgUrl||baseImg}}" [width]="50" [height]="70">
+                    <img ngSrc="{{product.image!==null?`${ENV.API_BASE_URL}images/${product.image.publicId!}`:ENV.BASE_IMAGE}}" [width]="50" [height]="70">
                 </td>
                 <td
                         style="width: 120px">{{ product.price | number:"1.0-0" }}
@@ -114,7 +114,7 @@
                         <div class="grid mt-3">
                             <div class="col-3 flex justify-content-center">
                                 <p-image
-                                        src="{{product.imgUrl||baseImg}}"
+                                        src="{{product.image!==null?`${ENV.API_BASE_URL}images/${product.image.publicId!}`:ENV.BASE_IMAGE}}"
                                         alt="Image"
                                         width="250"
                                         [preview]="true"/>

@@ -48,12 +48,12 @@ import {ENV} from "../../../environment";
 
 
 export class UpdateFormComponent implements OnInit {
-
+    
     ngOnInit() {
         this.findProductById();
         this.getListYears();
         this.updateForm = this.fb.group({
-            code:this.fb.control<string | null>(null),
+            code: this.fb.control<string | null>(null),
             name: this.fb.control<string | null>(null, [Validators.required]),
             imgFile: null,
             publisherId: this.fb.control<number | null>(null),
@@ -73,13 +73,12 @@ export class UpdateFormComponent implements OnInit {
             name: ['', Validators.required]
         });
     }
-
+    
     updateForm!: FormGroup;
     categoryInput!: FormGroup;
     authorInput!: FormGroup;
     private defaultData = signal<ProductResponse | undefined>(undefined);
     imageUrl = signal<string | undefined>(undefined);
-    publicId = signal<string | null>(null);
     years = signal<number[]>([]);
     submitted = signal(false);
     private messageService = inject(MessageService);
@@ -101,13 +100,13 @@ export class UpdateFormComponent implements OnInit {
     publisherIds = input.required<number[]>();
     onUpdate = output<PageResponse<ProductResponse>>();
     updateId = input<number>();
-
+    
     async updateBook() {
         this.submitted.set(true);
         if (this.updateForm.valid) {
             let fileReq: File | null = this.updateForm.controls['imgFile'].value;
             let bookReq: ProductUpdatedRequest = {
-                code:this.updateForm.controls['code'].value!,
+                code: this.updateForm.controls['code'].value!,
                 name: this.updateForm.controls['name'].value!,
                 quantity: this.updateForm.controls['quantity'].value!,
                 price: this.updateForm.controls['price'].value!,
@@ -130,20 +129,20 @@ export class UpdateFormComponent implements OnInit {
                 categoryIds: this.categoryIds(),
                 publisherIds: this.publisherIds()
             }))
-                .then(res => {
-                    this.onUpdate.emit(res.data);
-                    this.message.emit(
+            .then(res => {
+                this.onUpdate.emit(res.data);
+                this.message.emit(
                         {
                             severity: "success",
                             summary: "Thành công",
                             detail: "Cập nhật sản phẩm thành công!!!"
                         }
-                    );
-                });
-
+                );
+            });
+            
             this.submitted.set(false);
             this.visible.set(false);
-
+            
         } else {
             this.messageService.add({
                 severity: "error",
@@ -153,16 +152,16 @@ export class UpdateFormComponent implements OnInit {
             this.visible.set(false);
         }
     }
-
+    
     chooseImage(event: any) {
         const file = event.files[0];
         this.updateForm.patchValue({imgFile: file});
     }
-
+    
     removeImage() {
         this.updateForm.patchValue({imgFile: null});
     }
-
+    
     findProductById() {
         const id: number = this.updateId()!;
         this.productService.findById(id).subscribe({
@@ -170,7 +169,7 @@ export class UpdateFormComponent implements OnInit {
                 let authorIds: number[] = res.data.authors.map(author => author.id);
                 let categoryIds: number[] = res.data.categories.map(category => category.id);
                 this.updateForm.patchValue({
-                    code:res.data.code,
+                    code: res.data.code,
                     name: res.data.name,
                     imgFile: null,
                     publisherId: res.data.publisher.id,
@@ -183,19 +182,18 @@ export class UpdateFormComponent implements OnInit {
                     publishedYear: res.data?.publishedYear,
                     description: res.data.description,
                 });
-                this.imageUrl.set(res.data.imgUrl || ENV.BASE_IMAGE);
-                this.publicId.set(res.data.publicId);
+                this.imageUrl.set(res.data.image !== null ? `${ENV.API_BASE_URL}images/${res.data.image.publicId}` : ENV.BASE_IMAGE);
                 this.defaultData.set(res.data);
             }
         });
-
+        
     }
-
-
+    
+    
     saveCategoryForm() {
         this.categoryVisible.set(true);
     }
-
+    
     saveCategory(input: any) {
         console.log(input);
         this.categoryService.save({name: input.name}).subscribe({
@@ -208,11 +206,11 @@ export class UpdateFormComponent implements OnInit {
             }
         });
     }
-
+    
     saveAuthorForm() {
         this.authorVisible.set(true);
     }
-
+    
     saveAuthor(input: any) {
         this.authorService.save({name: input.name}).subscribe({
             next: res => {
@@ -221,7 +219,7 @@ export class UpdateFormComponent implements OnInit {
             }
         });
     }
-
+    
     savePublisher(input: any) {
         this.publisherService.save({name: input.name}).subscribe({
             next: res => {
@@ -230,12 +228,12 @@ export class UpdateFormComponent implements OnInit {
             }
         });
     }
-
+    
     closeDialog() {
         this.visible.set(false);
         this.updateForm.reset();
     }
-
+    
     getListYears() {
         const currentYear = new Date().getFullYear();
         const startYear = 1900;

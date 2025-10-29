@@ -11,7 +11,8 @@ import java.util.*;
                 CategoryMapper.class,
                 AuthorMapper.class,
                 PublisherMapper.class,
-                ProductMapper.class
+                ProductMapper.class,
+                ImageMapper.class
         })
 public interface ProductMapper {
     ProductResponse toProductResponse(Product product);

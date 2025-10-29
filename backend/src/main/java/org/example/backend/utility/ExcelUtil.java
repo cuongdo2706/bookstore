@@ -58,7 +58,6 @@ public class ExcelUtil {
                 row.createCell(0).setCellValue(rowNum - 1);
                 row.createCell(1).setCellValue(p.getCode());
                 row.createCell(2).setCellValue(p.getName());
-                row.createCell(3).setCellValue(p.getImgUrl());
                 row.createCell(4).setCellValue(p.getQuantity());
                 row.createCell(5).setCellValue(String.valueOf(p.getPrice()));
                 row.createCell(6).setCellValue(p.getPublisher().getName());

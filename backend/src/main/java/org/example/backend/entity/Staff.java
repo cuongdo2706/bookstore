@@ -29,6 +29,10 @@ public class Staff extends BaseEntity {
     @JoinColumn(name = "province_id", referencedColumnName = "code")
     Province province;
 
+    @OneToOne(cascade = CascadeType.MERGE)
+    @JoinColumn(name = "image_id",referencedColumnName = "id")
+    Image image;
+
     @ManyToOne
     @JoinColumn(name = "commune_id", referencedColumnName = "code")
     Commune commune;

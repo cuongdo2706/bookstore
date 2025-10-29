@@ -242,4 +242,6 @@ export class ProductComponent implements OnInit {
     updateMessage(event: {}) {
         this.messageService.add(event);
     }
+    
+    protected readonly ENV = ENV;
 }

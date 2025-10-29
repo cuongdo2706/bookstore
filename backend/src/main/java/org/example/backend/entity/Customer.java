@@ -34,6 +34,10 @@ public class Customer extends BaseEntity {
     @JoinColumn(name = "commune_id", referencedColumnName = "code")
     Commune commune;
 
+    @OneToOne(cascade = CascadeType.MERGE)
+    @JoinColumn(name = "image_id",referencedColumnName = "id")
+    Image image;
+
     String address;
     @Column(unique = true)
     String email;

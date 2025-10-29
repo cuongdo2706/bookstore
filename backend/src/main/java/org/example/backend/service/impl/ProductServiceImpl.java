@@ -8,10 +8,7 @@ import org.example.backend.dto.request.UpdateProductRequest;
 import org.example.backend.dto.response.ImageResponse;
 import org.example.backend.dto.response.PageResponse;
 import org.example.backend.dto.response.ProductResponse;
-import org.example.backend.entity.Author;
-import org.example.backend.entity.Category;
-import org.example.backend.entity.Product;
-import org.example.backend.entity.Publisher;
+import org.example.backend.entity.*;
 import org.example.backend.exception.DataExistedException;
 import org.example.backend.exception.DataNotFoundException;
 import org.example.backend.mapper.ProductMapper;
@@ -42,8 +39,9 @@ public class ProductServiceImpl implements ProductService {
     private final AuthorService authorService;
     private final PublisherService publisherService;
     private final SequenceService sequenceService;
-    private final ImageService2 imageService2;
+    private final ImageService imageService;
     private final ProductMapper productMapper;
+    private static final String defaultPath="product";
 
     @Override
     public List<Product> findAll() {
@@ -94,9 +92,9 @@ public class ProductServiceImpl implements ProductService {
     @Transactional
     @Override
     public ProductResponse save(CreateProductRequest request, MultipartFile file) throws DataNotFoundException, IOException {
-        ImageResponse imageResponse = null;
+        Image image = null;
         if (file != null && !file.isEmpty()) {
-            imageResponse = imageService2.upload(file);
+            image = imageService.upload(file,defaultPath);
         }
         Set<Author> existedAuthors = new HashSet<>(authorService.findAllByIds(request.getAuthorIds()));
         Set<Category> existedCategories = new HashSet<>(categoryService.findAllByIds(request.getCategoryIds()));
@@ -110,7 +108,10 @@ public class ProductServiceImpl implements ProductService {
             }
             productCode = request.getCode();
         }
-        Product product = Product.builder().code(productCode).name(request.getName()).quantity(request.getQuantity()).publicId(imageResponse == null ? null : imageResponse.publicId()).imgUrl(imageResponse == null ? null : imageResponse.imgUrl()).price(request.getPrice()).publisher(existedPublisher).translator(request.getTranslator()).numOfPages(request.getNumOfPages()).publishedYear(request.getPublishedYear()).description(request.getDescription()).categories(existedCategories).isDeleted(Boolean.FALSE).isActive(Boolean.TRUE).authors(existedAuthors).build();
+        Product product = Product.builder().code(productCode).name(request.getName()).quantity(request.getQuantity()).price(request.getPrice()).publisher(existedPublisher).translator(request.getTranslator()).numOfPages(request.getNumOfPages()).publishedYear(request.getPublishedYear()).description(request.getDescription()).categories(existedCategories).isDeleted(Boolean.FALSE).isActive(Boolean.TRUE).authors(existedAuthors).build();
+        if (image!=null){
+            product.setImage(image);
+        }
         return productMapper.toProductResponse(productRepository.save(product));
 
     }
@@ -157,14 +158,11 @@ public class ProductServiceImpl implements ProductService {
             existedProduct.setAuthors(existedAuthors);
         }
         if (file != null && !file.isEmpty()) {
-            ImageResponse imageResponse;
-            if (existedProduct.getPublicId() != null) {
-                imageResponse = imageService2.update(existedProduct.getPublicId(), file);
+            if (existedProduct.getImage() != null) {
+                imageService.update(file,existedProduct.getImage());
             } else {
-                imageResponse = imageService2.upload(file);
+                existedProduct.setImage(imageService.upload(file,"product"));
             }
-            existedProduct.setPublicId(imageResponse.publicId());
-            existedProduct.setImgUrl(imageResponse.imgUrl());
         }
         try {
             return productMapper.toProductResponse(productRepository.save(existedProduct));

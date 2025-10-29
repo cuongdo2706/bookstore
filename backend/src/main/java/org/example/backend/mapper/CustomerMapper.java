@@ -6,8 +6,10 @@ import org.mapstruct.Mapper;
 
 import java.util.List;
 import java.util.stream.Collectors;
-@Mapper(componentModel = "spring")
+
+@Mapper(componentModel = "spring", uses = {ImageMapper.class})
 public interface CustomerMapper {
     CustomerResponse toCustomerResponse(Customer customer);
+
     List<CustomerResponse> toCustomerResponses(List<Customer> customers);
 }

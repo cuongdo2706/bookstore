@@ -66,11 +66,15 @@ export class SaveFormComponent implements OnInit {
         this.authorInput = this.fb.group({
             name: ['', Validators.required]
         });
+        this.publisherInput=this.fb.group({
+            name: ['',Validators.required]
+        })
     }
 
     saveForm!: FormGroup;
     categoryInput!: FormGroup;
     authorInput!: FormGroup;
+    publisherInput!:FormGroup;
     years = signal<number[]>([]);
     submitted = signal(false);
     private messageService = inject(MessageService);
@@ -82,6 +86,7 @@ export class SaveFormComponent implements OnInit {
     visible = model(false);
     categoryVisible = signal(false);
     authorVisible = signal(false);
+    publisherVisible=signal(false)
     authors = model.required<AuthorResponse[]>();
     categories = model.required<CategoryResponse[]>();
     publishers = model.required<PublisherResponse[]>();
@@ -172,12 +177,23 @@ export class SaveFormComponent implements OnInit {
     saveAuthorForm() {
         this.authorVisible.set(true);
     }
+    savePublisherForm() {
+        this.publisherVisible.set(true);
+    }
 
     saveAuthor(input: any) {
         this.authorService.save(input).subscribe({
             next: res => {
                 this.authors.update(item => [...item, res.data]);
                 this.authorVisible.set(false);
+            }
+        });
+    }
+    savePublisher(input: any) {
+        this.publisherService.save(input).subscribe({
+            next: res => {
+                this.publishers.update(item => [...item, res.data]);
+                this.publisherVisible.set(false);
             }
         });
     }

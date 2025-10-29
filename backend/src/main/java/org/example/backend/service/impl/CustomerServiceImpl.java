@@ -7,6 +7,7 @@ import org.example.backend.dto.response.ImageResponse;
 import org.example.backend.dto.response.PageResponse;
 import org.example.backend.dto.response.CustomerResponse;
 import org.example.backend.entity.Customer;
+import org.example.backend.entity.Image;
 import org.example.backend.exception.DataExistedException;
 import org.example.backend.exception.DataNotFoundException;
 import org.example.backend.mapper.CustomerMapper;
@@ -19,6 +20,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -29,10 +31,11 @@ import java.util.Objects;
 public class CustomerServiceImpl implements CustomerService {
     private final CustomerRepository customerRepository;
     private final CustomerMapper customerMapper;
-    private final ImageService2 imageService2;
+    private final ImageService imageService;
     private final SequenceService sequenceService;
     private final CommuneService communeService;
     private final ProvinceService provinceService;
+    private static final String defaultPath="customer";
 
     @Override
     public Customer findById(Long id) throws DataNotFoundException {
@@ -65,10 +68,11 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
+    @Transactional
     public CustomerResponse save(CreateCustomerRequest request, MultipartFile file) throws IOException, DataNotFoundException {
-        ImageResponse imageResponse = null;
+        Image image = null;
         if (file != null && !file.isEmpty()) {
-            imageResponse = imageService2.upload(file);
+            image = imageService.upload(file,defaultPath);
         }
         String customerCode = null;
         if (request.getCode() == null || request.getCode().isBlank())
@@ -89,9 +93,8 @@ public class CustomerServiceImpl implements CustomerService {
                 .address(request.getAddress())
                 .email(request.getEmail())
                 .build();
-        if (imageResponse != null) {
-            customer.setImgUrl(imageResponse.imgUrl());
-            customer.setPublicId(imageResponse.publicId());
+        if (image != null) {
+            customer.setImage(image);
         }
         if (request.getProvinceCode() != null) {
             if (provinceService.existsByCode(request.getProvinceCode()))

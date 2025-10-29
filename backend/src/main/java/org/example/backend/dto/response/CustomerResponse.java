@@ -14,6 +14,7 @@ public record CustomerResponse(
         String email,
         String imgUrl,
         Boolean isActive,
+        ImageResponse image,
         LocalDateTime createdAt,
         LocalDateTime updatedAt
 ) {
