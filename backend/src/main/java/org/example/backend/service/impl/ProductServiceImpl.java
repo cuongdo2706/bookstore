@@ -41,7 +41,7 @@ public class ProductServiceImpl implements ProductService {
     private final SequenceService sequenceService;
     private final ImageService imageService;
     private final ProductMapper productMapper;
-    private static final String defaultPath="product";
+    private static final String defaultPath = "product";
 
     @Override
     public List<Product> findAll() {
@@ -94,7 +94,7 @@ public class ProductServiceImpl implements ProductService {
     public ProductResponse save(CreateProductRequest request, MultipartFile file) throws DataNotFoundException, IOException {
         Image image = null;
         if (file != null && !file.isEmpty()) {
-            image = imageService.upload(file,defaultPath);
+            image = imageService.upload(file, defaultPath);
         }
         Set<Author> existedAuthors = new HashSet<>(authorService.findAllByIds(request.getAuthorIds()));
         Set<Category> existedCategories = new HashSet<>(categoryService.findAllByIds(request.getCategoryIds()));
@@ -108,8 +108,22 @@ public class ProductServiceImpl implements ProductService {
             }
             productCode = request.getCode();
         }
-        Product product = Product.builder().code(productCode).name(request.getName()).quantity(request.getQuantity()).price(request.getPrice()).publisher(existedPublisher).translator(request.getTranslator()).numOfPages(request.getNumOfPages()).publishedYear(request.getPublishedYear()).description(request.getDescription()).categories(existedCategories).isDeleted(Boolean.FALSE).isActive(Boolean.TRUE).authors(existedAuthors).build();
-        if (image!=null){
+        Product product = Product.builder()
+                .code(productCode)
+                .name(request.getName())
+                .quantity(request.getQuantity())
+                .price(request.getPrice())
+                .publisher(existedPublisher)
+                .translator(request.getTranslator())
+                .numOfPages(request.getNumOfPages())
+                .publishedYear(request.getPublishedYear())
+                .description(request.getDescription())
+                .categories(existedCategories)
+                .isDeleted(Boolean.FALSE)
+                .isActive(Boolean.TRUE)
+                .authors(existedAuthors)
+                .build();
+        if (image != null) {
             product.setImage(image);
         }
         return productMapper.toProductResponse(productRepository.save(product));
@@ -159,9 +173,9 @@ public class ProductServiceImpl implements ProductService {
         }
         if (file != null && !file.isEmpty()) {
             if (existedProduct.getImage() != null) {
-                imageService.update(file,existedProduct.getImage());
+                imageService.update(file, existedProduct.getImage());
             } else {
-                existedProduct.setImage(imageService.upload(file,"product"));
+                existedProduct.setImage(imageService.upload(file, "product"));
             }
         }
         try {

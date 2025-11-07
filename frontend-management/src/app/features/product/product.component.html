@@ -96,7 +96,8 @@
                     <!--		        src = "{{product.imgUrl||baseImg}}"-->
                     <!--		        width = "50"-->
                     <!--		/>-->
-                    <img ngSrc="{{product.image!==null?`${ENV.API_BASE_URL}images/${product.image.publicId!}`:ENV.BASE_IMAGE}}" [width]="50" [height]="70">
+                    <img ngSrc="{{product.image!==null?`${buildImgUrl(product.image.publicId)}`:ENV.BASE_IMAGE}}"
+                         [width]="50" [height]="70">
                 </td>
                 <td
                         style="width: 120px">{{ product.price | number:"1.0-0" }}
@@ -114,7 +115,7 @@
                         <div class="grid mt-3">
                             <div class="col-3 flex justify-content-center">
                                 <p-image
-                                        src="{{product.image!==null?`${ENV.API_BASE_URL}images/${product.image.publicId!}`:ENV.BASE_IMAGE}}"
+                                        src="{{product.image!==null?`${buildImgUrl(product.image.publicId)}`:ENV.BASE_IMAGE}}"
                                         alt="Image"
                                         width="250"
                                         [preview]="true"/>
@@ -259,13 +260,10 @@
             [(visible)]="saveFormVisible"
             (onSave)="onSaveForm($event)"
             (message)="saveMessage($event)"
-            [productStatus]="statusSelection()"
-            [authorIds]="selectedAuthorIds()"
-            [categoryIds]="selectedAuthorIds()"
-            [publisherIds]="selectedAuthorIds()"
             [publishers]="publishers()"
             [authors]="authors()"
             [categories]="categories()"
+            (paginatorReset)="searchProducts(1,10,$event)"
     ></app-save-form>
 }
 @if (updateFormVisible()) {
@@ -274,12 +272,9 @@
             [updateId]="updateId"
             (onUpdate)="onUpdateForm($event)"
             (message)="updateMessage($event)"
-            [productStatus]="this.statusSelection()"
-            [publisherIds]="selectedAuthorIds()"
-            [categoryIds]="selectedAuthorIds()"
-            [authorIds]="selectedAuthorIds()"
             [publishers]="publishers()"
             [authors]="authors()"
             [categories]="categories()"
+            (paginatorReset)="searchProducts(page(),size(),$event)"
     ></app-update-form>
 }

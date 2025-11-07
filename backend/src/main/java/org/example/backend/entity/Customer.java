@@ -35,7 +35,7 @@ public class Customer extends BaseEntity {
     Commune commune;
 
     @OneToOne(cascade = CascadeType.MERGE)
-    @JoinColumn(name = "image_id",referencedColumnName = "id")
+    @JoinColumn(name = "image_id",referencedColumnName = "id",unique = true)
     Image image;
 
     String address;

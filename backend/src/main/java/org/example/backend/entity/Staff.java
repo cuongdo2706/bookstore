@@ -30,7 +30,7 @@ public class Staff extends BaseEntity {
     Province province;
 
     @OneToOne(cascade = CascadeType.MERGE)
-    @JoinColumn(name = "image_id",referencedColumnName = "id")
+    @JoinColumn(name = "image_id",referencedColumnName = "id",unique = true)
     Image image;
 
     @ManyToOne

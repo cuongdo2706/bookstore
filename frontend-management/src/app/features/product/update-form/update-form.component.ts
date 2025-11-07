@@ -94,12 +94,9 @@ export class UpdateFormComponent implements OnInit {
     authorVisible = signal(false);
     visible = model(false);
     message = output<{}>();
-    productStatus = input.required<boolean>();
-    categoryIds = input.required<number[]>();
-    authorIds = input.required<number[]>();
-    publisherIds = input.required<number[]>();
     onUpdate = output<PageResponse<ProductResponse>>();
     updateId = input<number>();
+    paginatorReset = output<boolean>();
     
     async updateBook() {
         this.submitted.set(true);
@@ -119,29 +116,17 @@ export class UpdateFormComponent implements OnInit {
                 categoryIds: this.updateForm.controls['categories'].value!
             };
             await firstValueFrom(this.productService.update(this.updateId()!, bookReq, fileReq));
-            await firstValueFrom(this.productService.search({
-                page: 1,
-                size: 10,
-                sortBy: "name",
-                nameOrCodeKeyword: "",
-                isActive: this.productStatus(),
-                authorIds: this.authorIds(),
-                categoryIds: this.categoryIds(),
-                publisherIds: this.publisherIds()
-            }))
-            .then(res => {
-                this.onUpdate.emit(res.data);
-                this.message.emit(
-                        {
-                            severity: "success",
-                            summary: "Thành công",
-                            detail: "Cập nhật sản phẩm thành công!!!"
-                        }
-                );
-            });
-            
+            this.paginatorReset.emit(false)
+            this.message.emit(
+                    {
+                        severity: "success",
+                        summary: "Thành công",
+                        detail: "Cập nhật sản phẩm thành công!!!"
+                    }
+            );
             this.submitted.set(false);
             this.visible.set(false);
+            
             
         } else {
             this.messageService.add({
@@ -157,6 +142,10 @@ export class UpdateFormComponent implements OnInit {
         const file = event.files[0];
         this.updateForm.patchValue({imgFile: file});
     }
+
+//     getImageUrl=(publicId:string):string=>{
+//         re
+// }
     
     removeImage() {
         this.updateForm.patchValue({imgFile: null});
@@ -195,7 +184,6 @@ export class UpdateFormComponent implements OnInit {
     }
     
     saveCategory(input: any) {
-        console.log(input);
         this.categoryService.save({name: input.name}).subscribe({
             next: res => {
                 this.categories.update(item => [...item, res.data]);

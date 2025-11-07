@@ -26,6 +26,7 @@ import {PublisherResponse} from "../../core/model/response/publisher-response.mo
 import {CategoryService} from "../../core/service/category.service";
 import {AuthorService} from "../../core/service/author.service";
 import {PublisherService} from "../../core/service/publisher.service";
+import {buildImgUrl} from "../../shared/utils/image-utils";
 
 @Component({
     selector: 'app-product',
@@ -86,7 +87,6 @@ export class ProductComponent implements OnInit {
     saveFormVisible = signal(false);
     updateFormVisible = signal(false);
     updateId!: number;
-    readonly baseImg = ENV.BASE_IMAGE;
     isFilter = signal(false);
     timeout: any;
     
@@ -136,8 +136,10 @@ export class ProductComponent implements OnInit {
     }
     
     onPageChange(event: PaginatorState) {
+        this.size.set(event.rows!);
+        this.page.set(event.page! + 1);
         if (this.isFilter()) return;
-        this.searchProducts(event.page! + 1, event.rows!, false);
+        this.searchProducts(this.page(), this.size(), false);
     }
     
     fetchAuthors() {
@@ -244,4 +246,5 @@ export class ProductComponent implements OnInit {
     }
     
     protected readonly ENV = ENV;
+    protected readonly buildImgUrl = buildImgUrl;
 }

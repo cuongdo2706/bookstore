@@ -32,7 +32,7 @@ public class Product extends BaseEntity {
     String description;
 
     @OneToOne(cascade = CascadeType.MERGE)
-    @JoinColumn(name = "image_id",referencedColumnName = "id")
+    @JoinColumn(name = "image_id", referencedColumnName = "id", unique = true)
     Image image;
 
     @ManyToMany(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH})
@@ -59,7 +59,7 @@ public class Product extends BaseEntity {
     @JoinColumn(name = "promotion_id")
     Promotion promotion;
     @Builder.Default
-    Boolean isActive=true;
+    Boolean isActive = true;
     @Builder.Default
-    Boolean isDeleted=false;
+    Boolean isDeleted = false;
 }

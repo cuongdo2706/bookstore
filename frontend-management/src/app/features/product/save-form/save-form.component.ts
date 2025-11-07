@@ -44,7 +44,7 @@ import {PublisherResponse} from "../../../core/model/response/publisher-response
 })
 export class SaveFormComponent implements OnInit {
     ngOnInit(): void {
-
+        
         this.getListYears();
         this.saveForm = this.fb.group({
             code: null,
@@ -66,15 +66,15 @@ export class SaveFormComponent implements OnInit {
         this.authorInput = this.fb.group({
             name: ['', Validators.required]
         });
-        this.publisherInput=this.fb.group({
-            name: ['',Validators.required]
-        })
+        this.publisherInput = this.fb.group({
+            name: ['', Validators.required]
+        });
     }
-
+    
     saveForm!: FormGroup;
     categoryInput!: FormGroup;
     authorInput!: FormGroup;
-    publisherInput!:FormGroup;
+    publisherInput!: FormGroup;
     years = signal<number[]>([]);
     submitted = signal(false);
     private messageService = inject(MessageService);
@@ -86,38 +86,35 @@ export class SaveFormComponent implements OnInit {
     visible = model(false);
     categoryVisible = signal(false);
     authorVisible = signal(false);
-    publisherVisible=signal(false)
+    publisherVisible = signal(false);
     authors = model.required<AuthorResponse[]>();
     categories = model.required<CategoryResponse[]>();
     publishers = model.required<PublisherResponse[]>();
     onSave = output<any>();
     message = output<{}>();
-    productStatus = input.required<boolean>();
-    categoryIds = input.required<number[]>();
-    authorIds = input.required<number[]>();
-    publisherIds = input.required<number[]>();
-
-
+    paginatorReset = output<boolean>();
+    
+    
     closeDialog() {
         this.visible.set(false);
         this.saveForm.reset();
     }
-
+    
     chooseImage(event: any) {
         const file = event.files[0];
         this.saveForm.patchValue({imgFile: file});
     }
-
+    
     removeImage() {
         this.saveForm.patchValue({imgFile: null});
     }
-
+    
     async saveBook() {
         this.submitted.set(true);
         if (this.saveForm.valid) {
             let fileReq: File | null = this.saveForm.controls['imgFile'].value;
             let bookReq: ProductCreatedRequest = {
-                code:this.saveForm.controls['code'].value,
+                code: this.saveForm.controls['code'].value,
                 name: this.saveForm.controls['name'].value!,
                 quantity: this.saveForm.controls['quantity'].value!,
                 price: this.saveForm.controls['price'].value!,
@@ -130,19 +127,7 @@ export class SaveFormComponent implements OnInit {
                 categoryIds: this.saveForm.controls['categories'].value!
             };
             await firstValueFrom(this.productService.save(bookReq, fileReq));
-            const res = await firstValueFrom(this.productService.search({
-                page: 1,
-                size: 10,
-                sortBy: "name",
-                nameOrCodeKeyword: "",
-                isActive: this.productStatus(),
-                authorIds: this.authorIds(),
-                categoryIds: this.categoryIds(),
-                publisherIds: this.publisherIds()
-            }));
-            
-            // xử lý kết quả
-            this.onSave.emit(res.data);
+            this.paginatorReset.emit(true);
             this.message.emit({
                 severity: "success",
                 summary: "Thành công",
@@ -159,12 +144,12 @@ export class SaveFormComponent implements OnInit {
             });
         }
     }
-
-
+    
+    
     saveCategoryForm() {
         this.categoryVisible.set(true);
     }
-
+    
     saveCategory(input: any) {
         this.categoryService.save({name: input.name}).subscribe({
             next: res => {
@@ -173,14 +158,15 @@ export class SaveFormComponent implements OnInit {
             }
         });
     }
-
+    
     saveAuthorForm() {
         this.authorVisible.set(true);
     }
+    
     savePublisherForm() {
         this.publisherVisible.set(true);
     }
-
+    
     saveAuthor(input: any) {
         this.authorService.save(input).subscribe({
             next: res => {
@@ -189,6 +175,7 @@ export class SaveFormComponent implements OnInit {
             }
         });
     }
+    
     savePublisher(input: any) {
         this.publisherService.save(input).subscribe({
             next: res => {
@@ -197,7 +184,7 @@ export class SaveFormComponent implements OnInit {
             }
         });
     }
-
+    
     getListYears() {
         const currentYear = new Date().getFullYear();
         const startYear = 1900;
