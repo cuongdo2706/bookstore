@@ -3,16 +3,16 @@ import {MainLayoutComponent} from "./core/component/main-layout/main-layout.comp
 import {LoginComponent} from "./core/component/login/login.component";
 import {LoginGuard} from "./core/guard/login.guard";
 import {AuthGuard} from "./core/guard/auth.guard";
-import {DashboardComponent} from "./features/dashboard/dashboard.component";
-import {PosComponent} from "./features/pos/pos.component";
-import {ProductComponent} from "./features/product/product.component";
-import {AttributeComponent} from "./features/attribute/attribute.component";
-import {OrderComponent} from "./features/order/order.component";
-import {CustomerComponent} from "./features/customer/customer.component";
-import {StaffComponent} from "./features/staff/staff.component";
-import {PromotionComponent} from "./features/promotion/promotion.component";
-import {CouponComponent} from "./features/coupon/coupon.component";
-import {PageNotFoundComponent} from "./features/page-not-found/page-not-found.component";
+import {Dashboard} from "./features/dashboard/dashboard";
+import {Pos} from "./features/pos/pos";
+import {Product} from "./features/product/product";
+import {Attribute} from "./features/attribute/attribute";
+import {Order} from "./features/order/order";
+import {Customer} from "./features/customer/customer";
+import {Staff} from "./features/staff/staff";
+import {Promotion} from "./features/promotion/promotion";
+import {Coupon} from "./features/coupon/coupon";
+import {PageNotFound} from "./features/page-not-found/page-not-found";
 
 
 export const routes: Routes = [
@@ -35,60 +35,60 @@ export const routes: Routes = [
                 path: "thong-ke",
                 title: "Thống kê",
                 canActivate: [AuthGuard],
-                component: DashboardComponent
+                component: Dashboard
             },
             {
                 path: "ban-hang",
                 title: "Bán hàng",
                 canActivate: [AuthGuard],
-                component: PosComponent
+                component: Pos
             },
             {
                 path: "san-pham",
                 title: "Sản phẩm",
                 canActivate: [AuthGuard],
-                component: ProductComponent
+                component: Product
             },
             {
                 path: "thuoc-tinh",
                 title: "Thuộc tính",
                 canActivate: [AuthGuard],
-                component: AttributeComponent
+                component: Attribute
             }, {
                 path: "don-hang",
                 title: "Đơn hàng",
                 canActivate: [AuthGuard],
-                component: OrderComponent
+                component: Order
             },
             {
                 path: "khach-hang",
                 title: "Khách hàng",
                 canActivate: [AuthGuard],
-                component: CustomerComponent
+                component: Customer
             },
             {
                 path: "nhan-vien",
                 title: "Nhân viên",
                 canActivate: [AuthGuard],
-                component: StaffComponent
+                component: Staff
             },
             {
                 path: "khuyen-mai",
                 title: "Khuyến mãi",
                 canActivate: [AuthGuard],
-                component: PromotionComponent
+                component: Promotion
             },
             {
                 path: "ma-giam-gia",
                 title: "Mã giảm giá",
                 canActivate: [AuthGuard],
-                component: CouponComponent
+                component: Coupon
             }
         ]
     },
     {
         path: "404",
-        component: PageNotFoundComponent
+        component: PageNotFound
     },
     {
         path: "**",

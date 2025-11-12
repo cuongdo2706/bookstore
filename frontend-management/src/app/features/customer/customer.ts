@@ -35,11 +35,11 @@ import {DatePipe} from "@angular/common";
         Image,
         DatePipe
     ],
-    templateUrl: './customer.component.html',
-    styleUrl: './customer.component.css',
+    templateUrl: './customer.html',
+    styleUrl: './customer.css',
     providers: [ConfirmationService, MessageService]
 })
-export class CustomerComponent implements OnInit {
+export class Customer implements OnInit {
     ngOnInit(): void {
         this.searchCustomer(this.page(), this.size(), false);
     }

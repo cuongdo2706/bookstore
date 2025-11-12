@@ -71,6 +71,7 @@ export class CustomerSaveForm implements OnInit {
     message = output<{}>();
     private messageService = inject(MessageService);
     customerStatus = input.required<boolean>();
+    paginatorReset = output<boolean>();
     
     closeDialog() {
         this.visible.set(false);

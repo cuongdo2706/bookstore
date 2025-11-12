@@ -7,10 +7,10 @@ import {NgOptimizedImage} from "@angular/common";
     imports: [
         NgOptimizedImage
     ],
-    templateUrl: './page-not-found.component.html',
-    styleUrl: './page-not-found.component.css'
+    templateUrl: './page-not-found.html',
+    styleUrl: './page-not-found.css'
 })
-export class PageNotFoundComponent {
+export class PageNotFound {
     private router = inject(Router);
 
     goHome() {

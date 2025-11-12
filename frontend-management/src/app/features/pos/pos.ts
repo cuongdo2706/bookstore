@@ -79,13 +79,13 @@ interface OrderDetail {
         CustomerSaveForm,
     
     ],
-    templateUrl: './pos.component.html',
-    styleUrl: './pos.component.css',
+    templateUrl: './pos.html',
+    styleUrl: './pos.css',
     providers: [MessageService],
     encapsulation: ViewEncapsulation.None
 })
 
-export class PosComponent implements OnInit {
+export class Pos implements OnInit {
     posForm!: FormGroup;
     messageService = inject(MessageService);
     readonly MAX_TABS: number = 5;

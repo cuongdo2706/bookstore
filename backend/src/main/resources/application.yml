@@ -57,7 +57,7 @@ cloudinary:
 
 file:
   upload:
-    base-dir: ${user.home}/images
+    base-dir: E:/images
     max-size: 10485760
     allowed-extensions: jpg,jpeg,png,gif,webp,bmp,svg
 

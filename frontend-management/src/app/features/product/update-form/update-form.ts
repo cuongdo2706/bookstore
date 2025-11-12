@@ -40,14 +40,14 @@ import {ENV} from "../../../environment";
         InputNumber,
         MultiSelect
     ],
-    templateUrl: './update-form.component.html',
-    styleUrl: './update-form.component.css',
+    templateUrl: './update-form.html',
+    styleUrl: './update-form.css',
     providers: [MessageService],
     encapsulation: ViewEncapsulation.None
 })
 
 
-export class UpdateFormComponent implements OnInit {
+export class UpdateForm implements OnInit {
     
     ngOnInit() {
         this.findProductById();

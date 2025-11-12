@@ -9,11 +9,11 @@ import {FormsModule} from "@angular/forms";
 import {Image} from "primeng/image";
 import {Paginator, PaginatorModule, PaginatorState} from "primeng/paginator";
 import {DecimalPipe, NgOptimizedImage} from "@angular/common";
-import {SaveFormComponent} from "./save-form/save-form.component";
+import {ProductSaveForm} from "./product-save-form/product-save-form";
 import {ConfirmDialog} from "primeng/confirmdialog";
 import {ConfirmationService, MessageService} from "primeng/api";
 import {firstValueFrom} from "rxjs";
-import {UpdateFormComponent} from "./update-form/update-form.component";
+import {UpdateForm} from "./update-form/update-form";
 import {Select} from "primeng/select";
 import {ENV} from "../../environment";
 import {ProductService} from "../../core/service/product.service";
@@ -33,8 +33,8 @@ import {buildImgUrl} from "../../shared/utils/image-utils";
     imports: [
         FormsModule,
         DecimalPipe,
-        SaveFormComponent,
-        UpdateFormComponent,
+        ProductSaveForm,
+        UpdateForm,
         Select,
         Toast,
         Button,
@@ -48,11 +48,11 @@ import {buildImgUrl} from "../../shared/utils/image-utils";
         NgOptimizedImage,
         MultiSelect
     ],
-    templateUrl: './product.component.html',
-    styleUrl: './product.component.css',
+    templateUrl: './product.html',
+    styleUrl: './product.css',
     providers: [ConfirmationService, MessageService]
 })
-export class ProductComponent implements OnInit {
+export class Product implements OnInit {
     private confirmationService = inject(ConfirmationService);
     private messageService = inject(MessageService);
     private productService = inject(ProductService);

@@ -43,10 +43,10 @@ interface SelectForm {
         Button,
         SplitButton
     ],
-    templateUrl: './order.component.html',
-    styleUrl: './order.component.css'
+    templateUrl: './order.html',
+    styleUrl: './order.css'
 })
-export class OrderComponent implements OnInit {
+export class Order implements OnInit {
     constructor() {
         this.exportItems.set([
             {

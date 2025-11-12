@@ -37,12 +37,12 @@ import {PublisherResponse} from "../../../core/model/response/publisher-response
         InputNumber,
         MultiSelect
     ],
-    templateUrl: './save-form.component.html',
-    styleUrl: './save-form.component.css',
+    templateUrl: './product-save-form.html',
+    styleUrl: './product-save-form.css',
     providers: [MessageService],
     encapsulation: ViewEncapsulation.None
 })
-export class SaveFormComponent implements OnInit {
+export class ProductSaveForm implements OnInit {
     ngOnInit(): void {
         
         this.getListYears();

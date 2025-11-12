@@ -6,9 +6,9 @@ import {CardModule} from "primeng/card";
     imports: [
         CardModule
     ],
-    templateUrl: './promotion.component.html',
-    styleUrl: './promotion.component.css'
+    templateUrl: './promotion.html',
+    styleUrl: './promotion.css'
 })
-export class PromotionComponent {
+export class Promotion {
 
 }

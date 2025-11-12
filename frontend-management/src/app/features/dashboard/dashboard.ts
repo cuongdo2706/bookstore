@@ -8,10 +8,10 @@ import {UIChart} from "primeng/chart";
         CardModule,
         UIChart
     ],
-    templateUrl: './dashboard.component.html',
-    styleUrl: './dashboard.component.css'
+    templateUrl: './dashboard.html',
+    styleUrl: './dashboard.css'
 })
-export class DashboardComponent implements OnInit {
+export class Dashboard implements OnInit {
     ngOnInit(): void {
         this.initNetRevenueChart();
 
