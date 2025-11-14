@@ -41,8 +41,8 @@
     "uuid": "^11.1.0"
   },
   "devDependencies": {
-    "@angular/build": "^20.3.2",
-    "@angular/cli": "^20.3.2",
+    "@angular/build": "^20.3.10",
+    "@angular/cli": "^20.3.10",
     "@angular/compiler-cli": "^20.3.11",
     "@types/jasmine": "~5.1.0",
     "jasmine-core": "~5.9.0",
