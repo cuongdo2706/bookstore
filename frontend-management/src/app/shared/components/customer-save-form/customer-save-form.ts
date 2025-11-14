@@ -1,4 +1,4 @@
-import {Component, inject, input, model, OnInit, output, signal} from '@angular/core';
+import {Component, inject, model, OnInit, output, signal} from '@angular/core';
 import {Dialog} from 'primeng/dialog';
 import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
 import {Button} from 'primeng/button';
@@ -15,8 +15,6 @@ import {AddressService} from "../../../core/service/address.service";
 import {Province} from "../../../core/model/response/province-response.model";
 import {CustomerCreatedRequest} from "../../../core/model/request/customer-created-request";
 import {firstValueFrom} from "rxjs";
-import {PageResponse} from "../../../core/model/response/page-response.model";
-import {CustomerResponse} from "../../../core/model/response/customer-response.model";
 import {MessageService} from "primeng/api";
 
 @Component({
@@ -67,10 +65,8 @@ export class CustomerSaveForm implements OnInit {
     now: Date = new Date();
     provinces = signal<Province[]>([]);
     communes = signal<{}[]>([]);
-    onSave = output<PageResponse<CustomerResponse>>();
     message = output<{}>();
     private messageService = inject(MessageService);
-    customerStatus = input.required<boolean>();
     paginatorReset = output<boolean>();
     
     closeDialog() {
@@ -121,8 +117,8 @@ export class CustomerSaveForm implements OnInit {
     async saveCustomer() {
         this.submitted.set(true);
         if (this.saveForm.valid) {
-            let fileReq: File | null = this.saveForm.controls['imgFile'].value;
-            let controls = (field: string): any => this.saveForm.controls[`${field}`].value;
+            let controls = (field: string): any => this.saveForm.controls[field].value;
+            let fileReq: File | null = controls('imgFile');
             let customerReq: CustomerCreatedRequest = {
                 code: controls('code'),
                 name: controls('name')!,
@@ -133,23 +129,15 @@ export class CustomerSaveForm implements OnInit {
                 email: controls('email'),
             };
             await firstValueFrom(this.customerService.save(customerReq, fileReq));
-            await firstValueFrom(this.customerService.search({
-                searchKeyword: "",
-                sortBy: "name",
-                page: 1,
-                size: 10,
-                isActive: true
-            })).then(res => {
-                this.onSave.emit(res.data);
-                this.message.emit({
-                    severity: "success",
-                    summary: "Thành công",
-                    detail: "Thêm mới thành công!!!"
-                });
-                this.saveForm.reset();
-                this.submitted.set(true);
-                this.visible.set(false);
+            this.paginatorReset.emit(true);
+            this.message.emit({
+                severity: "success",
+                summary: "Thành công",
+                detail: "Thêm mới thành công!!!"
             });
+            this.saveForm.reset();
+            this.submitted.set(true);
+            this.visible.set(false);
         } else {
             this.messageService.add({
                 severity: "error",

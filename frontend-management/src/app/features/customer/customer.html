@@ -112,6 +112,46 @@
                                     <div class="col-8">{{ cus.address }}</div>
                                 </div>
                             </div>
+
+                        </div>
+                        <div class="flex pt-2 justify-content-end">
+                            <p-button (click)="showUpdateDialog(cus.id)" icon="pi pi-pencil" class="mr-3"
+                                      label="Cập nhật"></p-button>
+
+                            <p-button (onClick)="changeStatus(cus.id)" icon="pi pi-pause-circle" severity="warn"
+                                      class="mr-3"
+                                      [label]="cus.isActive?'Ngừng hoạt động':'Cho phép hoạt động'"></p-button>
+                            <p-button (onClick)="confirmDelete(cus.id)" icon="pi pi-trash" severity="danger"
+                                      label="Xoá"></p-button>
+
+                            <p-confirm-dialog #cd>
+                                <ng-template #headless let-message let-onAccept="onAccept"
+                                             let-onReject="onReject">
+                                    <div class="flex flex-column align-items-center p-5 surface-overlay border-round">
+                                        <div
+                                                class="border-circle bg-primary inline-flex justify-content-center align-items-center h-6rem w-6rem">
+                                            <i class="pi pi-question text-5xl"></i>
+                                        </div>
+                                        <span class="font-bold text-2xl block mb-2 mt-4">{{ message.header }}</span>
+                                        <div class="flex align-items-center gap-2 mt-4">
+                                            <p-button
+                                                    label="Đồng ý"
+                                                    severity="danger"
+                                                    icon="pi pi-check"
+                                                    (onClick)="onAccept()"
+                                                    class="w-8rem">
+                                            </p-button>
+                                            <p-button
+                                                    label="Bỏ qua"
+                                                    severity="secondary"
+                                                    icon="pi pi-times"
+                                                    (onClick)="onReject()"
+                                                    class="p-button-outlined w-8rem ">
+                                            </p-button>
+                                        </div>
+                                    </div>
+                                </ng-template>
+                            </p-confirm-dialog>
                         </div>
                     </div>
                 </td>
@@ -135,8 +175,15 @@
 @if (saveFormVisible()) {
     <app-customer-save-form
             [(visible)]="saveFormVisible"
-            (onSave)="onSaveForm($event)"
             (message)="saveMessage($event)"
-            [customerStatus]="statusSelection()"
+            (paginatorReset)="searchCustomer(page(),size(),$event)"
     ></app-customer-save-form>
+}
+@if (updateFormVisible()) {
+    <app-customer-update-form
+            [(visible)]="updateFormVisible"
+            [updateId]="updateId"
+            (message)="updateMessage($event)"
+            (paginatorReset)="searchCustomer(page(),size(),$event)"
+    ></app-customer-update-form>
 }

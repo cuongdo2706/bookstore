@@ -19,7 +19,6 @@ import {CategoryService} from "../../../core/service/category.service";
 import {AuthorService} from "../../../core/service/author.service";
 import {AuthorResponse} from "../../../core/model/response/author-response.model";
 import {CategoryResponse} from "../../../core/model/response/category-response.model";
-import {PageResponse} from "../../../core/model/response/page-response.model";
 import {ProductUpdatedRequest} from "../../../core/model/request/product-updated-request.model";
 import {PublisherResponse} from "../../../core/model/response/publisher-response.model";
 import {PublisherService} from "../../../core/service/publisher.service";
@@ -40,31 +39,31 @@ import {ENV} from "../../../environment";
         InputNumber,
         MultiSelect
     ],
-    templateUrl: './update-form.html',
-    styleUrl: './update-form.css',
+    templateUrl: './product-update-form.html',
+    styleUrl: './product-update-form.css',
     providers: [MessageService],
     encapsulation: ViewEncapsulation.None
 })
 
 
-export class UpdateForm implements OnInit {
+export class ProductUpdateForm implements OnInit {
     
     ngOnInit() {
         this.findProductById();
         this.getListYears();
         this.updateForm = this.fb.group({
-            code: this.fb.control<string | null>(null),
-            name: this.fb.control<string | null>(null, [Validators.required]),
+            code: [null],
+            name: [null, [Validators.required]],
             imgFile: null,
-            publisherId: this.fb.control<number | null>(null),
-            translator: this.fb.control<string | null>(null),
-            authors: this.fb.control<number | null>(null, [Validators.required]),
-            categories: this.fb.control<number | null>(null, [Validators.required]),
+            publisherId: null,
+            translator: null,
+            authors: [null, [Validators.required]],
+            categories: [null, [Validators.required]],
             quantity: [0, [Validators.required, Validators.min(0), Validators.pattern('^[1-9]\\d*$')]],
-            price: this.fb.control<number | null>(null, [Validators.required, Validators.min(1)]),
-            numOfPages: this.fb.control<number | null>(null, [Validators.min(1), Validators.pattern('^[1-9]\\d*$')]),
-            publishedYear: this.fb.control<number | null>(null),
-            description: this.fb.control<string | null>(null)
+            price: [null, [Validators.required, Validators.min(1)]],
+            numOfPages: [null, [Validators.min(1), Validators.pattern('^[1-9]\\d*$')]],
+            publishedYear: [null],
+            description: [null]
         });
         this.categoryInput = this.fb.group({
             name: ['', Validators.required]
@@ -94,29 +93,29 @@ export class UpdateForm implements OnInit {
     authorVisible = signal(false);
     visible = model(false);
     message = output<{}>();
-    onUpdate = output<PageResponse<ProductResponse>>();
     updateId = input<number>();
     paginatorReset = output<boolean>();
     
     async updateBook() {
         this.submitted.set(true);
         if (this.updateForm.valid) {
-            let fileReq: File | null = this.updateForm.controls['imgFile'].value;
+            let controls = (field: string): any => this.updateForm.controls[field].value;
+            let fileReq: File | null = controls('imgFile');
             let bookReq: ProductUpdatedRequest = {
-                code: this.updateForm.controls['code'].value!,
-                name: this.updateForm.controls['name'].value!,
-                quantity: this.updateForm.controls['quantity'].value!,
-                price: this.updateForm.controls['price'].value!,
-                publisherId: this.updateForm.controls['publisherId'].value,
-                translator: this.updateForm.controls['translator'].value,
-                numOfPages: this.updateForm.controls['numOfPages'].value,
-                publishedYear: this.updateForm.controls['publishedYear'].value,
-                description: this.updateForm.controls['description'].value,
-                authorIds: this.updateForm.controls['authors'].value!,
-                categoryIds: this.updateForm.controls['categories'].value!
+                code: controls('code')!,
+                name: controls('name')!,
+                quantity: controls('quantity')!,
+                price: controls('price')!,
+                publisherId: controls('publisherId'),
+                translator: controls('translator'),
+                numOfPages: controls('numOfPages'),
+                publishedYear: controls('publishedYear'),
+                description: controls('description'),
+                authorIds: controls('authors')!,
+                categoryIds: controls('categories')!
             };
             await firstValueFrom(this.productService.update(this.updateId()!, bookReq, fileReq));
-            this.paginatorReset.emit(false)
+            this.paginatorReset.emit(false);
             this.message.emit(
                     {
                         severity: "success",

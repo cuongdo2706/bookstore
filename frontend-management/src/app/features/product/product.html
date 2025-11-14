@@ -258,7 +258,6 @@
 @if (saveFormVisible()) {
     <app-save-form
             [(visible)]="saveFormVisible"
-            (onSave)="onSaveForm($event)"
             (message)="saveMessage($event)"
             [publishers]="publishers()"
             [authors]="authors()"
@@ -270,7 +269,6 @@
     <app-update-form
             [(visible)]="updateFormVisible"
             [updateId]="updateId"
-            (onUpdate)="onUpdateForm($event)"
             (message)="updateMessage($event)"
             [publishers]="publishers()"
             [authors]="authors()"

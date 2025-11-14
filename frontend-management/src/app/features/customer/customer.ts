@@ -6,7 +6,6 @@ import {CustomerResponse} from "../../core/model/response/customer-response.mode
 import {Paginator, PaginatorState} from "primeng/paginator";
 import {ENV} from "../../environment";
 import {TableModule, TableRowExpandEvent} from "primeng/table";
-import {PageResponse} from "../../core/model/response/page-response.model";
 import {CustomerSaveForm} from "../../shared/components/customer-save-form/customer-save-form";
 import {IconField} from "primeng/iconfield";
 import {InputIcon} from "primeng/inputicon";
@@ -17,6 +16,9 @@ import {Button} from "primeng/button";
 import {Toast} from "primeng/toast";
 import {Image} from "primeng/image";
 import {DatePipe} from "@angular/common";
+import {ConfirmDialog} from "primeng/confirmdialog";
+import {firstValueFrom} from "rxjs";
+import {CustomerUpdateForm} from "./customer-update-form/customer-update-form";
 
 @Component({
     selector: 'app-customer',
@@ -33,7 +35,9 @@ import {DatePipe} from "@angular/common";
         Paginator,
         Toast,
         Image,
-        DatePipe
+        DatePipe,
+        ConfirmDialog,
+        CustomerUpdateForm
     ],
     templateUrl: './customer.html',
     styleUrl: './customer.css',
@@ -109,8 +113,10 @@ export class Customer implements OnInit {
     }
     
     onPageChange(event: PaginatorState) {
+        this.size.set(event.rows!);
+        this.page.set(event.page! + 1);
         if (this.isFilter()) return;
-        this.searchCustomer(event.page! + 1, event.rows!, false);
+        this.searchCustomer(this.page(), this.size(), false);
     }
     
     onRowExpand(event: TableRowExpandEvent<CustomerResponse>) {
@@ -125,12 +131,39 @@ export class Customer implements OnInit {
         });
     }
     
-    onSaveForm(event: PageResponse<CustomerResponse>) {
-        this.customers.set(event.content);
-        this.totalElements.set(event.totalElements);
-    }
     
     saveMessage(event: {}) {
+        this.messageService.add(event);
+    }
+    
+    showUpdateDialog(id: number) {
+        this.updateFormVisible.set(true);
+        this.updateId = id;
+    }
+    
+    async changeStatus(id: number) {
+        await firstValueFrom(this.customerService.changeStatus(id));
+        this.searchCustomer(this.page(), this.size(), false);
+    }
+    
+    confirmDelete(id: number) {
+        this.confirmationService.confirm({
+            header: 'Bạn có chắc muốn xoá ?',
+            accept: async () => {
+                await firstValueFrom(this.customerService.delete(id));
+                this.messageService.add({
+                    severity: 'error',
+                    summary: 'Xác nhận',
+                    detail: 'Xoá thành công'
+                });
+                this.searchCustomer(this.page(), this.size(), false);
+            },
+            reject: () => {
+            }
+        });
+    }
+    
+    updateMessage(event: {}) {
         this.messageService.add(event);
     }
 }

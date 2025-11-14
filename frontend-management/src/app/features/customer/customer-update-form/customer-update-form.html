@@ -1,1 +1,9 @@
-<p>update-form works!</p>
+<p-dialog header="Cập nhật"
+          [modal]="true"
+          [style]="{width:'70rem'}"
+          [visible]="visible()"
+          closable="false">
+    <form [formGroup]="updateForm" (ngSubmit)="updateCustomer()">
+
+    </form>
+</p-dialog>

@@ -13,7 +13,7 @@ import {ProductSaveForm} from "./product-save-form/product-save-form";
 import {ConfirmDialog} from "primeng/confirmdialog";
 import {ConfirmationService, MessageService} from "primeng/api";
 import {firstValueFrom} from "rxjs";
-import {UpdateForm} from "./update-form/update-form";
+import {ProductUpdateForm} from "./product-update-form/product-update-form";
 import {Select} from "primeng/select";
 import {ENV} from "../../environment";
 import {ProductService} from "../../core/service/product.service";
@@ -34,7 +34,7 @@ import {buildImgUrl} from "../../shared/utils/image-utils";
         FormsModule,
         DecimalPipe,
         ProductSaveForm,
-        UpdateForm,
+        ProductUpdateForm,
         Select,
         Toast,
         Button,
@@ -197,12 +197,6 @@ export class Product implements OnInit {
         });
     }
     
-    
-    onSaveForm(event: PageResponse<ProductResponse>) {
-        this.products.set(event.content);
-        this.totalElements.set(event.totalElements);
-    }
-    
     saveMessage(event: {}) {
         this.messageService.add(event);
     }
@@ -234,11 +228,6 @@ export class Product implements OnInit {
     showUpdateDialog(id: number) {
         this.updateFormVisible.set(true);
         this.updateId = id;
-    }
-    
-    onUpdateForm(event: PageResponse<ProductResponse>) {
-        this.products.set(event.content);
-        this.totalElements.set(event.totalElements);
     }
     
     updateMessage(event: {}) {

@@ -1,6 +1,6 @@
 export interface ProductUpdatedRequest {
-    code:string
-    name?: string;
+    code: string;
+    name: string;
     quantity?: number;
     price?: number;
     publisherId?: number | null;

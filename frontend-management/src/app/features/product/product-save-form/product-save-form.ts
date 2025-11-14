@@ -90,7 +90,6 @@ export class ProductSaveForm implements OnInit {
     authors = model.required<AuthorResponse[]>();
     categories = model.required<CategoryResponse[]>();
     publishers = model.required<PublisherResponse[]>();
-    onSave = output<any>();
     message = output<{}>();
     paginatorReset = output<boolean>();
     
@@ -112,19 +111,20 @@ export class ProductSaveForm implements OnInit {
     async saveBook() {
         this.submitted.set(true);
         if (this.saveForm.valid) {
-            let fileReq: File | null = this.saveForm.controls['imgFile'].value;
+            let controls = (field: string): any => this.saveForm.controls[field].value;
+            let fileReq: File | null = controls('imgFile');
             let bookReq: ProductCreatedRequest = {
-                code: this.saveForm.controls['code'].value,
-                name: this.saveForm.controls['name'].value!,
-                quantity: this.saveForm.controls['quantity'].value!,
-                price: this.saveForm.controls['price'].value!,
-                publisherId: this.saveForm.controls['publisherId'].value,
-                translator: this.saveForm.controls['translator'].value,
-                numOfPages: this.saveForm.controls['numOfPages'].value,
-                publishedYear: this.saveForm.controls['publishedYear'].value,
-                description: this.saveForm.controls['description'].value,
-                authorIds: this.saveForm.controls['authors'].value!,
-                categoryIds: this.saveForm.controls['categories'].value!
+                code: controls('code'),
+                name: controls('name')!,
+                quantity: controls('quantity')!,
+                price: controls('price')!,
+                publisherId: controls('publisherId'),
+                translator: controls('translator'),
+                numOfPages: controls('numOfPages'),
+                publishedYear: controls('publishedYear'),
+                description: controls('description'),
+                authorIds: controls('authors')!,
+                categoryIds: controls('categories')!
             };
             await firstValueFrom(this.productService.save(bookReq, fileReq));
             this.paginatorReset.emit(true);
