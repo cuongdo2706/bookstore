@@ -1,9 +1,11 @@
 package org.example.backend.controller.manager;
 
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.example.backend.dto.request.CreateCustomerRequest;
 import org.example.backend.dto.request.FilterCustomerRequest;
+import org.example.backend.dto.request.UpdateCustomerRequest;
 import org.example.backend.dto.response.PageResponse;
 import org.example.backend.dto.response.SuccessResponse;
 import org.example.backend.dto.response.CustomerResponse;
@@ -22,6 +24,11 @@ import java.io.IOException;
 public class CustomerController {
     private final CustomerService customerService;
 
+    @GetMapping("/{id}")
+    public SuccessResponse<CustomerResponse> findById(@PathVariable Long id) throws DataNotFoundException {
+        return new SuccessResponse<>(HttpStatus.OK.value(), "Getting data success", customerService.findDtoById(id));
+    }
+
     @PostMapping("/search")
     public SuccessResponse<PageResponse<CustomerResponse>> findByCodeOrPhoneNum(@Valid @RequestBody FilterCustomerRequest request) {
         return new SuccessResponse<>(HttpStatus.OK.value(), "Getting data success", customerService.searchCustomer(request));
@@ -33,4 +40,16 @@ public class CustomerController {
         return new SuccessResponse<>(HttpStatus.CREATED.value(), "Save data success", customerService.save(request, file));
     }
 
+    @PutMapping(value = "/{id}", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    public SuccessResponse<CustomerResponse> updateCustomer(@PathVariable Long id,
+                                                            @Valid @RequestPart(value = "customer") UpdateCustomerRequest request,
+                                                            @RequestPart(value = "file", required = false) MultipartFile file) throws DataNotFoundException, IOException {
+        return new SuccessResponse<>(HttpStatus.ACCEPTED.value(), "Update data success", customerService.update(id, request, file));
+    }
+
+    @DeleteMapping("/{id}")
+    public SuccessResponse<?> deleteById(@Valid @NotNull(message = "Id must not be null") @PathVariable Long id) throws DataNotFoundException {
+        customerService.softDelete(id);
+        return new SuccessResponse<>(HttpStatus.NO_CONTENT.value(), "Deleting data success", null);
+    }
 }

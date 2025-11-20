@@ -1,9 +1,10 @@
 package org.example.backend.service.impl;
 
+import jakarta.persistence.OptimisticLockException;
 import lombok.RequiredArgsConstructor;
 import org.example.backend.dto.request.CreateCustomerRequest;
 import org.example.backend.dto.request.FilterCustomerRequest;
-import org.example.backend.dto.response.ImageResponse;
+import org.example.backend.dto.request.UpdateCustomerRequest;
 import org.example.backend.dto.response.PageResponse;
 import org.example.backend.dto.response.CustomerResponse;
 import org.example.backend.entity.Customer;
@@ -33,13 +34,17 @@ public class CustomerServiceImpl implements CustomerService {
     private final CustomerMapper customerMapper;
     private final ImageService imageService;
     private final SequenceService sequenceService;
-    private final CommuneService communeService;
     private final ProvinceService provinceService;
-    private static final String defaultPath="customer";
+    private static final String CUSTOMER_DEFAULT_PATH = "customer";
 
     @Override
     public Customer findById(Long id) throws DataNotFoundException {
         return customerRepository.findById(id).orElseThrow(() -> new DataNotFoundException("User Not Found"));
+    }
+
+    @Override
+    public CustomerResponse findDtoById(Long id) throws DataNotFoundException {
+        return customerMapper.toCustomerResponse(findById(id));
     }
 
     @Override
@@ -72,7 +77,7 @@ public class CustomerServiceImpl implements CustomerService {
     public CustomerResponse save(CreateCustomerRequest request, MultipartFile file) throws IOException, DataNotFoundException {
         Image image = null;
         if (file != null && !file.isEmpty()) {
-            image = imageService.upload(file,defaultPath);
+            image = imageService.upload(file, CUSTOMER_DEFAULT_PATH);
         }
         String customerCode = null;
         if (request.getCode() == null || request.getCode().isBlank())
@@ -102,13 +107,49 @@ public class CustomerServiceImpl implements CustomerService {
             else
                 throw new DataNotFoundException("Không tìm thấy tỉnh thành có mã: " + request.getProvinceCode());
         }
-        if (request.getCommuneCode() != null && request.getProvinceCode() != null) {
-            if (communeService.existsByCommuneCodeAndProvinceCode(request.getCommuneCode(), request.getProvinceCode())==1)
-                customer.setCommune(communeService.getReferenceById(request.getCommuneCode()));
-            else
-                throw new DataNotFoundException("Không tìm thấy phường xã có mã: " + request.getProvinceCode());
-        }
         return customerMapper.toCustomerResponse(customerRepository.save(customer));
+    }
+
+    @Override
+    public CustomerResponse update(Long id, UpdateCustomerRequest request, MultipartFile file) throws IOException, DataNotFoundException {
+        Customer existedCus = findById(id);
+        if (request.getCode() != null) {
+            if (customerRepository.existsByCode(request.getCode())) {
+                throw new DataExistedException("Mã này đã tồn tại, hãy dùng mã khác");
+            }
+            existedCus.setCode(request.getCode());
+        }
+        if (request.getName() != null) existedCus.setName(request.getName());
+        existedCus.setGender(request.getGender());
+        existedCus.setDob(request.getDob());
+        existedCus.setPhoneNum(request.getPhoneNum());
+        if (request.getProvinceCode() != null) {
+            if (provinceService.existsByCode(request.getProvinceCode()))
+                existedCus.setProvince(provinceService.getReferenceById(request.getProvinceCode()));
+            else
+                throw new DataNotFoundException("Không tìm thấy tỉnh thành có mã: " + request.getProvinceCode());
+        } else existedCus.setProvince(null);
+        existedCus.setEmail(request.getEmail());
+        existedCus.setAddress(request.getAddress());
+        if (file != null && !file.isEmpty()) {
+            if (existedCus.getImage() != null) {
+                imageService.update(file, existedCus.getImage());
+            } else {
+                existedCus.setImage(imageService.upload(file, CUSTOMER_DEFAULT_PATH));
+            }
+        }
+        try {
+            return customerMapper.toCustomerResponse(customerRepository.save(existedCus));
+        } catch (OptimisticLockException e) {
+            throw new OptimisticLockException("Khách hàng đã được cập nhật bởi một người dùng khác, hãy thử lại");
+        }
+    }
+
+    @Override
+    @Transactional
+    public void softDelete(Long id) throws DataNotFoundException {
+        if (!customerRepository.existsById(id)) throw new DataNotFoundException("Không tìm thấy khách hàng");
+        customerRepository.softDelete(id);
     }
 
 

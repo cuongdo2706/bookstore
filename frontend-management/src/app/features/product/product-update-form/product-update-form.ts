@@ -141,18 +141,13 @@ export class ProductUpdateForm implements OnInit {
         const file = event.files[0];
         this.updateForm.patchValue({imgFile: file});
     }
-
-//     getImageUrl=(publicId:string):string=>{
-//         re
-// }
     
     removeImage() {
         this.updateForm.patchValue({imgFile: null});
     }
     
     findProductById() {
-        const id: number = this.updateId()!;
-        this.productService.findById(id).subscribe({
+        this.productService.findById(this.updateId()!).subscribe({
             next: res => {
                 let authorIds: number[] = res.data.authors.map(author => author.id);
                 let categoryIds: number[] = res.data.categories.map(category => category.id);
@@ -170,6 +165,7 @@ export class ProductUpdateForm implements OnInit {
                     publishedYear: res.data?.publishedYear,
                     description: res.data.description,
                 });
+                console.log(this.updateForm.value);
                 this.imageUrl.set(res.data.image !== null ? `${ENV.API_BASE_URL}images/${res.data.image.publicId}` : ENV.BASE_IMAGE);
                 this.defaultData.set(res.data);
             }

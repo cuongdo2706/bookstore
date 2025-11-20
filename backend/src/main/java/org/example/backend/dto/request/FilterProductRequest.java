@@ -21,7 +21,7 @@ public class FilterProductRequest {
     @Positive(message = "Size must be greater than 0")
     Integer size = 10;
     String sortBy = "name";
-    Boolean isActive;
+    Boolean isPublished;
     String nameOrCodeKeyword = null;
     List<Long>publisherIds=new ArrayList<>();
     List<Long>authorIds=new ArrayList<>();

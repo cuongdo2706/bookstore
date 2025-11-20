@@ -5,7 +5,6 @@ export interface CustomerUpdatedRequest {
     dob?: Date;
     gender?: boolean;
     provinceCode?: number;
-    communeCode?: number;
     address?: string;
     email?: string;
 }

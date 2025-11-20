@@ -8,17 +8,13 @@ export interface CustomerResponse {
     gender: boolean;
     phoneNum: string;
     email: string;
-    province:{
-        code:string,
-        name:string
-    }
-    commune:{
-        code:string,
-        name:string
-    }
+    province?: {
+        code: string,
+        name: string
+    };
     address: string;
-    image:ImageResponse|null;
+    image: ImageResponse | null;
     isActive: boolean;
-    createdAt:Date;
-    updatedAt:Date
+    createdAt: Date;
+    updatedAt: Date;
 }

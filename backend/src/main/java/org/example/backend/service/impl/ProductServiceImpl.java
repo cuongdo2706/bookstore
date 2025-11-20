@@ -41,7 +41,7 @@ public class ProductServiceImpl implements ProductService {
     private final SequenceService sequenceService;
     private final ImageService imageService;
     private final ProductMapper productMapper;
-    private static final String defaultPath = "product";
+    private static final String PRODUCT_DEFAULT_PATH = "product";
 
     @Override
     public List<Product> findAll() {
@@ -75,8 +75,8 @@ public class ProductServiceImpl implements ProductService {
             spec = spec.and(ProductSpecification.categoryIn(filter.getCategoryIds()));
         if (filter.getPublisherIds() != null && !filter.getPublisherIds().isEmpty())
             spec = spec.and(ProductSpecification.publisherIn(filter.getPublisherIds()));
-        if (!Objects.equals(filter.getIsActive(), null))
-            spec = spec.and(ProductSpecification.isActive(filter.getIsActive()));
+        if (!Objects.equals(filter.getIsPublished(), null))
+            spec = spec.and(ProductSpecification.isActive(filter.getIsPublished()));
         Sort sort = switch (filter.getSortBy()) {
             case "name" -> Sort.by(Sort.Direction.ASC, "name");
             case "name-d" -> Sort.by(Sort.Direction.DESC, "name");
@@ -94,7 +94,7 @@ public class ProductServiceImpl implements ProductService {
     public ProductResponse save(CreateProductRequest request, MultipartFile file) throws DataNotFoundException, IOException {
         Image image = null;
         if (file != null && !file.isEmpty()) {
-            image = imageService.upload(file, defaultPath);
+            image = imageService.upload(file, PRODUCT_DEFAULT_PATH);
         }
         Set<Author> existedAuthors = new HashSet<>(authorService.findAllByIds(request.getAuthorIds()));
         Set<Category> existedCategories = new HashSet<>(categoryService.findAllByIds(request.getCategoryIds()));
@@ -120,7 +120,7 @@ public class ProductServiceImpl implements ProductService {
                 .description(request.getDescription())
                 .categories(existedCategories)
                 .isDeleted(Boolean.FALSE)
-                .isActive(Boolean.TRUE)
+                .isPublished(Boolean.TRUE)
                 .authors(existedAuthors)
                 .build();
         if (image != null) {
@@ -139,30 +139,23 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public ProductResponse update(Long id, UpdateProductRequest request, MultipartFile file) throws Exception {
         Product existedProduct = findById(id);
-        if (request.getCode() != null && !Objects.equals(request.getCode(), existedProduct.getCode())) {
+        if (request.getCode() != null) {
             if (productRepository.existsByCode(request.getCode())) {
                 throw new DataExistedException("Mã này đã tồn tại, hãy dùng mã khác");
             }
             existedProduct.setCode(request.getCode());
         }
-        if (request.getName() != null && !Objects.equals(request.getName(), existedProduct.getName()))
-            existedProduct.setName(request.getName());
-        if (request.getQuantity() != null && !Objects.equals(request.getQuantity(), existedProduct.getQuantity()))
-            existedProduct.setQuantity(request.getQuantity());
-        if (request.getPrice() != null && request.getPrice().compareTo(existedProduct.getPrice()) != 0)
-            existedProduct.setPrice(request.getPrice());
-        if (request.getPublisher() != null && !Objects.equals(request.getPublisher(), existedProduct.getPublisher().getId())) {
+        if (request.getName() != null) existedProduct.setName(request.getName());
+        if (request.getQuantity() != null) existedProduct.setQuantity(request.getQuantity());
+        if (request.getPrice() != null) existedProduct.setPrice(request.getPrice());
+        if (request.getPublisher() != null) {
             Publisher publisher = publisherService.findById(request.getPublisher());
             existedProduct.setPublisher(publisher);
         }
-        if (!Objects.equals(request.getTranslator(), existedProduct.getTranslator()))
-            existedProduct.setTranslator(request.getTranslator());
-        if (!Objects.equals(request.getNumOfPages(), existedProduct.getNumOfPages()))
-            existedProduct.setNumOfPages(request.getNumOfPages());
-        if (!Objects.equals(request.getPublishedYear(), existedProduct.getPublishedYear()))
-            existedProduct.setPublishedYear(request.getPublishedYear());
-        if (!Objects.equals(request.getDescription(), existedProduct.getDescription()))
-            existedProduct.setDescription(request.getDescription());
+        existedProduct.setTranslator(request.getTranslator());
+        existedProduct.setNumOfPages(request.getNumOfPages());
+        existedProduct.setPublishedYear(request.getPublishedYear());
+        existedProduct.setDescription(request.getDescription());
         if (!request.getCategoryIds().equals(existedProduct.getCategories().stream().map(Category::getId).collect(Collectors.toSet()))) {
             Set<Category> existedCategories = new HashSet<>(categoryService.findAllByIds(request.getCategoryIds()));
             existedProduct.setCategories(existedCategories);
@@ -175,13 +168,13 @@ public class ProductServiceImpl implements ProductService {
             if (existedProduct.getImage() != null) {
                 imageService.update(file, existedProduct.getImage());
             } else {
-                existedProduct.setImage(imageService.upload(file, "product"));
+                existedProduct.setImage(imageService.upload(file, PRODUCT_DEFAULT_PATH));
             }
         }
         try {
             return productMapper.toProductResponse(productRepository.save(existedProduct));
         } catch (OptimisticLockException e) {
-            throw new OptimisticLockException("The product was updated by another transaction. Please try again.");
+            throw new OptimisticLockException("Sản phẩm đã được cập nhật bởi một người dùng khác, hãy thử lại");
         }
 
     }
@@ -216,7 +209,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public void changeStatus(Long id) throws DataNotFoundException {
         Product existedProduct = findById(id);
-        existedProduct.setIsActive(!existedProduct.getIsActive());
+        existedProduct.setIsPublished(!existedProduct.getIsPublished());
         try {
             productRepository.save(existedProduct);
         } catch (OptimisticLockException e) {

@@ -12,7 +12,7 @@ import java.util.List;
 
 public class ProductSpecification {
     public static Specification<Product> isActive(Boolean isActive) {
-        return (root, query, cb) -> cb.equal(root.get("isActive"), isActive);
+        return (root, query, cb) -> cb.equal(root.get("isPublished"), isActive);
     }
 
     public static Specification<Product> nameOrCodeContains(String keyword) {

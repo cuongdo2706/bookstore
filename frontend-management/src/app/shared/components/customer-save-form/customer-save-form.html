@@ -78,18 +78,6 @@
                     <label>Tỉnh thành</label>
                 </p-floatlabel>
                 <p-floatlabel variant="on" class="mt-5 flex">
-                    <p-select
-                            [style]="{'width':'600px'}"
-                            [options]="communes()"
-                            (onClear)="clearCommune()"
-                            [showClear]="true"
-                            optionLabel="name"
-                            optionValue="code"
-                            formControlName="commune"
-                    />
-                    <label>Phường xã</label>
-                </p-floatlabel>
-                <p-floatlabel variant="on" class="mt-5 flex">
                     <input aria-describedby="address-error"
                            type="text"
                            pInputText

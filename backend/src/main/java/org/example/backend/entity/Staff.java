@@ -32,16 +32,10 @@ public class Staff extends BaseEntity {
     @OneToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "image_id",referencedColumnName = "id",unique = true)
     Image image;
-
-    @ManyToOne
-    @JoinColumn(name = "commune_id", referencedColumnName = "code")
-    Commune commune;
     String address;
     @Column(unique = true)
     String email;
     String identityNum;
-    String publicId;
-    String imgUrl;
     @Builder.Default
     Boolean isActive=true;
     @Builder.Default

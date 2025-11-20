@@ -1,14 +1,4 @@
-import {
-    Component,
-    computed,
-    effect,
-    inject,
-    linkedSignal,
-    OnInit,
-    signal,
-    ViewChild,
-    ViewEncapsulation
-} from '@angular/core';
+import {Component, computed, effect, inject, linkedSignal, OnInit, signal, ViewEncapsulation} from '@angular/core';
 import {MessageService} from "primeng/api";
 import {Button} from "primeng/button";
 import {FormArray, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule} from "@angular/forms";
@@ -21,9 +11,9 @@ import {InputText} from "primeng/inputtext";
 import {firstValueFrom, lastValueFrom} from "rxjs";
 import {Toast} from "primeng/toast";
 import {Paginator, PaginatorState} from "primeng/paginator";
-import {ToggleSwitch, ToggleSwitchChangeEvent} from "primeng/toggleswitch";
+import {ToggleSwitchChangeEvent} from "primeng/toggleswitch";
 import {ActivatedRoute} from "@angular/router";
-import {Select, SelectChangeEvent} from "primeng/select";
+import {SelectChangeEvent} from "primeng/select";
 import {CustomerResponse} from "../../core/model/response/customer-response.model";
 import {ProductResponse} from "../../core/model/response/product-response.model";
 import {OrderService} from "../../core/service/order.service";
@@ -33,7 +23,6 @@ import {CouponService} from "../../core/service/coupon.service";
 import {CustomerService} from "../../core/service/customer.service";
 import {CouponResponse} from "../../core/model/response/coupon-response.model";
 import {Address} from "../../shared/models/address";
-import {UserResponse} from "../../core/model/response/user-response.model";
 import {OrderCreatedRequest} from "../../core/model/request/order-created-request";
 import {CustomerSaveForm} from '../../shared/components/customer-save-form/customer-save-form';
 
@@ -167,7 +156,7 @@ export class Pos implements OnInit {
             size: 10,
             nameOrCodeKeyword: this.keyword(),
             sortBy: "name",
-            isActive: true,
+            isPublished: true,
             authorIds: [],
             categoryIds: [],
             publisherIds: []
@@ -577,7 +566,7 @@ export class Pos implements OnInit {
             tab!.formData.orderDetails = tab!.formData.orderDetails.filter(orderDetail => {
                 let product = products.find(product =>
                         product.id === orderDetail.bookId
-                        && product.isActive
+                        && product.isPublished
                         && product.quantity > 0);
                 if (product === undefined) isChanged = true;
                 return product !== undefined;
@@ -664,7 +653,7 @@ export class Pos implements OnInit {
             size: event.rows!,
             nameOrCodeKeyword: this.keyword(),
             sortBy: "name",
-            isActive: true,
+            isPublished: true,
             publisherIds: [],
             categoryIds: [],
             authorIds: []

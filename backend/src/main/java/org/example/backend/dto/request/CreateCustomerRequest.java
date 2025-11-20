@@ -25,7 +25,6 @@ public class CreateCustomerRequest {
     LocalDate dob;
     Boolean gender;
     Short provinceCode;
-    Integer communeCode;
     String address;
     @Email(message = "Email format is invalid")
     String email;

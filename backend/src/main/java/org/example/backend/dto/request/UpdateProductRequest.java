@@ -1,9 +1,6 @@
 package org.example.backend.dto.request;
 
-import jakarta.validation.constraints.DecimalMin;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Positive;
-import jakarta.validation.constraints.PositiveOrZero;
+import jakarta.validation.constraints.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -16,11 +13,15 @@ import java.util.Set;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class UpdateProductRequest {
+    @NotBlank(message = "Tên không được để trống")
     String code;
+    @NotBlank(message = "Tên không được để trống")
     String name;
-    @PositiveOrZero(message = "Quantity must be greater than or equal 0")
+    @NotNull(message = "Số lượng không được để trống")
+    @PositiveOrZero(message = "Số lượng phải >= 0")
     Integer quantity;
-    @DecimalMin(value = "1.0", message = "Price must be greater than 0")
+    @NotNull(message = "Giá không được để trống")
+    @DecimalMin(value = "1.0", message = "Giá phải > 0")
     BigDecimal price;
     Long publisher;
     String translator;

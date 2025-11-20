@@ -10,7 +10,7 @@ export interface ProductResponse {
     translator: string | null;
     numOfPages: number | null;
     publishedYear: number | null;
-    isActive: boolean;
+    isPublished: boolean;
     description: string;
     authors: {
         id: number;

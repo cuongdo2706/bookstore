@@ -18,7 +18,6 @@ import {Select} from "primeng/select";
 import {ENV} from "../../environment";
 import {ProductService} from "../../core/service/product.service";
 import {ProductResponse} from "../../core/model/response/product-response.model";
-import {PageResponse} from "../../core/model/response/page-response.model";
 import {MultiSelect} from "primeng/multiselect";
 import {AuthorResponse} from "../../core/model/response/author-response.model";
 import {CategoryResponse} from "../../core/model/response/category-response.model";
@@ -106,7 +105,7 @@ export class Product implements OnInit {
             size: size,
             sortBy: this.filterSelection(),
             nameOrCodeKeyword: this.nameOrCodeKeyword(),
-            isActive: this.statusSelection(),
+            isPublished: this.statusSelection(),
             authorIds: this.selectedAuthorIds(),
             categoryIds: this.selectedCategoryIds(),
             publisherIds: this.selectedPublisherIds()

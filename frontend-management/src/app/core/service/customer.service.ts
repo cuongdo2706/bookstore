@@ -6,6 +6,7 @@ import {PageResponse} from "../model/response/page-response.model";
 import {CustomerResponse} from "../model/response/customer-response.model";
 import {CustomerCreatedRequest} from "../model/request/customer-created-request";
 import {CustomerFilterRequest} from "../model/request/customer-filter-request";
+import {CustomerUpdatedRequest} from "../model/request/customer-updated-request";
 
 
 @Injectable({
@@ -19,6 +20,10 @@ export class CustomerService {
         return this.http.post<ApiResponse<PageResponse<CustomerResponse>>>(`${this.url}/search`, body);
     }
     
+    findById(id: number) {
+        return this.http.get<ApiResponse<CustomerResponse>>(`${this.url}/${id}`);
+    }
+    
     save(customer: CustomerCreatedRequest, file: File | null) {
         const formData = new FormData();
         const customerBlob = new Blob([JSON.stringify(customer)], {type: 'application/json'});
@@ -27,6 +32,16 @@ export class CustomerService {
             formData.append('file', file);
         }
         return this.http.post<ApiResponse<CustomerResponse>>(this.url, formData);
+    }
+    
+    update(id: number, customer: CustomerUpdatedRequest, file: File | null) {
+        const formData = new FormData();
+        const cusBlob = new Blob([JSON.stringify(customer)], {type: 'application/json'});
+        formData.append('customer', cusBlob);
+        if (file) {
+            formData.append('file', file);
+        }
+        return this.http.put<ApiResponse<CustomerResponse>>(`${this.url}/${id}`, formData);
     }
     
     delete(id: number) {

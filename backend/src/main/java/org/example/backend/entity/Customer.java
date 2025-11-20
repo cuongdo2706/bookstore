@@ -30,10 +30,6 @@ public class Customer extends BaseEntity {
     @JoinColumn(name = "province_id", referencedColumnName = "code")
     Province province;
 
-    @ManyToOne
-    @JoinColumn(name = "commune_id", referencedColumnName = "code")
-    Commune commune;
-
     @OneToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "image_id",referencedColumnName = "id",unique = true)
     Image image;
@@ -41,8 +37,6 @@ public class Customer extends BaseEntity {
     String address;
     @Column(unique = true)
     String email;
-    String publicId;
-    String imgUrl;
     @Builder.Default
     Boolean isActive = true;
     @Builder.Default

@@ -44,16 +44,11 @@ export class CustomerSaveForm implements OnInit {
             dob: null,
             gender: null,
             address: null,
-            commune: [{value: null, disabled: true}],
             province: null,
             email: [null, Validators.email],
             imgFile: null
         });
         this.fetchProvince();
-        this.saveForm.get('province')!.valueChanges.subscribe(value => {
-            if (value)
-                this.findCommuneByProvinceCode(value);
-        });
     }
     
     private fb = inject(FormBuilder);
@@ -82,14 +77,6 @@ export class CustomerSaveForm implements OnInit {
         });
     }
     
-    findCommuneByProvinceCode(code: number) {
-        this.addressService.fetchCommunes(code).subscribe({
-            next: res => {
-                this.communes.set(res.data);
-            }
-        });
-    }
-    
     selectProvince(event: SelectChangeEvent) {
         if (event.value) this.communes.set(new Address().communes.filter(i => i.provinceCode === <string>event.value));
         this.saveForm.get('commune')?.enable();
@@ -97,12 +84,6 @@ export class CustomerSaveForm implements OnInit {
     
     clearProvince() {
         this.saveForm.get("province")?.reset();
-        this.saveForm.get("commune")?.reset();
-        this.saveForm.get('commune')?.disable();
-    }
-    
-    clearCommune() {
-        this.saveForm.get("commune")?.reset();
     }
     
     chooseImage(event: any) {
@@ -124,7 +105,6 @@ export class CustomerSaveForm implements OnInit {
                 name: controls('name')!,
                 dob: controls('dob'),
                 provinceCode: controls('province'),
-                communeCode: controls('commune'),
                 address: controls('address'),
                 email: controls('email'),
             };

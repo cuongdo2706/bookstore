@@ -59,7 +59,7 @@ public class Product extends BaseEntity {
     @JoinColumn(name = "promotion_id")
     Promotion promotion;
     @Builder.Default
-    Boolean isActive = true;
+    Boolean isPublished = true;
     @Builder.Default
     Boolean isDeleted = false;
 }

@@ -22,7 +22,7 @@ public class Province {
     @Id
     Short code;
     String name;
-    @JsonIgnore
-    @OneToMany(mappedBy = "province")
-    List<Commune> communes;
+//    @JsonIgnore
+//    @OneToMany(mappedBy = "province")
+//    List<Commune> communes;
 }
