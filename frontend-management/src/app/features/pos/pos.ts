@@ -51,6 +51,7 @@ interface OrderDetail {
     price: number;
 }
 
+
 @Component({
     selector: 'app-pos',
     imports: [
