@@ -53,7 +53,6 @@ export class CustomerUpdateForm implements OnInit {
             email: [null, Validators.email],
         });
         this.fetchProvince();
-        
     }
     
     updateForm!: FormGroup;
@@ -71,6 +70,7 @@ export class CustomerUpdateForm implements OnInit {
     message = output<{}>();
     updateId = input<number>();
     paginatorReset = output<boolean>();
+    initFormValue: any;
     
     async updateCustomer() {
         this.submitted.set(true);
@@ -103,6 +103,14 @@ export class CustomerUpdateForm implements OnInit {
                 detail: "Dữ liệu nhập vào không đúng yêu cầu, hãy nhập lại!!!"
             });
             this.visible.set(false);
+        }
+    }
+    
+    isFormValid(): boolean {
+        if (JSON.stringify(this.initFormValue) !== JSON.stringify(this.updateForm.value)) {
+            return this.updateForm.valid;
+        } else {
+            return false;
         }
     }
     
@@ -149,6 +157,7 @@ export class CustomerUpdateForm implements OnInit {
                 });
                 this.imageUrl.set(res.data.image !== null ? `${ENV.API_BASE_URL}images/${res.data.image.publicId}` : ENV.BASE_IMAGE);
                 this.defaultData.set(res.data);
+                this.initFormValue = this.updateForm.value;
             }
         });
     }

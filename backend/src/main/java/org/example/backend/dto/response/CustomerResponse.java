@@ -1,5 +1,7 @@
 package org.example.backend.dto.response;
 
+import org.example.backend.entity.Province;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
@@ -10,6 +12,7 @@ public record CustomerResponse(
         LocalDate dob,
         Boolean gender,
         String phoneNum,
+        Province province,
         String address,
         String email,
         String imgUrl,

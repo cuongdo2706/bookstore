@@ -19,6 +19,7 @@ import {DatePipe} from "@angular/common";
 import {ConfirmDialog} from "primeng/confirmdialog";
 import {firstValueFrom} from "rxjs";
 import {CustomerUpdateForm} from "./customer-update-form/customer-update-form";
+import {buildImgUrl} from "../../shared/utils/image-utils";
 
 @Component({
     selector: 'app-customer',
@@ -73,9 +74,11 @@ export class Customer implements OnInit {
     saveFormVisible = signal(false);
     updateFormVisible = signal(false);
     updateId!: number;
-    readonly baseImg = ENV.BASE_IMAGE;
     isFilter = signal(false);
     timeout: any;
+    protected readonly buildImgUrl = buildImgUrl;
+    protected readonly ENV = ENV;
+    
     
     searchCustomer(
             page: number,
@@ -166,4 +169,6 @@ export class Customer implements OnInit {
     updateMessage(event: {}) {
         this.messageService.add(event);
     }
+    
+    
 }

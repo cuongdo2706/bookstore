@@ -113,12 +113,7 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     public CustomerResponse update(Long id, UpdateCustomerRequest request, MultipartFile file) throws IOException, DataNotFoundException {
         Customer existedCus = findById(id);
-        if (request.getCode() != null) {
-            if (customerRepository.existsByCode(request.getCode())) {
-                throw new DataExistedException("Mã này đã tồn tại, hãy dùng mã khác");
-            }
-            existedCus.setCode(request.getCode());
-        }
+        if (request.getCode() != null) existedCus.setCode(request.getCode());
         if (request.getName() != null) existedCus.setName(request.getName());
         existedCus.setGender(request.getGender());
         existedCus.setDob(request.getDob());

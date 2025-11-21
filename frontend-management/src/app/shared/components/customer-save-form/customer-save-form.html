@@ -4,7 +4,7 @@
         [style]="{width:'70rem'}"
         [visible]="visible()"
         closable="false">
-    <form [formGroup]="saveForm" (ngSubmit)="saveCustomer()">
+    <form (ngSubmit)="saveCustomer()">
         <!--Phần input chính -->
         <div class="flex">
             <div class="col-6">
@@ -29,7 +29,7 @@
                     />
                     <label for="name">Tên khách hàng</label>
                 </p-floatlabel>
-                @if (submitted() && saveForm.get('name')?.invalid) {
+                @if (submitted() && saveF) {
                     <small class="error-code block mt-1">
                         Tên không được để trống
                     </small>

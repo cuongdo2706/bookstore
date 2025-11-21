@@ -113,7 +113,7 @@
 
             </div>
             <div class="col-6 flex pt-2 justify-content-end">
-                <p-button class="mr-3" type="submit" label="Cập nhật" icon="pi pi-pencil"></p-button>
+                <p-button class="mr-3" type="submit" label="Cập nhật" icon="pi pi-pencil" [disabled]="!isFormValid()"></p-button>
                 <p-button severity="secondary" label="Bỏ qua" (onClick)="closeDialog()"
                           icon="pi pi-times"></p-button>
             </div>

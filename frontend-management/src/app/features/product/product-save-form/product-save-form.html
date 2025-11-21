@@ -253,7 +253,7 @@
             <!--Phần button -->
 
             <div class="flex pt-2 col-5 justify-content-end">
-                <p-button class="mr-3" type="submit" [disabled]="!this.saveForm.valid" label="Thêm mới"
+                <p-button class="mr-3" type="submit" [disabled]="this.saveForm.invalid" label="Thêm mới"
                           icon="pi pi-plus"></p-button>
                 <p-button severity="secondary" label="Bỏ qua" (onClick)="closeDialog()"
                           icon="pi pi-times"></p-button>

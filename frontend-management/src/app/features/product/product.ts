@@ -88,6 +88,8 @@ export class Product implements OnInit {
     updateId!: number;
     isFilter = signal(false);
     timeout: any;
+    protected readonly ENV = ENV;
+    protected readonly buildImgUrl = buildImgUrl;
     
     
     ngOnInit() {
@@ -233,6 +235,5 @@ export class Product implements OnInit {
         this.messageService.add(event);
     }
     
-    protected readonly ENV = ENV;
-    protected readonly buildImgUrl = buildImgUrl;
+    
 }
