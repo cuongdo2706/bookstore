@@ -66,7 +66,7 @@ export class Customer implements OnInit {
         {name: "Đang hoạt động", value: true},
         {name: "Ngừng hoạt động", value: false}
     ]);
-    statusSelection = signal(true);
+    statusSelection = signal<boolean | null>(null);
     page = signal(1);
     size = signal(10);
     totalElements = signal(0);

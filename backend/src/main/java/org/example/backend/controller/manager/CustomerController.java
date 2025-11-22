@@ -52,4 +52,9 @@ public class CustomerController {
         customerService.softDelete(id);
         return new SuccessResponse<>(HttpStatus.NO_CONTENT.value(), "Deleting data success", null);
     }
+    @PatchMapping("/{id}/change-status")
+    public SuccessResponse<?>changeStatus(@Valid @NotNull(message = "Id must not be null") @PathVariable Long id) throws DataNotFoundException{
+        customerService.changeStatus(id);
+        return new SuccessResponse<>(HttpStatus.NO_CONTENT.value(), "Change status success", null);
+    }
 }

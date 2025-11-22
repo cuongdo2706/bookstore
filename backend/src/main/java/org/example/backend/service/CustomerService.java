@@ -24,4 +24,6 @@ public interface CustomerService {
     CustomerResponse update(Long id, UpdateCustomerRequest request, MultipartFile file) throws IOException, DataNotFoundException;
 
     void softDelete(Long id) throws DataNotFoundException;
+
+    void changeStatus(Long id) throws DataNotFoundException;
 }

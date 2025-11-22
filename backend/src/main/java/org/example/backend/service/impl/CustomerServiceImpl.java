@@ -147,5 +147,14 @@ public class CustomerServiceImpl implements CustomerService {
         customerRepository.softDelete(id);
     }
 
-
+    @Override
+    public void changeStatus(Long id) throws DataNotFoundException{
+        Customer existedCustomer=findById(id);
+        existedCustomer.setIsActive(!existedCustomer.getIsActive());
+        try {
+            customerRepository.save(existedCustomer);
+        } catch (OptimisticLockException e) {
+            throw new OptimisticLockException("The customer was updated by another transaction. Please try again.");
+        }
+    }
 }

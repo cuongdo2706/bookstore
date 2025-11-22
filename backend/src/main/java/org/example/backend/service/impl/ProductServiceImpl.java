@@ -76,7 +76,7 @@ public class ProductServiceImpl implements ProductService {
         if (filter.getPublisherIds() != null && !filter.getPublisherIds().isEmpty())
             spec = spec.and(ProductSpecification.publisherIn(filter.getPublisherIds()));
         if (!Objects.equals(filter.getIsPublished(), null))
-            spec = spec.and(ProductSpecification.isActive(filter.getIsPublished()));
+            spec = spec.and(ProductSpecification.isPublished(filter.getIsPublished()));
         Sort sort = switch (filter.getSortBy()) {
             case "name" -> Sort.by(Sort.Direction.ASC, "name");
             case "name-d" -> Sort.by(Sort.Direction.DESC, "name");

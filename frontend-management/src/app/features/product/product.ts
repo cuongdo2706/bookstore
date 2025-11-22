@@ -75,7 +75,7 @@ export class Product implements OnInit {
         {name: "Đang bán", value: true},
         {name: "Ngừng bán", value: false}
     ]);
-    statusSelection = signal(true);
+    statusSelection = signal<boolean | null>(null);
     page = signal(1);
     size = signal(10);
     totalElements = signal(0);

@@ -15,9 +15,8 @@ import {FileUpload} from "primeng/fileupload";
 import {Image} from "primeng/image";
 import {DatePicker} from "primeng/datepicker";
 import {RadioButton} from "primeng/radiobutton";
-import {Select, SelectChangeEvent} from "primeng/select";
+import {Select} from "primeng/select";
 import {AddressService} from "../../../core/service/address.service";
-import {Address} from "../../../shared/models/address";
 import {Province} from "../../../core/model/response/province-response.model";
 
 @Component({
@@ -62,7 +61,6 @@ export class CustomerUpdateForm implements OnInit {
     imageUrl = signal<string | undefined>(undefined);
     submitted = signal(false);
     provinces = signal<Province[]>([]);
-    communes = signal<{}[]>([]);
     private messageService = inject(MessageService);
     private fb = inject(FormBuilder);
     private customerService = inject(CustomerService);
@@ -122,10 +120,6 @@ export class CustomerUpdateForm implements OnInit {
         });
     }
     
-    selectProvince(event: SelectChangeEvent) {
-        if (event.value) this.communes.set(new Address().communes.filter(i => i.provinceCode === <string>event.value));
-        this.updateForm.get('commune')?.enable();
-    }
     
     clearProvince() {
         this.updateForm.get("province")?.reset();

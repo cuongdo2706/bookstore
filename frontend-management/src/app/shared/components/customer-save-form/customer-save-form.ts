@@ -8,8 +8,7 @@ import {FloatLabel} from "primeng/floatlabel";
 import {InputText} from "primeng/inputtext";
 import {DatePicker} from "primeng/datepicker";
 import {RadioButton} from "primeng/radiobutton";
-import {Select, SelectChangeEvent} from "primeng/select";
-import {Address} from "../../models/address";
+import {Select} from "primeng/select";
 import {CustomerService} from "../../../core/service/customer.service";
 import {AddressService} from "../../../core/service/address.service";
 import {Province} from "../../../core/model/response/province-response.model";
@@ -77,10 +76,6 @@ export class CustomerSaveForm implements OnInit {
         });
     }
     
-    selectProvince(event: SelectChangeEvent) {
-        if (event.value) this.communes.set(new Address().communes.filter(i => i.provinceCode === <string>event.value));
-        this.saveForm.get('commune')?.enable();
-    }
     
     clearProvince() {
         this.saveForm.get("province")?.reset();

@@ -3,7 +3,7 @@ export interface ProductFilterRequest {
     size: number;
     sortBy: string;
     nameOrCodeKeyword: string;
-    isPublished: boolean;
+    isPublished: boolean | null;
     categoryIds: number[];
     authorIds: number[];
     publisherIds: number[];
