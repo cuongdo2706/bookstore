@@ -1,0 +1,27 @@
+<p-menu [style]="{'height':'calc(100vh - 70px)','border-radius':'12px','overflow-y':'auto','background-color':'#f8f9fa','margin':'5px','border':'solid 1px lightgreen'}">
+    <ng-template #start>
+        <div class="sidenav-header">
+            <img src="{{user.imgUrl?user.imgUrl:defaultImg}}" width="80" height="80">
+            <div class="header-text">
+                <h2>{{ user.sub }}</h2>
+                <p>{{ user.role === "ROLE_ADMIN" ? "Quản lý" : "Nhân viên" }}</p>
+            </div>
+        </div>
+        <div class="overflow-y-auto">
+            <ul class="list-none p-0 pt-2 m-0 overflow-hidden">
+                @for (i of this.items; track $index) {
+                    <li>
+                        <a pRipple routerLink="{{i.routerLink}}" routerLinkActive="active" style="text-decoration: none"
+                           class="flex items-center cursor-pointer pl-5 p-3 border-0 text-gray-700 active:accent-surface-700 transition-all p-ripple">
+                            <i class="{{i.icon}} mr-2"></i>
+                            <span class="font-medium" style="font-size: 1rem">{{ i.label }}</span>
+                        </a>
+                    </li>
+                }
+            </ul>
+        </div>
+    </ng-template>
+</p-menu>
+
+
+

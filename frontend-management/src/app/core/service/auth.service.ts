@@ -2,7 +2,7 @@ import {inject, Injectable} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {catchError, Observable, of, tap} from "rxjs";
 import {Router} from "@angular/router";
-import {Login} from "../model/request/login-request.model";
+import {LoginRequest} from "../model/request/login-request.model";
 import {JwtHelperService} from "@auth0/angular-jwt";
 import {TokenResponse} from "../model/response/token-response.model";
 import {ApiResponse} from "../model/response/api-response.model";
@@ -38,7 +38,7 @@ export class AuthService {
         }
     }
 
-    login(login: Login): Observable<ApiResponse<TokenResponse>> {
+    login(login: LoginRequest): Observable<ApiResponse<TokenResponse>> {
         return this.http.post<ApiResponse<TokenResponse>>(`${this.url}`, login)
             .pipe(
                 catchError(err => {

@@ -1,29 +1,28 @@
-import {Routes} from '@angular/router';
-import {MainLayoutComponent} from "./core/component/main-layout/main-layout.component";
-import {LoginComponent} from "./core/component/login/login.component";
-import {LoginGuard} from "./core/guard/login.guard";
+import { Routes } from '@angular/router';
+import {PageNotFound} from "./features/page-not-found/page-not-found";
 import {AuthGuard} from "./core/guard/auth.guard";
+import {LoginGuard} from "./core/guard/login.guard";
+import {Login} from "./core/component/login/login";
+import {MainLayout} from "./core/component/main-layout/main-layout";
+import {Coupon} from "./features/coupon/coupon";
+import {Promotion} from "./features/promotion/promotion";
 import {Dashboard} from "./features/dashboard/dashboard";
 import {Pos} from "./features/pos/pos";
 import {Product} from "./features/product/product";
-import {Attribute} from "./features/attribute/attribute";
-import {Order} from "./features/order/order";
-import {Customer} from "./features/customer/customer";
 import {Staff} from "./features/staff/staff";
-import {Promotion} from "./features/promotion/promotion";
-import {Coupon} from "./features/coupon/coupon";
-import {PageNotFound} from "./features/page-not-found/page-not-found";
-
+import {Customer} from "./features/customer/customer";
+import {Order} from "./features/order/order";
+import {Attribute} from "./features/attribute/attribute";
 
 export const routes: Routes = [
     {
         path: "dang-nhap",
-        component: LoginComponent,
+        component: Login,
         canActivate: [LoginGuard]
     },
     {
         path: "",
-        component: MainLayoutComponent,
+        component: MainLayout,
         canActivate: [AuthGuard],
         children: [
             {

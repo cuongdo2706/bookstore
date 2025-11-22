@@ -1,6 +1,6 @@
 import {Component, inject, OnInit, signal} from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import {PRIME_NG_CONFIG, PrimeNG} from "primeng/config";
+import {PrimeNG} from "primeng/config";
 
 @Component({
   selector: 'app-root',
@@ -8,9 +8,9 @@ import {PRIME_NG_CONFIG, PrimeNG} from "primeng/config";
   templateUrl: './app.html',
   styleUrl: './app.css'
 })
-export class App implements OnInit{
+export class App implements OnInit {
     private primeng = inject(PrimeNG);
-
+    
     ngOnInit(): void {
         this.primeng.ripple.set(true);
         this.primeng.setTranslation({
@@ -29,5 +29,6 @@ export class App implements OnInit{
             clear: 'Xóa',
             dateFormat: 'dd/mm/yy',
             weekHeader: 'Tuần'
-        })
-    }}
+        });
+    }
+}

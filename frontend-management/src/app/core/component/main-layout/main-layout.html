@@ -1,0 +1,7 @@
+<app-navbar></app-navbar>
+<div class="flex" style="height: calc(100vh - 60px); overflow: hidden;">
+    <app-sidebar></app-sidebar>
+    <p-card class="flex-1" [style]="{'height':'calc(100vh - 70px)','margin':'5px','border':'1px lightgreen solid'}">
+        <router-outlet></router-outlet>
+    </p-card>
+</div>
